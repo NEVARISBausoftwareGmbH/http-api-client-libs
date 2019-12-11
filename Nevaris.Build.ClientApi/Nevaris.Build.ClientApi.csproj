@@ -4,12 +4,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl />
-    <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients</RepositoryUrl>
-    <PackageTags>Nevaris Build</PackageTags>
+    <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</RepositoryUrl>
+    <PackageTags>Nevaris</PackageTags>
     <Description>A client library for accessing Nevaris Build via its REST API</Description>
-    <Authors>Andreas Horwath</Authors>
+    <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
