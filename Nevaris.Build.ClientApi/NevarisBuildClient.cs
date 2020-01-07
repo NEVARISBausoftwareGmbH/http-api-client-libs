@@ -50,14 +50,12 @@ namespace Nevaris.Build.ClientApi
 
         static RefitSettings _refitSettings = new RefitSettings
         {
-            JsonSerializerSettings = _jsonSerializerSettings
-        };
-
-        static JsonSerializerSettings _jsonSerializerSettings = new JsonSerializerSettings()
-        {
-            ContractResolver = new CamelCasePropertyNamesContractResolver(),
-            Converters = { new StringEnumConverter { CamelCaseText = true } },
-            NullValueHandling = NullValueHandling.Ignore
+            ContentSerializer = new JsonContentSerializer(new JsonSerializerSettings
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Converters = { new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy() } },
+                NullValueHandling = NullValueHandling.Ignore
+            })
         };
     }
 }
