@@ -1377,6 +1377,9 @@ namespace Nevaris.Build.ClientApi
 
         public string Nummer { get; set; }
 
+        /// <summary>
+        /// Vollständige Nummer des Betriebsmittls (einschließlich Präfix), z.B. "M24.211".
+        /// </summary>
         public string NummerKomplett { get; set; }
 
         public string Bezeichnung { get; set; }
@@ -1952,6 +1955,32 @@ namespace Nevaris.Build.ClientApi
     }
 
     /// <summary>
+    /// Die Kalkulations-Rechenergebnisse eines einzelnen Betriebsmittels.
+    /// </summary>
+    public class BetriebsmittelErgebnis
+    {
+        /// <summary>
+        /// Id des Betriebsmittels.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Vollständige Nummer des Betriebsmittls (einschließlich Präfix), z.B. "M24.211".
+        /// </summary>
+        public string NummerKomplett { get; set; }
+
+        /// <summary>
+        /// Die berechnete Warenkorbmenge. Dies ist aktuell der einzige gelieferte Rechenwert.
+        /// </summary>
+        public decimal WarenkorbMenge { get; set; }
+    }
+
+    public class KalkulationErgebnisse
+    {
+        public List<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; }
+    }
+
+    /// <summary>
     /// Eine zu einem Leistungsverzeichnis gehörende Kalkulation.
     /// </summary>
     public class Kalkulation : BaseObject
@@ -1961,6 +1990,12 @@ namespace Nevaris.Build.ClientApi
         public string Nummer { get; set; }
         public string Bezeichnung { get; set; }
         public KalkulationsArt? Art { get; set; }
+
+        /// <summary>
+        /// Rechenergebnisse (ist befüllt, wenn die Kalkultion per /build/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen=true
+        /// abgerufen wurde).
+        /// </summary>
+        public KalkulationErgebnisse Ergebnisse { get; set; }
 
         /// <summary>
         /// Liste von untergeordneten Kalkulationen. Ist nur befüllt, wenn die Kalkulationen

@@ -73,8 +73,8 @@ namespace Nevaris.Build.ClientApi
         [Delete("/build/projekte/{projektId}/positionsbloecke/{positionsblockId}")]
         Task DeletePositionsblock(string projektId, Guid positionsblockId);
 
-        [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}")]
-        Task<Kalkulation> GetKalkulation(string projektId, Guid kalkulationId);
+        [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen={mitErgebnissen}")]
+        Task<Kalkulation> GetKalkulation(string projektId, Guid kalkulationId, bool mitErgebnissen = false);
 
         [Post("/build/projekte/{projektId}/kalkulationen/{parentKalkulationId}/kalkulationen")]
         Task<Kalkulation> CreateUntergeordneteKalkulation(string projektId, Guid parentKalkulationId);
