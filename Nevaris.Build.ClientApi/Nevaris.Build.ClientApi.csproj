@@ -6,11 +6,11 @@
     <PackageProjectUrl />
     <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</RepositoryUrl>
     <PackageTags>Nevaris</PackageTags>
-    <Description>A client library for accessing Nevaris Build via its REST API</Description>
+    <Description>A client library for accessing Nevaris Build via its RESTful API</Description>
     <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.0.4-2020.2</Version>
+    <Version>1.0.5-2020.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

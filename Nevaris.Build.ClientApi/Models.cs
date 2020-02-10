@@ -1000,9 +1000,6 @@ namespace Nevaris.Build.ClientApi
         public string Sparte { get; set; }
         public string Typ { get; set; }
 
-        [Obsolete("Tippfehler")]
-        public string Auschreibungsart { get; set; }
-
         /// <summary>
         /// Liste von Leistungsverzeichnissen, die in diesem Projekt enthalten sind.
         /// </summary>
@@ -2167,14 +2164,10 @@ namespace Nevaris.Build.ClientApi
         public string Einheit { get; set; }
         public string Art { get; set; }
         public decimal? LvMenge { get; set; }
-        // TODO Prognosemengen
         public Dictionary<string, Money> Preisanteile { get; set; }
         public Money Einheitspreis { get; set; }
         public bool IstFixpreis { get; set; }
         public bool IstIntern { get; set; }
-
-        [Obsolete("Tippfehler")]
-        public Money Einheitspeis { get; set; }
     }
 
     public class Aufmaßblatt : BaseObject
