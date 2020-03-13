@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using Nevaris.Build.ClientApi.Fianance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
@@ -33,6 +34,7 @@ namespace Nevaris.Build.ClientApi
             HostUrl = hostUrl;
             ProjektApi = RestService.For<IProjektApi>(hostUrl, _refitSettings);
             StammApi = RestService.For<IStammApi>(hostUrl, _refitSettings);
+            FinanceApi = RestService.For<IFinanceApi>(hostUrl, _refitSettings);
         }
 
         /// <summary>
@@ -49,6 +51,11 @@ namespace Nevaris.Build.ClientApi
         /// Zugriff auf Stammdaten-Operationen.
         /// </summary>
         public IProjektApi ProjektApi { get; }
+
+        /// <summary>
+        /// Zugriff auf Finance-Operationen.
+        /// </summary>
+        public IFinanceApi FinanceApi { get; }
 
         /// <summary>
         /// Ermittelt die Version der HTTP-API und gibt sie gemeinsam mit der Version der Client-Library (Nevaris.Build.ClientApi)
