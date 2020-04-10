@@ -11,63 +11,96 @@ namespace Nevaris.Build.ClientApi.Fianance
 {
     public class Adresse : BaseObject
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
         public string Anrede { get; set; }
         public string Titel { get; set; }
         public string TitelImAnschreiben { get; set; }
         public string Name { get; set; }
         public string Vorname { get; set; }
-        public List<string> Adresszeilen { get; set; }
+
+        public string Nachname { get; set; }
+
+        public string Adresszeile1 { get; set; }
+        public string Adresszeile2 { get; set; }
+        public string Adresszeile3 { get; set; }
+
         public string Straße { get; set; }
-        public string PLZ { get; set; }
+        public string Plz { get; set; }
         public string Ort { get; set; }
-        public Land Land { get; set; }
+
+        public string LandCode { get; set; }
         public string Postfach { get; set; }
-        public string PostfachPLZ { get; set; }
+        public string PostfachPlz { get; set; }
         public string PostfachOrt { get; set; }
         public string Internet { get; set; }
-        public string Email { get; set; }
+        public string EMail { get; set; }
         public string Telefon { get; set; }
         public string Fax { get; set; }
-        public string UmsatzsteuerID { get; set; }
-        public string Steuernummer { get; set; }
+        public string UstId { get; set; }
+        public string SteuernummerGesellschaft { get; set; }
         public string ExterneAdressNummer { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public List<Adressat> Adressaten { get; set; }
-        public Adressat StandardAdressat { get; set; }
         public string Gruppe { get; set; }
-        public List<string> Adresstypen { get; set; }
-        public List<string> Branchen { get; set; }
-        public List<string> Gewerke { get; set; }
         public bool? DebitorVorhanden { get; set; }
         public bool? KreditorVorhanden { get; set; }
-        public DateTime? LetzteÄnderung { get; set; }
+        public DateTime? Änderungsdatum { get; set; }
+
+        //public List<Adressat> Adressaten { get; set; }
     }
 
-    public class Adressat : BaseObject
+    public class NewAdresseInfo
     {
-        public string Id { get; set; }
-        public string AdressNummer { get; set; }
-        public string Anrede { get; set; }
-        public string Titel { get; set; }
-        public string TitelImAnschreiben { get; set; }
+        /// <summary>
+        /// Der Code (= Adressnummer) der anzulegenden Adresse. Wenn nicht angegeben, wird der Code
+        /// über die passende Finance-Nummernserie ermittelt.
+        /// </summary>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// Identifiziert die globale Nummernserie, die herangezogen wird, wenn das Code-Feld nicht befüllt ist.
+        /// Falls leer, wird "ADRESSE" verwendet.
+        /// </summary>
+        public string NummernserieCode { get; set; }
+
         public string Name { get; set; }
+
         public string Vorname { get; set; }
-        public string Email { get; set; }
-        public string Telefon { get; set; }
-        public string Mobil { get; set; }
-        public string Fax { get; set; }
-        public string Abteilung { get; set; }
-        public string Funktion { get; set; }
-        public DateTime? Geburtsdatum { get; set; }
-        public bool? Inaktiv { get; set; }
-        public DateTime? LetzteÄnderung { get; set; }
+
+        public string Nachname { get; set; }
     }
+
+    //public class Adressat : BaseObject
+    //{
+    //    public string Id { get; set; }
+    //    public string Anrede { get; set; }
+    //    public string Titel { get; set; }
+    //    public string TitelImAnschreiben { get; set; }
+    //    public string Name { get; set; }
+    //    public string Vorname { get; set; }
+    //    public string EMail { get; set; }
+    //    public string Telefon { get; set; }
+    //    public string Mobil { get; set; }
+    //    public string Fax { get; set; }
+    //    public string Abteilung { get; set; }
+    //    public string Funktion { get; set; }
+    //    public DateTime? Geburtsdatum { get; set; }
+    //    public bool? Inaktiv { get; set; }
+    //    public DateTime? Änderungsdatum { get; set; }
+    //}
 
     public class Land : BaseObject
     {
-        public string Id { get; set; }
+        public string Code { get; set; }
+        public string Bezeichnung { get; set; }
+        public string LänderCodeEU { get; set; }
+        public string LänderCodeISO3166Alpha { get; set; }
+        public string LänderCodeISO3166Numerisch { get; set; }
+    }
+
+    public class NewLandInfo
+    {
+        public string Code { get; set; }
         public string Bezeichnung { get; set; }
         public string LänderCodeEU { get; set; }
         public string LänderCodeISO3166Alpha { get; set; }
@@ -92,10 +125,10 @@ namespace Nevaris.Build.ClientApi.Fianance
         public string DebitorNummer { get; set; }
         public string DebitorBezeichnung { get; set; }
 
-        public Adresse Adresse { get; set; }
-        public Adresse Auftraggeber { get; set; }
-        public Adresse Bauherr { get; set; }
-        public Adresse Bauleiter { get; set; }
+        public string AdressCode { get; set; }
+        public string AuftraggeberAdressCode { get; set; }
+        public string BauherrAdressCode { get; set; }
+        public string BauleiterName { get; set; }
 
         public string Vertragsart { get; set; }
 
@@ -109,10 +142,10 @@ namespace Nevaris.Build.ClientApi.Fianance
         public decimal? GestellteRechnungen { get; set; }
         public decimal? ErhalteneZahlungen { get; set; }
 
-        public DateTime? LetzteÄnderung { get; set; }
+        public DateTime? Änderungsdatum { get; set; }
     }
 
-    public class Zahlungsbedingungen : BaseObject
+    public class Zahlungsbedingung : BaseObject
     {
         public string Id { get; set; }
         public string Beschreibung { get; set; }
@@ -126,12 +159,19 @@ namespace Nevaris.Build.ClientApi.Fianance
     public class NewDebitorInfo
     {
         /// <summary>
-        /// Die eindeutige Nummer der Debitors. Kann identisch sein mit dem AdressCode.
+        /// Die eindeutige Nummer des Debitors. Wenn nicht angegeben, wird die ID
+        /// über die passende mandantenspezifische Finance-Nummernserie ermittelt.
         /// </summary>
         public string DebitorId { get; set; }
 
         /// <summary>
-        /// Die Nummer der zugehörigen Adresse.
+        /// Identifiziert die mandantenspezifische Nummernserie, die herangezogen wird, wenn das DebitorId-Feld nicht befüllt ist.
+        /// Falls leer, wird "DEBITOREN" verwendet.
+        /// </summary>
+        public string NummernserieCode { get; set; }
+
+        /// <summary>
+        /// Der Code der zugehörigen Adresse.
         /// </summary>
         public string AdressCode { get; set; }
     }
@@ -354,12 +394,19 @@ namespace Nevaris.Build.ClientApi.Fianance
     public class NewKreditorInfo
     {
         /// <summary>
-        /// Die eindeutige Nummer der Kreditors. Kann identisch sein mit dem AdressCode.
+        /// Die eindeutige Nummer des Kreditors. Wenn nicht angegeben, wird die ID
+        /// über die passende mandantenspezifische Finance-Nummernserie ermittelt.
         /// </summary>
         public string KreditorId { get; set; }
 
         /// <summary>
-        /// Die Nummer der zugehörigen Adresse.
+        /// Identifiziert die mandantenspezifische Nummernserie, die herangezogen wird, wenn das KreditorId-Feld nicht befüllt ist.
+        /// Falls leer, wird "KRDITOREN" verwendet.
+        /// </summary>
+        public string NummernserieCode { get; set; }
+
+        /// <summary>
+        /// Der Code der zugehörigen Adresse.
         /// </summary>
         public string AdressCode { get; set; }
     }
@@ -944,6 +991,7 @@ namespace Nevaris.Build.ClientApi.Fianance
         public string Änderungssystem { get; set; }
         public string Änderungsbenutzer { get; set; }
         public DateTime? Änderungsdatum { get; set; }
+        public WartungspostitionStatus? Status { get; set; }
     }
 
     public enum WartungspositionBelegart
@@ -984,5 +1032,13 @@ namespace Nevaris.Build.ClientApi.Fianance
     {
         Listenpreis_gem_Angebot = 0,
         Rabattierter_VK_Preis = 1
+    }
+
+    public enum WartungspostitionStatus
+    {
+        _ = 0,
+        gekündigt = 1,
+        insolvent = 2,
+        Rücknahme = 3
     }
 }
