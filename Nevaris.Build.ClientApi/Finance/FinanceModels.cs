@@ -991,7 +991,7 @@ namespace Nevaris.Build.ClientApi.Fianance
         public string Änderungssystem { get; set; }
         public string Änderungsbenutzer { get; set; }
         public DateTime? Änderungsdatum { get; set; }
-        public WartungspostitionStatus? Status { get; set; }
+        public WartungspositionStatus? Status { get; set; }
     }
 
     public enum WartungspositionBelegart
@@ -1034,7 +1034,7 @@ namespace Nevaris.Build.ClientApi.Fianance
         Rabattierter_VK_Preis = 1
     }
 
-    public enum WartungspostitionStatus
+    public enum WartungspositionStatus
     {
         _ = 0,
         gekündigt = 1,
