@@ -1,9 +1,5 @@
 # http-api-client-libs für NEVARIS Build 2020.2
 
-## Prerelease
-
-Dieser Branch enthält das Prerelease der [Nevaris.Build.ClientApi](https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs) für künftige Versionen von NEVARIS Build. Zu diesem Prerelease gibt es auch ein passendes [nuget-Package](https://www.nuget.org/packages/Nevaris.Build.ClientApi/1.0.4-2020.2).
-
 ## Nevaris.Build.ClientApi
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API von NEVARIS Build. Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
