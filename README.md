@@ -4,6 +4,10 @@
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API von NEVARIS Build. Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
+## Beispielcode ##
+
+Beispielcode zur Verwendung der Nevaris.Build.ClientApi findet sich unter [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+
 ## Voraussetzungen ##
 
 Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server der NEVARIS Businessdienst installiert werden. Dazu muss im Setup-Programm zunächst _Benutzerdefiniert_ ausgewählt werden:
@@ -22,8 +26,4 @@ Nach erfolgreicher Installation wird der Dienstprozess _NEVARIS Build Businessdi
 
 ![SwaggerDoku](Docs/SwaggerDoku.png)
 
-Die Doku enthält auch einen Link auf eine swagger.json-Datei, die eine formale Beschreibung der API enthält. Daraus lässt sich mit geeigneten Tools auch automatisiert ein Client-Proxy erzeugen, was eine Alternative zur Verwendung der Nevaris.Build.ClientApi ist.
-
-## Beispielcode ##
-
-Beispielcode zur Verwendung der Nevaris.Build.ClientApi findet sich unter [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+Die Doku enthält auch einen Link auf eine swagger.json-Datei, die eine formale Beschreibung der API enthält. Daraus lässt sich mit geeigneten Tools auch automatisiert ein Client-Proxy erzeugen, falls dies erwünscht ist.

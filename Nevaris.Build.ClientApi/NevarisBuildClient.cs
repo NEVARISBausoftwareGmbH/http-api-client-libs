@@ -14,14 +14,10 @@ using Refit;
 namespace Nevaris.Build.ClientApi
 {
     /// <summary>
-    /// Ermöglicht die Steuerung von NEVARIS Build (Stammdaten und Projekte) über die NEVARIS Build API.
+    /// Ermöglicht die Steuerung von NEVARIS Build (Stammdaten und Projekte) über die NEVARIS Build RESTful API.
     /// Voraussetzung ist, dass der NEVARIS Build Businessdienst auf einem erreichbaren Server läuft und
-    /// so konfiguriert ist, dass die HTTP API bereitgestellt wird. Dazu muss auf dem Server in der
-    /// %PROGRAMDATA%/Nemetschek/Nevaris/Nevaris.config ein entsprechender SystemSetting-Eintrag
-    /// (&lt;HttpApiBaseAddress&gt;http://*:8500&lt;/HttpApiBaseAddress&gt;) vorhanden sein. Zur Kontrolle,
-    /// ob die HTTP API verfügbar ist, kann vom Client aus in einem Browser über die URL [BASIS-URL]/api-docs
-    /// die API-Doku abgerufen werden (z.B. http://localhost:8500/api-docs für den Fall, dass der
-    /// Businessdienst auf dem lokalen Rechner läuft).
+    /// so konfiguriert ist, dass die RESTful API bereitgestellt wird. Genauere Informationen zur Installation
+    /// finden Sie in README.md oder hier: https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs.
     /// </summary>
     public class NevarisBuildClient
     {
