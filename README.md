@@ -6,7 +6,7 @@ Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API 
 
 ## Beispielcode ##
 
-Beispielcode zur Verwendung der Nevaris.Build.ClientApi findet sich unter [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+Beispielcode zur Verwendung der Nevaris.Build.ClientApi befindet sich hier: [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
 
 ## Voraussetzungen ##
 
