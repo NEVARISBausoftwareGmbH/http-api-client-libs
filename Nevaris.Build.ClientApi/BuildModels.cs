@@ -45,6 +45,8 @@ namespace Nevaris.Build.ClientApi
     public class NewAdresseInfo
     {
         public AdressArt AdressArt { get; set; }
+
+        public string Name { get; set; }
     }
 
     public class Adresse : BaseObject
