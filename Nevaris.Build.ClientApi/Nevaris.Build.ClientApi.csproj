@@ -10,7 +10,7 @@
     <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>1.2.3</Version>
+    <Version>1.3.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

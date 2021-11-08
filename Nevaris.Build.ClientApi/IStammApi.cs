@@ -76,6 +76,9 @@ namespace Nevaris.Build.ClientApi
         [Post("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel")]
         Task<Betriebsmittel> CreateBetriebsmittel(Guid betriebsmittelStammId, [Body] NewBetriebsmittelInfo newBetriebsmittelInfo);
 
+        [Post("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_collection")]
+        Task<BetriebsmittelCollectionResult> CreateBetriebsmittelCollection(Guid betriebsmittelStammId, [Body] IReadOnlyCollection<Betriebsmittel> betriebsmittelListe);
+
         [Put("/build/global/betriebsmittel/{betriebsmittelId}")]
         Task UpdateBetriebsmittel(Guid betriebsmittelId, [Body] Betriebsmittel betriebsmittel);
 

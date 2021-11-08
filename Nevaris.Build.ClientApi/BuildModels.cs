@@ -36,9 +36,101 @@ namespace Nevaris.Build.ClientApi
         Hinweis
     }
 
+    /// <summary>
+    /// Ein Mandant. Im integrierten Betrieb kommt dieser aus Finance.
+    /// </summary>
+    public class Mandant : BaseObject
+    {
+        /// <summary>
+        /// Die Mandanten-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
+        /// eine generierte Zufalls-ID.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
+        /// Mandantenbezeichnung, wie sie in der Benutzeroberfläche angezeigt wird.
+        /// </summary>
+        public string AnzeigeText { get; set; }
+
+        /// <summary>
+        /// Die Mandatenadresse, falls definiert.
+        /// </summary>
+        public AdresseKurzInfo Adresse { get; set; }
+
+        /// <summary>
+        /// Liste von zugeordneten Niederlassungen.
+        /// </summary>
+        public List<Niederlassung> Niederlassungen;
+
+        public override string ToString() => AnzeigeText;
+    }
+
+    /// <summary>
+    /// Eine Niederlassung. Im integrierten Betrieb kommt diese aus Finance.
+    /// </summary>
+    public class Niederlassung : BaseObject
+    {
+        /// <summary>
+        /// Die Niederlassungs-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
+        /// eine generierte Zufalls-ID.
+        /// </summary>
+        public string Id { get; set; }
+
+        public string Bezeichnung { get; set; }
+
+        public string Suchbegriff { get; set; }
+
+        /// <summary>
+        /// Niederlassungsbezeichnung, wie sie in der Benutzeroberfläche angezeigt wird.
+        /// </summary>
+        public string AnzeigeText { get; set; }
+
+        /// <summary>
+        /// Die Niederlassungsadresse, falls definiert.
+        /// </summary>
+        public AdresseKurzInfo Adresse { get; set; }
+
+        public override string ToString() => AnzeigeText;
+    }
+
+    /// <summary>
+    /// Eine Adresse, wie sie in <see cref="Mandant"/> und <see cref="Niederlassung"/> verwendet wird.
+    /// Enthält nicht alle Felder des vollständigen Adresstyps <see cref="Adresse"/>.
+    /// </summary>
+    public class AdresseKurzInfo : BaseObject
+    {
+        public string Code { get; set; }
+
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+        public AdressArt AdressArt { get; set; }
+
+        public string Name { get; set; }
+
+        public string Vorname { get; set; }
+
+        public string Zusatz1 { get; set; }
+
+        public string Zusatz2 { get; set; }
+
+        public string Zusatz3 { get; set; }
+
+        public string LandCode { get; set; }
+
+        public string Plz { get; set; }
+
+        public string Ort { get; set; }
+
+        public string Straße { get; set; }
+
+        public GesperrtArt GesperrtArt { get; set; }
+
+        public override string ToString() => $"{Code}: {Name}";
+    }
+
     public class GeoCoordinate
     {
         public double Latitude { get; set; }
+
         public double Longitude { get; set; }
     }
 
@@ -234,7 +326,9 @@ namespace Nevaris.Build.ClientApi
     public class ProjektInfo : BaseObject
     {
         public string Id { get; set; }
+
         public string Nummer { get; set; }
+
         public string Bezeichnung { get; set; }
     }
 
@@ -244,8 +338,29 @@ namespace Nevaris.Build.ClientApi
     public class Projekt : BaseObject
     {
         public string Id { get; set; }
+
+        /// <summary>
+        /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
+        /// </summary>
+        public string MandantId { get; set; }
+
+        /// <summary>
+        /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
+        /// </summary>
+        public string NiederlassungId { get; set; }
+
+        public bool IstVorlageprojekt { get; set; }
+
+        /// <summary>
+        /// Die Nummer des Projekts (optional).
+        /// </summary>
         public string Nummer { get; set; }
+
+        /// <summary>
+        /// Die Bezeichnung des Projekts (optional).
+        /// </summary>
         public string Bezeichnung { get; set; }
+
         public DateTime? Baubeginn { get; set; }
         public DateTime? Bauende { get; set; }
         public string Ampel { get; set; }
@@ -263,10 +378,32 @@ namespace Nevaris.Build.ClientApi
         public List<Leistungszeitraum> Leistungszeiträume { get; set; }
     }
 
+    /// <summary>
+    /// Beschreibt ein neu anzulegendes Projekt.
+    /// </summary>
     public class NewProjektInfo : BaseObject
     {
+        /// <summary>
+        /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
+        /// </summary>
+        public string MandantId { get; set; }
+
+        /// <summary>
+        /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
+        /// </summary>
+        public string NiederlassungId { get; set; }
+
+        /// <summary>
+        /// Die Nummer des Projekts (optional).
+        /// </summary>
         public string Nummer { get; set; }
+
+        /// <summary>
+        /// Die Bezeichnung des Projekts (optional).
+        /// </summary>
         public string Bezeichnung { get; set; }
+
+        public bool IstVorlageprojekt { get; set; }
     }
 
     /// <summary>
@@ -275,10 +412,29 @@ namespace Nevaris.Build.ClientApi
     public class BetriebsmittelStamm : BaseObject
     {
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Die ID des Mandanten, dem dieser Betriebsmittelstamm zugeordnet ist (optional).
+        /// </summary>
+        public string MandantId { get; set; }
+
+        /// <summary>
+        /// Identifiziert in Kombination mit MandantId die Niederlassung, dem dieser Betriebsmittelstamm zugeordnet ist (optional).
+        /// </summary>
+        public string NiederlassungId { get; set; }
+
         public string Nummer { get; set; }
+
         public string Bezeichnung { get; set; }
+
         public string Beschreibung { get; set; }
+
         public BetriebsmittelStammArt? Art { get; set; }
+
+        /// <summary>
+        /// Für ÖNORM-Stämme: Die Kalkulationsversion (kann nicht nachträglich geändert werden).
+        /// </summary>
+        public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
 
         public int? RechengenauigkeitMengen { get; set; } // = NachkommastellenAnsatz
         public int? RechengenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreise
@@ -315,6 +471,8 @@ namespace Nevaris.Build.ClientApi
         /// <summary>
         /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
         /// Über dieses Feld wird bestimmt, wie viele Zuschlagsspalten in den Kosten- und Zuschlagskatalogen angeboten werden und wie diese heißen.
+        /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
+        /// Zuschlagsart enthalten (es darf nicht mehr geben).
         /// </summary>
         public List<Zuschlagsart> Zuschlagsarten { get; set; }
 
@@ -351,6 +509,12 @@ namespace Nevaris.Build.ClientApi
         Ger
     }
 
+    public enum BetriebsmittelStammKalkulationsVersion
+    {
+        B2061_1999,
+        B2061_2020
+    }
+
     /// <summary>
     /// Enthält die Kostenanteilbezeichnungen.
     /// </summary>
@@ -383,8 +547,15 @@ namespace Nevaris.Build.ClientApi
     public class NewBetriebsmittelStammInfo : BaseObject
     {
         public string Nummer { get; set; }
+
         public string Bezeichnung { get; set; }
+
         public BetriebsmittelStammArt? Art { get; set; }
+
+        /// <summary>
+        /// Die Kalkulationsversion (nur für Betriebsmittelstämme der Art "Aut" relevant).
+        /// </summary>
+        public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
     }
 
     /// <summary>
@@ -526,7 +697,12 @@ namespace Nevaris.Build.ClientApi
     public class Zuschlagsgruppe : BaseObject
     {
         public string Nummer { get; set; }
+
         public string Bezeichnung { get; set; }
+
+        /// <summary>
+        /// Wird derzeit nicht genutzt.
+        /// </summary>
         public int? Stufe { get; set; }
     }
 
@@ -619,11 +795,28 @@ namespace Nevaris.Build.ClientApi
     }
 
     /// <summary>
+    /// Rückgabeobjekt der Operation POST /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_collection.
+    /// </summary>
+    public class BetriebsmittelCollectionResult : BaseObject
+    {
+        /// <summary>
+        /// Die IDs der erzeugten Betriebsmittel (einschließlich Grupper), ohne untergeordnete Betriebsmittel.
+        /// </summary>
+        public List<Guid> NewRootBetriebsmittelIds { get; set; }
+    }
+
+    /// <summary>
     /// Ein Betriebsmittel (kann auch eine Betriebsmittelgruppe sein).
     /// </summary>
     public class Betriebsmittel : BaseObject
     {
         public Guid Id { get; set; }
+
+        /// <summary>
+        /// Die Id der Gruppe, unter dem dieses Betriebsmittel hängt. Ist null, wenn dieses Betriebsmittel
+        /// selbst eine Gruppe auf oberste Ebene ist.
+        /// </summary>
+        public Guid? ParentGruppeId { get; set; }
 
         public BetriebsmittelArt Art { get; set; }
 
@@ -757,31 +950,59 @@ namespace Nevaris.Build.ClientApi
     public class BetriebsmittelLohnDetails : BaseObject
     {
         public bool? IstProduktiv { get; set; }
-        public decimal? EinheitenFaktor { get; set; } // = Umrechnung auf Stunden(1/x)
-        public string BasNummer { get; set; } // Nummer des Bauarbeitsschlüssels
+
+        /// <summary>
+        /// Umrechnung auf Stunden(1/x)
+        /// </summary>
+        public decimal? EinheitenFaktor { get; set; }
+
+        /// <summary>
+        /// Nummer des Bauarbeitsschlüssels
+        /// </summary>
+        public string BasNummer { get; set; }
 
         public string KostenartKostenanteil1 { get; set; }
 
         public string KostenartKostenanteil2 { get; set; }
 
+        public string KostenartGemeinkosten { get; set; }
+
+        public string KostenartUmlagekosten { get; set; }
+
         public int? WarengruppeKostenanteil1 { get; set; }
 
         public int? WarengruppeKostenanteil2 { get; set; }
 
+        public int? WarengruppeGemeinkosten { get; set; }
+
+        public int? WarengruppeUmlagekosten { get; set; }
     }
 
     public class BetriebsmittelMaterialDetails : BaseObject
     {
         public decimal? Ladezeit { get; set; }
 
-
         public string Kostenart { get; set; }
+
+        public string KostenartPreisAbLieferer { get; set; }
+
+        public string KostenartTransport { get; set; }
+
+        public string KostenartGemeinkosten { get; set; }
+
+        public string KostenartManipulation { get; set; }
+
+        public string KostenartNebenmaterial { get; set; }
 
         public int? WarengruppePreisAbLieferer { get; set; }
 
         public int? WarengruppeTransport { get; set; }
 
         public int? WarengruppeManipulation { get; set; }
+
+        public int? WarengruppeGemeinkosten { get; set; }
+
+        public int? WarengruppeNebenmaterial { get; set; }
     }
 
     public class BetriebsmittelGerätDetails : BaseObject
@@ -791,20 +1012,57 @@ namespace Nevaris.Build.ClientApi
         public string GerätefaktorNummer { get; set; }
 
         public string KostenartAV { get; set; }
+
         public string KostenartRepLohn { get; set; }
+
         public string KostenartRepMaterial { get; set; }
 
+
+        public string KostenartGemeinkostenAV { get; set; }
+
+        public string KostenartGemeinkostenLohn { get; set; }
+
+        public string KostenartGemeinkostenSonstiges { get; set; }
+
+        public string KostenartAndereKostenLohn { get; set; }
+
+        public string KostenartAndereKostenSonstiges { get; set; }
+
+        public string KostenartListenpreisgerätLohn { get; set; }
+
+        public string KostenartListenpreisgerätSonstiges { get; set; }
+
+        public string KostenartListenpreisgerätGemeinkosten { get; set; }
+
         public string KostenartListenpreisGeraetKostenanteil1 { get; set; }
+
         public string KostenartListenpreisGeraetKostenanteil2 { get; set; }
 
-
         public int? WarengruppeAbschreibungVerzinsung { get; set; }
+
         public int? WarengruppeReparaturLohn { get; set; }
+
         public int? WarengruppeReparaturMaterial { get; set; }
 
         public int? WarengruppeListenpreisGeraetKostenanteil1 { get; set; }
+
         public int? WarengruppeListenpreisGeraetKostenanteil2 { get; set; }
 
+        public int? WarengruppeGemeinkostenAV { get; set; }
+
+        public int? WarengruppeGemeinkostenLohn { get; set; }
+
+        public int? WarengruppeGemeinkostenSonstiges { get; set; }
+
+        public int? WarengruppeAndereKostenLohn { get; set; }
+
+        public int? WarengruppeAndereKostenSonstiges { get; set; }
+
+        public int? WarengruppeListenpreisgerätLohn { get; set; }
+
+        public int? WarengruppeListenpreisgerätSonstiges { get; set; }
+
+        public int? WarengruppeListenpreisgerätGemeinkosten { get; set; }
 
         /// <summary>
         /// (Detailinfo) Enthält zusätzliche Geräte-Eigenschaften.
@@ -847,36 +1105,75 @@ namespace Nevaris.Build.ClientApi
     public class BetriebsmittelSonstigeKostenDetails : BaseObject
     {
         public string Kostenart1 { get; set; }
+
         public string Kostenart2 { get; set; }
+
         public string Kostenart3 { get; set; }
+
         public string Kostenart4 { get; set; }
+
         public string Kostenart5 { get; set; }
+
         public string Kostenart6 { get; set; }
 
+        public string KostenartGemeinkosten { get; set; }
+
         public int? WarengruppeKostenanteil1 { get; set; }
+
         public int? WarengruppeKostenanteil2 { get; set; }
+
         public int? WarengruppeKostenanteil3 { get; set; }
+
         public int? WarengruppeKostenanteil4 { get; set; }
+
         public int? WarengruppeKostenanteil5 { get; set; }
+
         public int? WarengruppeKostenanteil6 { get; set; }
 
+        public int? WarengruppeKostenanteil7 { get; set; }
+
+        public int? WarengruppeKostenanteil8 { get; set; }
+
+        public int? WarengruppeGemeinkosten { get; set; }
     }
 
     public class BetriebsmittelNachunternehmerDetails : BaseObject
     {
         public string Kostenart1 { get; set; }
+
         public string Kostenart2 { get; set; }
+
         public string Kostenart3 { get; set; }
+
         public string Kostenart4 { get; set; }
+
         public string Kostenart5 { get; set; }
+
         public string Kostenart6 { get; set; }
 
+        public string Kostenart7 { get; set; }
+
+        public string Kostenart8 { get; set; }
+
+        public string KostenartGemeinkosten { get; set; }
+
         public int? WarengruppeKostenanteil1 { get; set; }
+
         public int? WarengruppeKostenanteil2 { get; set; }
+
         public int? WarengruppeKostenanteil3 { get; set; }
+
         public int? WarengruppeKostenanteil4 { get; set; }
+
         public int? WarengruppeKostenanteil5 { get; set; }
+
         public int? WarengruppeKostenanteil6 { get; set; }
+
+        public int? WarengruppeKostenanteil7 { get; set; }
+
+        public int? WarengruppeKostenanteil8 { get; set; }
+
+        public int? WarengruppeGemeinkosten { get; set; }
     }
 
     public class BetriebsmittelBausteinDetails : BaseObject
@@ -970,56 +1267,109 @@ namespace Nevaris.Build.ClientApi
     public class BetriebsmittelKostenLohnDetails : BaseObject
     {
         public Money Kostenanteil1 { get; set; }
+
+        /// <summary>
+        /// Kostenanteil 2: Nur für B2061_1999 verfügbar.
+        /// </summary>
         public Money Kostenanteil2 { get; set; }
+
+        public Money Umlagekosten { get; set; }
+
+        public decimal? Gemeinkosten { get; set; }
     }
 
     public class BetriebsmittelKostenMaterialDetails : BaseObject
     {
         public Money Listenpreis { get; set; }
+
         public decimal? Rabatt { get; set; }
+
         public decimal? Verlust { get; set; }
+
         public Money Manipulation { get; set; }
+
         public Money Transportkosten { get; set; }
+
+        public decimal? Gemeinkosten { get; set; }
+
+        public decimal? Nebenmaterial { get; set; }
     }
 
     public class BetriebsmittelKostenGerätDetails : BaseObject
     {
         public Money Neuwert { get; set; } // = Mittlerer Neuwert
+
         public Money Kostenanteil1 { get; set; }
+
         public Money Kostenanteil2 { get; set; }
+
         public decimal? AbschreibungVerzinsung { get; set; } // = A + V
+
         public decimal? Reparaturkosten { get; set; }
+
+        public decimal? GemeinkostenListenpreisGeraet { get; set; }
+
+        public decimal? GemeinkostenAV { get; set; }
+
+        public decimal? GemeinkostenRepLohn { get; set; }
+
+        public decimal? GemeinkostenRepSonstiges { get; set; }
+
+        public Money AndereKostenLohn { get; set; }
+
+        public Money AndereKostenSonstiges { get; set; }
     }
 
     public class BetriebsmittelKostenSonstigeKostenDetails : BaseObject
     {
         public Money Kostenanteil1 { get; set; }
+
         public Money Kostenanteil2 { get; set; }
+
         public Money Kostenanteil3 { get; set; }
+
         public Money Kostenanteil4 { get; set; }
+
         public Money Kostenanteil5 { get; set; }
+
         public Money Kostenanteil6 { get; set; }
+
+        public decimal? Gemeinkosten { get; set; }
     }
 
     public class BetriebsmittelKostenNachunternehmerDetails : BaseObject
     {
         public Money Kostenanteil1 { get; set; }
+
         public Money Kostenanteil2 { get; set; }
+
         public Money Kostenanteil3 { get; set; }
+
         public Money Kostenanteil4 { get; set; }
+
         public Money Kostenanteil5 { get; set; }
+
         public Money Kostenanteil6 { get; set; }
+
+        public decimal? Gemeinkosten { get; set; }
     }
 
     public class KalkulationsZeileDetails : BaseObject
     {
         public decimal? Ergebnis { get; set; }
+
         public decimal? MengeGesamt { get; set; }
+
         public decimal? LeistungsMenge { get; set; }
+
         public Money KostenProEinheit { get; set; }
+
         public Money Kosten { get; set; }
+
         public Money Preis { get; set; }
+
         public decimal? StundenProduktiv { get; set; }
+
         public Money ZuschlagGesamt { get; set; }
     }
 
@@ -1164,7 +1514,8 @@ namespace Nevaris.Build.ClientApi
         FREIEFORM = 6,
         GAEBXML32 = 7,
         OENORMA2063V2015 = 8,
-        OENORMB2063 = 9
+        OENORMB2063 = 9,
+        OENORMA2063V2021 = 10
     }
 
 
@@ -1229,6 +1580,11 @@ namespace Nevaris.Build.ClientApi
 
     public class KalkulationErgebnisse
     {
+        /// <summary>
+        /// Die kalkulerte Angebotssumme für die das gesamte LV (ohne Nachträge).
+        /// </summary>
+        public decimal? Angebotssumme { get; set; }
+
         public List<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; }
     }
 
@@ -1493,6 +1849,7 @@ namespace Nevaris.Build.ClientApi
         public decimal? NettoForderungKorrektur { get; set; }
         public bool? IstGeschützt { get; set; }
         public bool? BürgschaftBankhaftbrief { get; set; }
+        public DateTime? GewährleistungBeginn { get; set; }
         public DateTime? GewährleistungBis { get; set; }
         public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
     }
@@ -1655,6 +2012,11 @@ namespace Nevaris.Build.ClientApi
         {
         }
 
+        public Money(string currency, decimal? value)
+        {
+            Add(currency, value);
+        }
+
         public static Money FromValues(IEnumerable<(string Currency, decimal? Value)> values)
         {
             if (values == null)
@@ -1765,6 +2127,8 @@ namespace Nevaris.Build.ClientApi
         /// </summary>
         public Dictionary<LvArt, List<Rechenwert>> Werte { get; set; }
     }
+
+    #region Bautagebuch
 
     public class NewBautagesberichtInfo : BaseObject
     {
@@ -1933,4 +2297,6 @@ namespace Nevaris.Build.ClientApi
         public Guid? Id { get; set; }
         public string Bezeichnung { get; set; }
     }
+
+    #endregion Bautagebuch
 }
