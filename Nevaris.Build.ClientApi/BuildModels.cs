@@ -806,10 +806,37 @@ namespace Nevaris.Build.ClientApi
     }
 
     /// <summary>
+    /// Enthält die Informationen zu einem Update der Kosten eines Betriebsmittels.
+    /// Wird der /build/global/betriebsmittel/kosten_collection_update als Parameter mitgegeben.
+    /// </summary>
+    public class BetriebsmittelKostenUpdateInfo : BaseObject
+    {
+        /// <summary>
+        /// Die ID des Betriebsmittels.
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Die neu zu setzenden Kosten. Enthält ein Kostenobjekt pro Kostenebene.
+        /// Die eigentlichen Kostenwerte werden aus dem jeweiligen Detailobjekt
+        /// geholt, z.B. LohnDetails für Löhne. Falls das Detailobjekt Objekt null ist,
+        /// werden die Kosten nicht verändert.
+        /// Das KostenebeneId-Feld muss befüllt sein, denn es identifiziert dieses Kostenobjekt
+        /// innerhalb des zugehörigen Betriebsmittels. Kostenobjekte auf dem Betriebsmittel, die im System
+        /// vorhanden sind, aber keine Entsprechung in dieser Liste haben, werden gelöscht.
+        /// Eine leere Liste führt zur Löschen aller Kostenobjekte. Falls null, passiert dagegen nichts.
+        /// </summary>
+        public List<BetriebsmittelKosten> Kosten { get; set; }
+    }
+
+    /// <summary>
     /// Ein Betriebsmittel (kann auch eine Betriebsmittelgruppe sein).
     /// </summary>
     public class Betriebsmittel : BaseObject
     {
+        /// <summary>
+        /// Die ID des Betriebsmittels.
+        /// </summary>
         public Guid Id { get; set; }
 
         /// <summary>
@@ -847,6 +874,7 @@ namespace Nevaris.Build.ClientApi
         /// Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
         /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
         /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich berechneter Kosten und Preise.
+        /// Wird bei Schreiboperationen ignoriert.
         /// </summary>
         public BetriebsmittelKostenDetails KostenDetails { get; set; }
 
@@ -1217,12 +1245,12 @@ namespace Nevaris.Build.ClientApi
     public class BetriebsmittelKosten : BaseObject
     {
         /// <summary>
-        /// Die ID der Kostenebene, auf der die Kosten für das Betriebsmittel definiert sind (z.B. des Kostenkatalog).
+        /// Die ID der Kostenebene (z.B. ein Kostenkatalog), auf der die Kosten für das Betriebsmittel definiert sind.
         /// </summary>
         public Guid KostenebeneId { get; set; }
 
         /// <summary>
-        /// Der Typ der Kostenebene (muss bei PUT-Operationen nicht angegeben werden).
+        /// Der Typ der Kostenebene. Wird nur bei Leseoperationen befüllt und bei Schreiboperationen ignoriert.
         /// </summary>
         public KostenebeneTyp? KostenebeneTyp { get; set; }
 

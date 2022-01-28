@@ -82,6 +82,9 @@ namespace Nevaris.Build.ClientApi
         [Put("/build/global/betriebsmittel/{betriebsmittelId}")]
         Task UpdateBetriebsmittel(Guid betriebsmittelId, [Body] Betriebsmittel betriebsmittel);
 
+        [Post("/build/global/betriebsmittel/kosten_collection_update")]
+        Task UpdateBetriebsmittelKostenCollection([Body] IReadOnlyCollection<BetriebsmittelKostenUpdateInfo> updateInfos);
+
         [Delete("/build/global/betriebsmittel/{betriebsmittelId}")]
         Task DeleteBetriebsmittel(Guid betriebsmittelId);
     }
