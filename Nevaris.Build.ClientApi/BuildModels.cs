@@ -817,7 +817,7 @@ namespace Nevaris.Build.ClientApi
         public Guid Id { get; set; }
 
         /// <summary>
-        /// Die neu zu setzenden Kosten. Enthält ein Kostenobjekt pro Kostenebene.
+        /// Die neu zu setzenden Kosten. Enthält ein Kostenobjekt pro Kostenebene (z.B. Kostenkatalog).
         /// Die eigentlichen Kostenwerte werden aus dem jeweiligen Detailobjekt
         /// geholt, z.B. LohnDetails für Löhne. Falls das Detailobjekt Objekt null ist,
         /// werden die Kosten nicht verändert.
@@ -1552,14 +1552,17 @@ namespace Nevaris.Build.ClientApi
         Ausschreibung,
         FreieAusschreibung,
         Vergabe,
-        Auftrag,
-        FreierAuftragEingehend,
-        FreierAuftragAusgehend,
+        AuftragErteilt,
+        NUAuftragErteilt,
+        FreierAuftragErteilt,
+        NUFreierAuftragErteilt,
+        FreierAuftragErhalten,
+
         Kostenschaetzung,
         Anfrage,
         Angebot,
         FreiesAngebot,
-        AuftragAusfuehrend,
+        AuftragErhalten,
         Subvergabe,
         SubVergabeAusfuehren,
         VereinfachterModus,
