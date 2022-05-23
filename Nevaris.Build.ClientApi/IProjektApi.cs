@@ -21,8 +21,44 @@ namespace Nevaris.Build.ClientApi
         [Get("/build/projekte/{projektId}/leistungsverzeichnisse")]
         Task<List<Leistungsverzeichnis>> GetLeistungsverzeichnisse(string projektId);
 
-        [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}?mitKnoten={mitKnoten}&mitKalkulationen={mitKalkulationen}")]
-        Task<Leistungsverzeichnis> GetLeistungsverzeichnis(string projektId, Guid lvId, bool mitKnoten = true, bool mitKalkulationen = true);
+        [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}?mengenArt={mengenArt}&mitKnoten={mitKnoten}&mitKalkulationen={mitKalkulationen}")]
+        Task<Leistungsverzeichnis> GetLeistungsverzeichnis(
+            string projektId, 
+            Guid lvId,
+            MengenArt mengenArt = MengenArt.Lv,
+            bool mitKnoten = true,
+            bool mitKalkulationen = true,
+            bool mitFormatiertenTexten = true);
+
+        [Post("/build/projekte/{projektId}/leistungsverzeichnisse")]
+        Task<Leistungsverzeichnis> CreateLeistungsverzeichnis(string projektId, [Body] NewLvInfo newLvInfo);
+
+        [Delete("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
+        Task DeleteLeistungsverzeichnis(string projektId, Guid lvId);
+
+        [Get("/build/projekte/{projektId}/lvknoten")]
+        Task<LvKnoten> GetLvKnoten(string projektId, Guid knotenId);
+
+        [Put("/build/projekte/{projektId}/lvknoten/{knotenId}")]
+        Task UpdateLvKnoten(string projektId, Guid knotenId, [Body] LvKnoten lvKnoten);
+
+        [Delete("/build/projekte/{projektId}/lvknoten/{knotenId}")]
+        Task DeleteLvKnoten(string projektId, Guid knotenId);
+
+        [Get("/build/projekte/{projektId}/lvpositionen")]
+        Task<LvPosition> GetLvPosition(string projektId, Guid positionId);
+
+        [Put("/build/projekte/{projektId}/lvpositionen/{positionId}")]
+        Task UpdateLvPosition(string projektId, Guid positionId, [Body] LvPosition lvPosition);
+
+        [Delete("/build/projekte/{projektId}/lvpositionen/{positionId}")]
+        Task DeleteLvPosition(string projektId, Guid positionId);
+
+        [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/knoten")]
+        Task<LvKnoten> CreateLvKnoten(string projektId, Guid lvId, [Body] NewLvKnotenInfo newLvKnotenInfo);
+
+        [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/positionen")]
+        Task<LvPosition> CreateLvPosition(string projektId, Guid lvId, [Body] NewLvPositionInfo newLvPositionInfo);
 
         [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/kalkulationen")]
         Task<Kalkulation> CreateKalkulation(string projektId, Guid lvId, [Body] NewKalkulationInfo newKalkulationInfo);

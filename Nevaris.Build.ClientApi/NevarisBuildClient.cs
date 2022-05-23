@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,32 +12,57 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using Refit;
 
+#nullable enable
 namespace Nevaris.Build.ClientApi
 {
+    /// <summary>
+    /// Optionenobjekt, das optional an
+    /// <see cref="NevarisBuildClient(string, NevarisBuildClientOptions?)"/>
+    /// übergeben wird.
+    /// </summary>
+    public class NevarisBuildClientOptions
+    {
+        public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(100);
+    }
+
     /// <summary>
     /// Ermöglicht die Steuerung von NEVARIS Build (Stammdaten und Projekte) über die NEVARIS Build RESTful API.
     /// Voraussetzung ist, dass der NEVARIS Build Businessdienst auf einem erreichbaren Server läuft und
     /// so konfiguriert ist, dass die RESTful API bereitgestellt wird. Genauere Informationen zur Installation
     /// finden Sie in README.md oder hier: https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs.
     /// </summary>
-    public class NevarisBuildClient
+    public class NevarisBuildClient : IDisposable
     {
         /// <summary>
         /// Konstruktor.
         /// </summary>
         /// <param name="hostUrl">Die Basis-URL, auf der die API bereitgestellt wird, z.B. "http://localhost:8500".</param>
-        public NevarisBuildClient(string hostUrl)
+        public NevarisBuildClient(string hostUrl, NevarisBuildClientOptions? options = null)
         {
-            HostUrl = hostUrl;
-            ProjektApi = RestService.For<IProjektApi>(hostUrl, _refitSettings);
-            StammApi = RestService.For<IStammApi>(hostUrl, _refitSettings);
-            FinanceApi = RestService.For<IFinanceApi>(hostUrl, _refitSettings);
+            options ??= new NevarisBuildClientOptions();
+
+            HttpClient = new HttpClient
+            {
+                BaseAddress = new Uri(hostUrl),
+                Timeout = options.Timeout
+            };
+
+            ProjektApi = RestService.For<IProjektApi>(HttpClient, _refitSettings);
+            StammApi = RestService.For<IStammApi>(HttpClient, _refitSettings);
+            FinanceApi = RestService.For<IFinanceApi>(HttpClient, _refitSettings);
         }
+
+        public void Dispose()
+        {
+            HttpClient.Dispose();
+        }
+
+        public HttpClient HttpClient { get; }
 
         /// <summary>
         /// Liefert die im Konstruktor übergebene Basis-URL.
         /// </summary>
-        public string HostUrl { get; }
+        public string HostUrl => HttpClient.BaseAddress.AbsoluteUri;
 
         /// <summary>
         /// Zugriff auf projektspezifische Operationen.
@@ -78,10 +104,21 @@ namespace Nevaris.Build.ClientApi
         {
             ContentSerializer = new JsonContentSerializer(new JsonSerializerSettings
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                ContractResolver = new JsonContractResolver(),
                 Converters = { new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy() } },
                 NullValueHandling = NullValueHandling.Ignore
             })
         };
+
+        public class JsonContractResolver : CamelCasePropertyNamesContractResolver
+        {
+            public JsonContractResolver()
+            {
+                // Dictionary-Keys (z.B. für LvPosition.Preisanteile) sind case-sensitive
+                // und dürfen nicht verängert werden. (Notwendig, da CamelCasePropertyNamesContractResolver
+                // diese Property auf true setzt.)
+                NamingStrategy!.ProcessDictionaryKeys = false;
+            }
+        }
     }
 }
