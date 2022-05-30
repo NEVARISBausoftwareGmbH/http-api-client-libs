@@ -383,7 +383,7 @@ public class Projekt : BaseObject
     /// <summary>
     /// Liste von Gliederungskatalogen, die in diesem Projekt enthalten sind.
     /// </summary>
-    public List<Gliederungskatalog> GliederungsKataloge { get; set; }
+    public List<Gliederungskatalog> Gliederungskataloge { get; set; }
 
     /// <summary>
     /// Liste von Leistungszeiträumen, die in diesem Projekt enthalten sind.
@@ -944,11 +944,6 @@ public class Betriebsmittel : BaseObject
     /// Falls das Betriebsmittel ein Baustein ist, enthält dieses Objekt die passenden Eigenschaften.
     /// </summary>
     public BetriebsmittelBausteinDetails BausteinDetails { get; set; }
-
-    /// <summary>
-    /// Zeigt an ob es sich um ein Freies Betriebmsittel handelt.
-    /// </summary>
-    public bool IsFreiesBetriebsmittel { get; set; }
 }
 
 public class BetriebsmittelDetails : BaseObject
@@ -1583,7 +1578,7 @@ public enum LvArt
     FreierAuftragErteilt,
     NUFreierAuftragErteilt,
     FreierAuftragErhalten,
-
+    
     Kostenschaetzung,
     Anfrage,
     Angebot,
@@ -1803,7 +1798,7 @@ public class PreisanteilInfo : BaseObject
     /// Der Code, der den Preisanteil definiert (z.B. "L" für Lohn").
     /// </summary>
     public string Code { get; set; }
-
+    
     /// <summary>
     /// Optionale Bezeichnung (z.B. "Lohn").
     /// </summary>
@@ -1818,13 +1813,13 @@ public class Gliederungskatalog : BaseObject
     public Guid Id { get; set; }
 
     public string Kennung { get; set; }
-
+    
     public int? Versionsnummer { get; set; }
-
+    
     public DateTime? Versionsdatum { get; set; }
-
+    
     public string Bezeichnung { get; set; }
-
+    
     /// <summary>
     /// (Detailinfo) Die Wurzelknoten des Katalogs.
     /// </summary>
@@ -1837,14 +1832,14 @@ public class Gliederungskatalog : BaseObject
 public class Gliederungsknoten : BaseObject
 {
     public Guid Id { get; set; }
-
+    
     /// <summary>
     /// Die vollständige Knotennummer (z.B. "2.7.8").
     /// </summary>
     public string NummerKomplett { get; set; }
-
+    
     public string Bezeichnung { get; set; }
-
+    
     /// <summary>
     /// Die untergeordneten Knoten.
     /// </summary>
@@ -1861,12 +1856,12 @@ public class NewLvInfo : BaseObject
     /// LV-Nummer
     /// </summary>
     public string Nummer { get; set; }
-
+    
     /// <summary>
     /// LV-Bezeichnung
     /// </summary>
     public string Bezeichnung { get; set; }
-
+    
     public LvArt? Art { get; set; }
 
     /// <summary>
@@ -1880,17 +1875,17 @@ public class NewLvInfo : BaseObject
     /// Erforderliches Objekt mit Detailinformationen zum neuen LV.
     /// </summary>
     public LvDetails LvDetails { get; set; }
-
+    
     /// <summary>
     /// Falls es sich um ein ÖNorm-LV handelt: Normspezifische Detailinformationen (optional).
     /// </summary>
     public OenormLvDetails OenormLvDetails { get; set; }
-
+    
     /// <summary>
     /// Falls es sich um ein GAEB-LV handelt: Normspezifische Detailinformationen (optional).
     /// </summary>
     public GaebLvDetails GaebLvDetails { get; set; }
-
+    
     /// <summary>
     /// Optionales Objekt, das das LV-Bild enthält.
     /// </summary>
@@ -1903,7 +1898,7 @@ public class NewLvInfo : BaseObject
 public class Leistungsverzeichnis : BaseObject
 {
     public Guid Id { get; set; } // ist die ID der Box
-
+    
     /// <summary>
     /// Die Nummer des LV (optional).
     /// </summary>
@@ -1913,31 +1908,31 @@ public class Leistungsverzeichnis : BaseObject
     /// Die Bezeichnung des LV.
     /// </summary>
     public string Bezeichnung { get; set; }
-
+    
     /// <summary>
     /// Die Norm (ÖNorm oder GAEB). Für eine genauere Angabe, siehe NormExakt.
     /// </summary>
     public Norm Norm { get; set; }
-
+    
     /// <summary>
     /// Die exakte Norm, z.B. ÖNorm A2063:2021.
     /// </summary>
     public NormExakt NormExakt { get; set; }
-
+    
     public LvArt? Art { get; set; }
-
+    
     public LvStatus? Status { get; set; }
 
     /// <summary>
     /// Detailinformationen zum LV.
     /// </summary>
     public LvDetails LvDetails { get; set; }
-
+    
     /// <summary>
     /// Nur für ÖNorm-LVs: Normspezifische Informationen.
     /// </summary>
     public OenormLvDetails OenormLvDetails { get; set; }
-
+    
     /// <summary>
     /// Nur für GAEB-LVs: Normspezifische Informationen.
     /// </summary>
@@ -1947,17 +1942,17 @@ public class Leistungsverzeichnis : BaseObject
     /// Enthält Binärdaten für Grafiken.
     /// </summary>
     public LvBildDetails BildDetails { get; set; }
-
+    
     /// <summary>
     /// (Detailinfo) Die Knoten der obersten Ebene (z.B. Leistungsgruppen) einschließlich untergeordneter Knoten und Positionen.
     /// </summary>
     public List<LvKnoten> RootKnotenListe { get; set; }
-
+    
     /// <summary>
     /// (Detailinfo) Die Wurzelkalkulationen einschließlich untergeordneter Kalkulationen.
     /// </summary>
     public List<Kalkulation> RootKalkulationen { get; set; }
-
+    
     /// <summary>
     /// Die Rechenergebnisse auf oberster Ebene. 
     /// </summary>
@@ -1970,53 +1965,53 @@ public class Leistungsverzeichnis : BaseObject
 public class LvDetails : BaseObject
 {
     public bool IstNummerSchreibgeschützt { get; set; }
-
+    
     public DateTime? Auftragsdatum { get; set; }
-
+    
     public DateTime? Baubeginn { get; set; }
-
+    
     public DateTime? Bauende { get; set; }
-
+    
     public DateTime? Projektbeginn { get; set; }
-
+    
     public DateTime? Projektende { get; set; }
-
+    
     public DateTime? DatumAngebotseröffnung { get; set; }
-
+    
     public DateTime? Angebotsfrist { get; set; }
-
+    
     public int? NachkommastellenMengen { get; set; }
-
+    
     public int? NachkommastellenPreisanteile { get; set; }
 
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
     // TODO Adress-Zuordnungen (AddAdresseInLv)
-
+    
     public string Währung { get; set; }
-
+    
     public string Umsatzsteuer { get; set; }
 
     public string Ausschreibungsart { get; set; }
-
+    
     public string Sparte { get; set; }
-
+    
     /// <summary>
     /// Die IDs der Gliederungskataloge, die dem LV zugeordnet sind.
     /// </summary>
     public List<Guid> GliederungskatalogIds { get; set; }
-
+    
     /// <summary>
     /// Die Preisanteil-Arten, die in diesem LV unterstützt werden.
     /// </summary>
     public List<PreisanteilInfo> PreisanteilInfos { get; set; }
-
+    
     /// <summary>
     /// Die möglichen Variantenzusammenstellungen (ohne die implizit
     /// definierte Standard-Variantenzusammenstellung).
     /// </summary>
     public List<Variantenzusammenstellung> Variantenzusammenstellungen { get; set; }
-
+    
     /// <summary>
     /// Die möglichen Zuordnungskennzeichen.
     /// </summary>
@@ -2078,7 +2073,7 @@ public enum BildFormat
 public class Variantenzusammenstellung
 {
     public string Nummer { get; set; }
-
+    
     public string Bezeichnung { get; set; }
 
     public string Beschreibung { get; set; }
@@ -2087,7 +2082,7 @@ public class Variantenzusammenstellung
 public class Zuordnungskennzeichen
 {
     public string Nummer { get; set; }
-
+    
     public string Bezeichnung { get; set; }
 
     /// <summary>
@@ -2108,7 +2103,7 @@ public class Variante
     /// Nummer der Variante (identifiziert die Variante innerhalb ihres Zuordnungskennzeichen).
     /// </summary>
     public int Nummer { get; set; }
-
+    
     public string Bezeichnung { get; set; }
 }
 
@@ -2157,26 +2152,26 @@ public class OenormLvDetails : BaseObject
     public OenormLvArt? Art { get; set; }
 
     public bool NachlässeAufEinheitspreis { get; set; }
-
+    
     public bool NachlässeAufPreisanteilen { get; set; }
-
+    
     public bool NachlässeAufHauptgruppen { get; set; }
-
+    
     public bool NachlässeAufObergruppen { get; set; }
-
+    
     public bool NachlässeAufLeistungsgruppen { get; set; }
-
+    
     public bool NachlässeAufUnterleistungsgruppen { get; set; }
-
+    
     public bool NachlässeAufLeistungsverzeichnis { get; set; }
 }
 
 public class GaebLvDetails : BaseObject
 {
     public List<GaebGliederungsebene> Gliederungsebenen { get; set; }
-
+    
     public string Füllzeichen { get; set; }
-
+    
     public GaebVergabeart? GaebVergabeArt { get; set; }
 }
 
@@ -2234,17 +2229,17 @@ public enum GaebVergabeart
 public class GaebGliederungsebene : BaseObject
 {
     // public int EbeneNummer { get; set; }
-
+    
     public GaebGliederungsebeneTyp? Typ { get; set; }
-
+    
     public string Bezeichnung { get; set; }
 
     public int? Stellenzahl { get; set; }
 
     public bool IstNumerisch { get; set; }
-
+    
     public string Startwert { get; set; }
-
+    
     public int? Schrittweite { get; set; }
 }
 
@@ -2273,7 +2268,7 @@ public enum OenormLvArt
 public enum LvItemTyp
 {
     None,
-
+    
     OnLeistungsposition,
     OnVorbemerkungsposition,
     OnHauptgruppe,
@@ -2281,7 +2276,7 @@ public enum LvItemTyp
     OnLeistungsgruppe,
     OnUntergruppe,
     OnGrundtext,
-
+    
     GaebLeistungsposition,
     GaebZuschlagsposition,
     GaebAusfuehrungsbeschreibung,
@@ -2361,13 +2356,13 @@ public class NewLvKnotenInfo : NewLvItemInfo
 public class NewLvPositionInfo : NewLvItemInfo
 {
     public Guid ParentKnotenId { get; set; }
-
+    
     public string Einheit { get; set; }
 
     public LvPositionsart? Positionsart { get; set; }
-
+    
     public decimal? LvMenge { get; set; }
-
+    
     public bool IstWesentlichePosition { get; set; }
 
     public bool EinheitSchreibgeschützt { get; set; }
@@ -2379,18 +2374,18 @@ public class NewLvPositionInfo : NewLvItemInfo
     public bool LvMengeSchreibgeschützt { get; set; }
 
     public string Mehrfachverwendung { get; set; }
-
+    
     public string Stichwortluecke { get; set; }
 
     public Dictionary<string, Money> Preisanteile { get; set; }
-
+    
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
 }
 
 public class LvItemBase : BaseObject
 {
     public Guid Id { get; set; }
-
+    
     /// <summary>
     /// Art der Position oder Gruppe.
     /// </summary>
@@ -2400,12 +2395,12 @@ public class LvItemBase : BaseObject
     /// Die lokale Nummer (z.B. "03").
     /// </summary>
     public string Nummer { get; set; }
-
+    
     /// <summary>
     /// Die vollständige Nummer (z.B. "01.04.03").
     /// </summary>
     public string NummerKomplett { get; set; }
-
+    
     /// <summary>
     /// Nur für ÖNorm: Das Stichwort. Für GAEB-LVs gibt es FormatierteTexte.Kurztext.
     /// </summary>
@@ -2415,25 +2410,25 @@ public class LvItemBase : BaseObject
     /// (Detailinfo) Objekt mit allen formatierten Texten (z.B. Langtext).
     /// </summary>
     public LvItemFormatierteTexte FormatierteTexte { get; set; }
-
+    
     public string Teilleistungsnummer { get; set; }
-
+    
     public string Markierungskennzeichen { get; set; }
 
     public Herkunftskennzeichen Herkunftskennzeichen { get; set; } = Herkunftskennzeichen.LB;
-
+    
     public LvItemLbInfo LbInfo { get; set; }
-
+    
     /// <summary>
     /// Enthält berechnete Werte. Ist nur befüllt, wenn das gesamte LV abgerufen wird
     /// (per /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}).
     /// </summary>
     public LvItemErgebnisse Ergebnisse { get; set; }
-
+    
     public bool Schreibgeschützt { get; set; }
-
+    
     public bool IstFixpreis { get; set; }
-
+    
     public bool IstIntern { get; set; }
 
     /// <summary>
@@ -2460,7 +2455,7 @@ public class NachlassInfo
     /// Aufschläge/Nachlässe pro Preisanteil (idertifiziert über den Preisanteil-Code, z.B. "L" für Lohn).
     /// </summary>
     public Dictionary<string, Nachlass> PreisanteilNachlässe { get; set; }
-
+    
     /// <summary>
     /// Falls Aufschläge/Nachlässe auf dem Einheitspreis unterstützt werden, kommt diese
     /// Eigenschaft zum Einsatz.
@@ -2471,7 +2466,7 @@ public class NachlassInfo
 public class Nachlass
 {
     public AufschlagNachlassArt Art { get; set; }
-
+    
     public decimal? Wert { get; set; }
 }
 
@@ -2490,7 +2485,7 @@ public class LvItemFormatierteTexte : BaseObject
     /// Der Langtext (im ÖNorm-Format, d.h. mit eingebetteten HTML-Tags).
     /// </summary>
     public string Langtext { get; set; }
-
+    
     /// <summary>
     /// Die Baubeschreibung (im ÖNorm-Format, d.h. mit eingebetteten HTML-Tags).
     /// </summary>
@@ -2518,7 +2513,7 @@ public class LvItemLbInfo : BaseObject
     public string LbUlgNummer { get; set; }
     public string LbGtNummer { get; set; }
     public string LbPosNummer { get; set; }
-
+    
     public OnÄnderungsumfang? AenderungsUmfang { get; set; }
 }
 
@@ -2528,7 +2523,7 @@ public class LvItemLbInfo : BaseObject
 public class LvKnoten : LvItemBase
 {
     public List<LvKnoten> Knoten { get; set; }
-
+    
     public List<LvPosition> Positionen { get; set; }
 }
 
@@ -2548,9 +2543,9 @@ public class LvPosition : LvItemBase
     public string Einheit { get; set; }
 
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
-
+    
     public decimal? LvMenge { get; set; }
-
+    
     public bool EinheitSchreibgeschützt { get; set; }
 
     public bool EinheitspreisSchreibgeschützt { get; set; }
@@ -2560,11 +2555,11 @@ public class LvPosition : LvItemBase
     public bool LvMengeSchreibgeschützt { get; set; }
 
     public string Mehrfachverwendung { get; set; }
-
+    
     public string Stichwortluecke { get; set; }
 
     public Dictionary<string, Money> Preisanteile { get; set; }
-
+    
     public bool IstWesentlichePosition { get; set; }
 
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
@@ -2573,7 +2568,7 @@ public class LvPosition : LvItemBase
 public class LvPositionGliederungsKnoten : BaseObject
 {
     public Guid KatalogId { get; set; }
-
+    
     public Guid KnotenId { get; set; }
 }
 

@@ -1,8 +1,26 @@
-# http-api-client-libs für NEVARIS Build 2021.2
+# http-api-client-libs für NEVARIS Build 2022.2
 
-## Nevaris.Build.ClientApi
+## Nevaris.Build.ClientApi 4.0.0
 
-Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API von NEVARIS Build. Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
+Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
+von NEVARIS Build 2022.2. Sie ist auch als
+[nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
+
+## Neuerungen und Breaking Changes ##
+
+Im Vergleich zur Versoin 2.x (für Build 2022.1) gibt es ab Version 4.0.0
+nun die Möglichkeit, Leistungsverzeichnisse über die API zu erstellen und zu manipulieren
+(Erzeugen, Ändern und Löschen von Positionen und Knoten). Die relevanten
+Endpukte sind:
+
+- /build/projekte/{projektId}/leistungsverzeichnisse
+- /build/projekte/{projektId}/lvknoten
+- /build/projekte/{projektId}/lvpositionen
+
+Beim Auslesen eines Leistungsverzeichnisses per
+/build/projekte/{projektId}/leistungsverzeichnisse/{lvId} hat sich der 
+Aufbau der zurückgegebenen Objekte leicht geändert, daher sind hier
+eventuell Anpassungen an bestehenden Client-Applikationen vorzunehmen.
 
 ## Beispielcode ##
 
