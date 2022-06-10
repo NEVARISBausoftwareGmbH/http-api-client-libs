@@ -37,6 +37,7 @@ namespace Nevaris.Build.ClientApi
         /// Konstruktor.
         /// </summary>
         /// <param name="hostUrl">Die Basis-URL, auf der die API bereitgestellt wird, z.B. "http://localhost:8500".</param>
+        /// <param name="options">Optionales <see cref="NevarisBuildClientOptions"/>-Objekt</param>
         public NevarisBuildClient(string hostUrl, NevarisBuildClientOptions? options = null)
         {
             options ??= new NevarisBuildClientOptions();
@@ -100,9 +101,9 @@ namespace Nevaris.Build.ClientApi
             return new VersionCheckResult(clientVersion: clientVersion, apiVersion: apiVersion);
         }
 
-        static RefitSettings _refitSettings = new RefitSettings
+        static readonly RefitSettings _refitSettings = new RefitSettings
         {
-            ContentSerializer = new JsonContentSerializer(new JsonSerializerSettings
+            ContentSerializer = new NewtonsoftJsonContentSerializer(new JsonSerializerSettings
             {
                 ContractResolver = new JsonContractResolver(),
                 Converters = { new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy() } },

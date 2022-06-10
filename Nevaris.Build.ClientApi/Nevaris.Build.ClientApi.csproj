@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
-    <PackageProjectUrl />
+    <PackageProjectUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</RepositoryUrl>
     <PackageTags>Nevaris</PackageTags>
     <Description>A client library for accessing Nevaris Build via its RESTful API</Description>
@@ -11,10 +11,16 @@
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Version>4.0.0</Version>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>Nevaris.Build.ClientApi</Title>
+    <Copyright>NEVARIS Bausoftware GmbH</Copyright>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageReleaseNotes>ClientApi für Build 2022.2; schreibender Zugriff auf Leistungsverzeichnisse; Breaking Changes in den von IProjektApi.GetLeistungsverzeichnis gelieferten Objekten</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Refit" Version="5.0.23" />
+    <PackageReference Include="Refit" Version="6.3.2" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="6.3.2" />
   </ItemGroup>
 
 </Project>
