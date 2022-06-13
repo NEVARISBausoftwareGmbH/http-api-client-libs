@@ -1360,7 +1360,7 @@ public class BetriebsmittelKostenGerätDetails : BaseObject
 
     public decimal? GemeinkostenRepSonstiges { get; set; }
 
-    public Money AndereKostenLohn { get; set; }
+    public Money AndereKostenLohn { get; set;  }
 
     public Money AndereKostenSonstiges { get; set; }
 }
@@ -1949,6 +1949,11 @@ public class Leistungsverzeichnis : BaseObject
     public List<LvKnoten> RootKnotenListe { get; set; }
     
     /// <summary>
+    /// Nur für GAEB: Positionen auf der obersten Ebene (z.B. Hinweistexte).
+    /// </summary>
+    public List<LvPosition> RootPositionen { get; set; }
+    
+    /// <summary>
     /// (Detailinfo) Die Wurzelkalkulationen einschließlich untergeordneter Kalkulationen.
     /// </summary>
     public List<Kalkulation> RootKalkulationen { get; set; }
@@ -2049,13 +2054,13 @@ public class Bild
     /// Name des Bilds (üblicherweise Dateiname ohne Verzeichnispfad)
     /// </summary>
     public string Name { get; set; }
-
+    
     /// <summary>
     /// Das Bildformat (png, jpeg, svg oder gif)
     /// </summary>
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-    public BildFormat Format { get; set; }
-
+    public BildFormat Format {get;set;}
+    
     /// <summary>
     /// Die Bilddaten
     /// </summary>
@@ -2299,6 +2304,7 @@ public enum Herkunftskennzeichen
 {
     /// <summary>
     /// Position aus einem Leistungsbuch (LB).
+    /// Dieser Wert ist auch für GAEB-Position gesetzt, wird dort aber ignoriert.
     /// </summary>
     LB = 0,
 
@@ -2346,6 +2352,11 @@ public class NewLvItemInfo : BaseObject
     public string Zuordnungskennzeichen { get; set; }
 
     public NachlassInfo NachlassInfo { get; set; }
+    
+    /// <summary>
+    /// Entfällt-Flag. Nur für GAEB.
+    /// </summary>
+    public bool Entfällt { get; set; }
 }
 
 public class NewLvKnotenInfo : NewLvItemInfo
@@ -2355,16 +2366,18 @@ public class NewLvKnotenInfo : NewLvItemInfo
 
 public class NewLvPositionInfo : NewLvItemInfo
 {
-    public Guid ParentKnotenId { get; set; }
-    
+    /// <summary>
+    /// Die ID des Knoten, unter dem die Position erzeugt wird. Für GAEB-LVs ist auch null erlaubt, um
+    /// Positonen (z.B. Zusatztexte) auf oberster Ebene zu erzeugen.
+    /// </summary>
+    public Guid? ParentKnotenId { get; set; }
+
     public string Einheit { get; set; }
 
     public LvPositionsart? Positionsart { get; set; }
     
     public decimal? LvMenge { get; set; }
     
-    public bool IstWesentlichePosition { get; set; }
-
     public bool EinheitSchreibgeschützt { get; set; }
 
     public bool EinheitspreisSchreibgeschützt { get; set; }
@@ -2380,6 +2393,51 @@ public class NewLvPositionInfo : NewLvItemInfo
     public Dictionary<string, Money> Preisanteile { get; set; }
     
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
+    
+    /// <summary>
+    /// Nur ÖNorm
+    /// </summary>
+    public bool IstWesentlichePosition { get; set; }
+
+    /// <summary>
+    /// Nur ÖNorm
+    /// </summary>
+    public bool IstNichtAngeboten { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstBeauftragt { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstSchwerpunktposition { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstStundenlohnarbeiten { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool WirdBezuschlagt { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstFreieBietermenge { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public BedarfspositionArt BedarfspositionArt { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen)
+    /// </summary>
+    public decimal? Zuschlagsprozentsatz { get; set; }
 }
 
 public class LvItemBase : BaseObject
@@ -2402,7 +2460,8 @@ public class LvItemBase : BaseObject
     public string NummerKomplett { get; set; }
     
     /// <summary>
-    /// Nur für ÖNorm: Das Stichwort. Für GAEB-LVs gibt es FormatierteTexte.Kurztext.
+    /// Das Stichwort. Für GAEB kann dieser String nur ausgelesen werden.
+    /// Zum Manipulieren gibt es FormatierteTexte.Kurztext.
     /// </summary>
     public string Stichwort { get; set; }
 
@@ -2415,6 +2474,9 @@ public class LvItemBase : BaseObject
     
     public string Markierungskennzeichen { get; set; }
 
+    /// <summary>
+    /// Nur für ÖNorm: Das Herkunftskennzeichen (gibt an, ob es einen LB-Bezug gibt).
+    /// </summary>
     public Herkunftskennzeichen Herkunftskennzeichen { get; set; } = Herkunftskennzeichen.LB;
     
     public LvItemLbInfo LbInfo { get; set; }
@@ -2447,6 +2509,11 @@ public class LvItemBase : BaseObject
     /// Aufschläge/Nachlässe, falls vorhanden.
     /// </summary>
     public NachlassInfo NachlassInfo { get; set; }
+    
+    /// <summary>
+    /// Entfällt-Flag. Nur für GAEB.
+    /// </summary>
+    public bool Entfällt { get; set; }
 }
 
 public class NachlassInfo
@@ -2530,9 +2597,26 @@ public class LvKnoten : LvItemBase
 public enum LvPositionsart
 {
     Normalposition = 0,
+    
+    /// <summary>
+    /// Wahlposition (für ÖNorm)
+    /// </summary>
     Wahlposition = 1,
-    Eventualposition = 2
-    // TODO GAEB-spezifische Positionsarten unterstützen (siehe GaebGrundAlternativArt)
+
+    /// <summary>
+    /// Eventualposition (für ÖNorm)
+    /// </summary>
+    Eventualposition = 2,
+
+    /// <summary>
+    /// Grundposition (für GAEB)
+    /// </summary>
+    Grundposition = 3,
+
+    /// <summary>
+    /// Alternativposition (für GAEB)
+    /// </summary>
+    Alternativposition = 4
 }
 
 /// <summary>
@@ -2557,12 +2641,76 @@ public class LvPosition : LvItemBase
     public string Mehrfachverwendung { get; set; }
     
     public string Stichwortluecke { get; set; }
-
+    
     public Dictionary<string, Money> Preisanteile { get; set; }
     
+    public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
+
+    /// <summary>
+    /// Nur ÖNorm
+    /// </summary>
     public bool IstWesentlichePosition { get; set; }
 
-    public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
+    /// <summary>
+    /// Nur ÖNorm
+    /// </summary>
+    public bool IstNichtAngeboten { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstBeauftragt { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstSchwerpunktposition { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstStundenlohnarbeiten { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool WirdBezuschlagt { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public bool IstFreieBietermenge { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB
+    /// </summary>
+    public BedarfspositionArt BedarfspositionArt { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen)
+    /// </summary>
+    public decimal? Zuschlagsprozentsatz { get; set; }
+}
+
+/// <summary>
+/// Art der Bedarfsposition (nur für GAEB).
+/// </summary>
+public enum BedarfspositionArt
+{
+    /// <summary>
+    /// Keine Bedarfsposition
+    /// </summary>
+    Keine,
+
+    /// <summary>
+    /// Gesamtbetrag geht nicht in die LV-Summe ein
+    /// </summary>
+    OhneGesamtbetrag,
+    
+    /// <summary>
+    /// Gesamtbetrag geht in die LV-Summe ein
+    /// </summary>
+    MitGesamtbetrag
 }
 
 public class LvPositionGliederungsKnoten : BaseObject
