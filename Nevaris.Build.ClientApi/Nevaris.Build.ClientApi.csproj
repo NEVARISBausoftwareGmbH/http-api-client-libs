@@ -15,7 +15,10 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2022.2; schreibender Zugriff auf Leistungsverzeichnisse; Breaking Changes in den von IProjektApi.GetLeistungsverzeichnis gelieferten Objekten</PackageReleaseNotes>
+    <PackageReleaseNotes>ClientApi für Build 2022.2 Patch 1 (22.2.22164.669): Erweiterte Unterstützung für GAEB-LVs </PackageReleaseNotes>
+    <PackageVersion>4.1.0</PackageVersion>
+    <AssemblyVersion>4.1.0</AssemblyVersion>
+    <FileVersion>4.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
