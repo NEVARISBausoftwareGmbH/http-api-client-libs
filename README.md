@@ -1,6 +1,6 @@
 # http-api-client-libs für NEVARIS Build 2022.2
 
-## Nevaris.Build.ClientApi 4.0.0
+## Nevaris.Build.ClientApi 4.1.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2022.2. Sie ist auch als
@@ -24,11 +24,14 @@ eventuell Anpassungen an bestehenden Client-Applikationen vorzunehmen.
 
 ## Beispielcode ##
 
-Beispielcode zur Verwendung der Nevaris.Build.ClientApi befindet sich hier: [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+Beispielcode zur Verwendung der Nevaris.Build.ClientApi befindet sich hier:
+[http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
 
 ## Voraussetzungen ##
 
-Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server der NEVARIS Businessdienst installiert werden. Dazu muss im Setup-Programm zunächst _Benutzerdefiniert_ ausgewählt werden:
+Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server
+der NEVARIS Businessdienst installiert werden. Dazu muss im Setup-Programm
+zunächst _Benutzerdefiniert_ ausgewählt werden:
 
 ![SetupBenutzerdefiniert](Docs/SetupBenutzerdefiniert.png)
 
@@ -40,8 +43,11 @@ Der Port, über den die RESTful API erreichbar ist, ist konfigurierbar (der Stan
 
 ![SetupBusinessdienstKonfiguration](Docs/SetupBusinessdienstKonfiguration.png)
 
-Nach erfolgreicher Installation wird der Dienstprozess _NEVARIS Build Businessdienst_ gestartet. Dieser stellt die RESTful API sowie eine HTML-basierte Dokumentation bereit, die über die URL **http://\<servername\>:8500/api-docs** erreichbar ist (falls 8500 als Portnummer gewählt wurde):
+Nach erfolgreicher Installation wird der Dienstprozess _NEVARIS Build Businessdienst_ gestartet. Dieser stellt
+die RESTful API sowie eine HTML-basierte Dokumentation bereit, die über die
+URL **http://\<servername\>:8500/api-docs** erreichbar ist (falls 8500 als Portnummer gewählt wurde):
 
 ![SwaggerDoku](Docs/SwaggerDoku.png)
 
-Die Doku enthält auch einen Link auf eine swagger.json-Datei, die eine formale Beschreibung der API enthält. Daraus lässt sich mit geeigneten Tools auch automatisiert ein Client-Proxy erzeugen, falls dies erwünscht ist.
+Die Doku enthält auch einen Link auf eine swagger.json-Datei, die eine formale Beschreibung der API enthält.
+Daraus lässt sich mit geeigneten Tools auch automatisiert ein Client-Proxy erzeugen, falls dies erwünscht ist.
