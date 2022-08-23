@@ -16,9 +16,9 @@
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageReleaseNotes>ClientApi für Build 2023.0 (Preview): Unterstützung für Individualeigenschaften (Custom Properties) + weitere LV-Eigenschaften</PackageReleaseNotes>
-    <PackageVersion>4.2.0-2023.0</PackageVersion>
-    <AssemblyVersion>4.2.0</AssemblyVersion>
-    <FileVersion>4.2.0</FileVersion>
+    <PackageVersion>4.2.1-2023.0</PackageVersion>
+    <AssemblyVersion>4.2.1</AssemblyVersion>
+    <FileVersion>4.2.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
