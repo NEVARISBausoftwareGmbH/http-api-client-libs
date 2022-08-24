@@ -30,8 +30,11 @@ Beispielcode zur Verwendung der Nevaris.Build.ClientApi befindet sich hier:
 ## Voraussetzungen ##
 
 Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server
-der NEVARIS Businessdienst installiert werden. Dazu muss im Setup-Programm
-zunächst _Benutzerdefiniert_ ausgewählt werden:
+der NEVARIS Businessdienst installiert werden. Dazu muss das Setup.exe per
+
+_setup.exe /hiddenfeatures restfulapi_
+
+gestartet werden und dann _Benutzerdefiniert_ ausgewählt werden:
 
 ![SetupBenutzerdefiniert](Docs/SetupBenutzerdefiniert.png)
 
