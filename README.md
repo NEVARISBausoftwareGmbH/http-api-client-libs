@@ -24,8 +24,33 @@ eventuell Anpassungen an bestehenden Client-Applikationen vorzunehmen.
 
 ## Beispielcode ##
 
-Beispielcode zur Verwendung der Nevaris.Build.ClientApi befindet sich hier:
-[http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+### Minimale Client-Applikation ###
+
+Die Verwendung der Library lässt sich am besten anhand eines einfachen Clients
+demonstrieren (zum Erstellen ist die Einbindung des  [nuget-Pakets](https://www.nuget.org/packages/Nevaris.Build.ClientApi/)
+erforderlich):
+
+```C#
+using Nevaris.Build.ClientApi;
+
+// Verbindung zum Businessdienst herstellen
+using var nevarisBuildClient = new NevarisBuildClient(hostUrl: "http://localhost:8500");
+
+// Build- und API-Version auslesen
+var versionInfo = await nevarisBuildClient.StammApi.GetVersion();
+Console.WriteLine($"Build-Version: {versionInfo.ProgramVersion}, API-Version: {versionInfo.ApiVersion}");
+
+// Speicherorte auslesen
+var speicherorte = await nevarisBuildClient.StammApi.GetSpeicherorte();
+foreach (var speicherort in speicherorte)
+{
+    Console.WriteLine($"{speicherort.Id}: {speicherort.Bezeichnung}");
+}
+```
+
+### http-api-demo-clients ###
+
+Eine Solution mit komplexeren Client-Applikationen steht in einem eigenen git-Repository zur Verfügung: [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
 
 ## Voraussetzungen ##
 
@@ -45,6 +70,14 @@ und anschließend in der Installationsauswahl _Businessdienst_ und _RESTful API_
 Der Port, über den die RESTful API erreichbar ist, ist konfigurierbar (der Standardwert ist 8500):
 
 ![SetupBusinessdienstKonfiguration](Docs/SetupBusinessdienstKonfiguration.png)
+
+Die im Setup getätigten Einstellungen führen dazu, dass in der Nevaris.config
+dieser Eintrag erzeugt wird, der den Businessdienst dazu veranlasst, die RESTful API 
+am Port 8500 bereitzustellen:
+
+````xml
+<RestfulApiBaseAddress>http://*:8500</RestfulApiBaseAddress>
+````
 
 Nach erfolgreicher Installation wird der Dienstprozess _NEVARIS Build Businessdienst_ gestartet. Dieser stellt
 die RESTful API sowie eine HTML-basierte Dokumentation bereit, die über die
