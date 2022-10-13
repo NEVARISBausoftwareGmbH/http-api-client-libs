@@ -3202,7 +3202,8 @@ public class FormelParameter
 
 /// <summary>
 /// Enthält den Wert einer Individualeigenschaft (Custom Property). Beim Auslesen ist neben dem Feld
-/// 'ValueType' immer genau eines der übrigen '...Value'-Felder befüllt (abhängig vom Datentyp).
+/// 'ValueType' immer genau eines der übrigen '...Value'-Felder befüllt (abhängig vom Datentyp), sofern ein
+/// Wert vorhanden ist, ansonsten sind alle Felder (außer 'ValueType') null.
 /// </summary>
 public class CustomPropertyValue : BaseObject
 {
