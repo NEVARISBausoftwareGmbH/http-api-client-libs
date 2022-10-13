@@ -143,10 +143,53 @@ public class NewAdresseInfo
     public string Name { get; set; }
 }
 
+public enum ZugeordneteAdresseRolle
+{
+    Auftraggeber = 0,
+    Auftragnehmer = 1,
+    LvErsteller = 2,
+    VergebendeStelle = 3,
+    Planer = 4,
+    Bauleiter = 5,
+    Kalkulant = 6,
+    BaustellenAdresse = 7,
+    Oberbauleiter = 8,
+    Rechnungsempfaenger = 9,
+    Architekt = 10,
+    Bieter = 11,
+    // Nur für GAEB
+    Bedarfstraeger = 12,
+    Ausfuehrungsort = 13,
+    Benachrichtigungsort = 14,
+    Abgabeort = 15,
+    // In Inform benötigt
+    Mitbewerber = 50
+}
+
+public class LvZugeordneteAdresse
+{
+    public ZugeordneteAdresseRolle Rolle { get; set; }
+    
+    public Guid? AdressId { get; set; }
+
+    public Guid? AnsprechpartnerId { get; set; }
+}
+
+/// <summary>
+/// Eine globale oder projektbezogene Adresse.
+/// </summary>
 public class Adresse : BaseObject
 {
+    /// <summary>
+    /// Für globale Adressen: Der Code, der die Adresse identifiziert.
+    /// </summary>
     public string Code { get; set; }
 
+    /// <summary>
+    /// Für Projektadressen: Die GUID, die die Adresse identifiziert.
+    /// </summary>
+    public Guid? Id { get; set; }
+    
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
 
@@ -200,7 +243,6 @@ public class Adresse : BaseObject
     public string UnsereKundenNummerDort { get; set; }
     public string SteuernummerGesellschaft { get; set; }
     public string UrsprungsCode { get; set; }
-    public bool IstEigeneAdresse { get; set; }
     public string TitelImAnschreiben { get; set; }
     public DateTime? Geburtsdatum { get; set; }
     public GesperrtArt GesperrtArt { get; set; }
@@ -227,15 +269,35 @@ public class Adresse : BaseObject
     public List<Bankverbindung> Bankverbindungen { get; set; }
     public List<AdressBranche> Branchen { get; set; }
     public List<AdressGewerk> Gewerke { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die dieser Adresse zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class Adressat : BaseObject
 {
+    /// <summary>
+    /// Für globale Adressen: Der Code, der den Adressaten identifiziert.
+    /// </summary>
     public string Code { get; set; }
+
+    /// <summary>
+    /// Für Projektadressen: Die GUID, die den Adressaten identifiziert.
+    /// </summary>
+    public Guid? Id { get; set; }
+
     public string AnredeCode { get; set; }
+
     public string PrivatadresseCode { get; set; }
+    
+    public Guid? PrivatadresseId { get; set; }
+    
     public string Titel { get; set; }
+    
     public string TitelImAnschreiben { get; set; }
+    
     public string Vorname { get; set; }
     public string Nachname { get; set; }
     public string Telefon { get; set; }
@@ -258,6 +320,11 @@ public class Adressat : BaseObject
     public string Durchwahl { get; set; }
     public string DurchwahlFax { get; set; }
     public Guid? Guid { get; internal set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die diesem Adressaten zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class Bankverbindung : BaseObject
@@ -389,6 +456,11 @@ public class Projekt : BaseObject
     /// Liste von Leistungszeiträumen, die in diesem Projekt enthalten sind.
     /// </summary>
     public List<Leistungszeitraum> Leistungszeiträume { get; set; }
+    
+    /// <summary>
+    /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -517,6 +589,11 @@ public class BetriebsmittelStamm : BaseObject
     /// (Detailinfo) Die Einträge im Grid "Zuschlagsberechnung" (nur GAEB-Stämme).
     /// </summary>
     public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public enum BetriebsmittelStammArt
@@ -944,6 +1021,16 @@ public class Betriebsmittel : BaseObject
     /// Falls das Betriebsmittel ein Baustein ist, enthält dieses Objekt die passenden Eigenschaften.
     /// </summary>
     public BetriebsmittelBausteinDetails BausteinDetails { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob es sich um ein Freies Betriebmsittel handelt.
+    /// </summary>
+    public bool IsFreiesBetriebsmittel { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittel zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class BetriebsmittelDetails : BaseObject
@@ -1957,7 +2044,7 @@ public class Leistungsverzeichnis : BaseObject
     /// (Detailinfo) Die Wurzelkalkulationen einschließlich untergeordneter Kalkulationen.
     /// </summary>
     public List<Kalkulation> RootKalkulationen { get; set; }
-    
+
     /// <summary>
     /// Die Rechenergebnisse auf oberster Ebene. 
     /// </summary>
@@ -1973,6 +2060,8 @@ public class LvDetails : BaseObject
     
     public DateTime? Auftragsdatum { get; set; }
     
+    public string Auftragsnummer { get; set; }
+    
     public DateTime? Baubeginn { get; set; }
     
     public DateTime? Bauende { get; set; }
@@ -1982,17 +2071,35 @@ public class LvDetails : BaseObject
     public DateTime? Projektende { get; set; }
     
     public DateTime? DatumAngebotseröffnung { get; set; }
+
+    public DateTime? DatumAngebotsabgabe { get; set; }
+    
+    public DateTime? Abnahmedatum { get; set; }
+    
+    public DateTime? Vergabedatum { get; set; }
+
+    public DateTime? DatumZuschlagsfrist { get; set; }
+    
+    public DateTime? GewährleistungBeginn { get; set; }
+    
+    public int? GewährleistungDauer { get; set; }
+    
+    public DateTime? GewährleistungEnde { get; set; }
+    
+    public GewaehrleistungEinheit? GewährleistungEinheit { get; set; }
     
     public DateTime? Angebotsfrist { get; set; }
     
+    public DateTime? Preisbasis { get; set; }
+
+    public DateTime? Bearbeitungsstand { get; set; }
+
     public int? NachkommastellenMengen { get; set; }
     
     public int? NachkommastellenPreisanteile { get; set; }
 
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
-    // TODO Adress-Zuordnungen (AddAdresseInLv)
-    
     public string Währung { get; set; }
     
     public string Umsatzsteuer { get; set; }
@@ -2000,7 +2107,19 @@ public class LvDetails : BaseObject
     public string Ausschreibungsart { get; set; }
     
     public string Sparte { get; set; }
-    
+
+    [Obsolete("Wird künftig nicht mehr unterstützt." +
+              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
+    public string Vorhaben { get; set; }
+
+    [Obsolete("Wird künftig nicht mehr unterstützt." +
+              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
+    public int? Alternativangebotsnummer { get; set; }
+
+    [Obsolete("Wird künftig nicht mehr unterstützt." +
+              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
+    public int? Abänderungsangebotsnummer { get; set; }
+
     /// <summary>
     /// Die IDs der Gliederungskataloge, die dem LV zugeordnet sind.
     /// </summary>
@@ -2032,6 +2151,22 @@ public class LvDetails : BaseObject
     /// Aufschläge/Nachlässe, die auf der LV-Ebene definiert sind.
     /// </summary>
     public NachlassInfo NachlassInfo { get; set; }
+    
+    public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
+
+    /// <summary>
+    /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+}
+
+/// <summary>
+/// Einheit der Gewährleistung
+/// </summary>
+public enum GewaehrleistungEinheit
+{
+    Jahre,
+    Monate
 }
 
 /// <summary>
@@ -2169,6 +2304,12 @@ public class OenormLvDetails : BaseObject
     public bool NachlässeAufUnterleistungsgruppen { get; set; }
     
     public bool NachlässeAufLeistungsverzeichnis { get; set; }
+    
+    public string Vorhaben { get; set; }
+    
+    public int? Alternativangebotsnummer { get; set; }
+
+    public int? Abänderungsangebotsnummer { get; set; }
 }
 
 public class GaebLvDetails : BaseObject
@@ -2178,6 +2319,26 @@ public class GaebLvDetails : BaseObject
     public string Füllzeichen { get; set; }
     
     public GaebVergabeart? GaebVergabeArt { get; set; }
+    
+    /// <summary>
+    /// Vergabenummer des Auftraggebers
+    /// </summary>
+    public string VergabenummerAG { get; set; }
+    
+    /// <summary>
+    /// Vergabenummer des Auftragnehmers
+    /// </summary>
+    public string VergabenummerAN { get; set; }
+    
+    public string DVNummerAG { get; set; }
+    
+    public string Abgabeort { get; set; }
+    
+    public string Zeiteinheit { get; set; }
+    
+    public bool BieterkommentareErlaubt { get; set; }
+
+    public string LeitwegId { get; set; }
 }
 
 /// <summary>
@@ -2319,6 +2480,9 @@ public enum Herkunftskennzeichen
     Z = 2
 }
 
+/// <summary>
+/// Ein Knoten oder eine Position eines Leistungsverzeichnisses.
+/// </summary>
 public class NewLvItemInfo : BaseObject
 {
     protected NewLvItemInfo()
@@ -2357,6 +2521,11 @@ public class NewLvItemInfo : BaseObject
     /// Entfällt-Flag. Nur für GAEB.
     /// </summary>
     public bool Entfällt { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class NewLvKnotenInfo : NewLvItemInfo
@@ -2422,24 +2591,72 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// <summary>
     /// Nur für GAEB
     /// </summary>
-    public bool WirdBezuschlagt { get; set; }
-
-    /// <summary>
-    /// Nur für GAEB
-    /// </summary>
     public bool IstFreieBietermenge { get; set; }
     
     /// <summary>
     /// Nur für GAEB
     /// </summary>
     public BedarfspositionArt BedarfspositionArt { get; set; }
-    
+
     /// <summary>
-    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen)
+    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen).
     /// </summary>
     public decimal? Zuschlagsprozentsatz { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB: Zuschlagsart (für Zuschlagspositionen)
+    /// </summary>
+    public GaebZuschlagsart? Zuschlagsart { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB: Markierung von zu bezuschlagenden Leistungspositionen.
+    /// Zuschlagspositionen der Art "AufMarkierteDavor" nehmen darauf Bezug.
+    /// </summary>
+    public bool WirdBezuschlagt { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Liste von zu bezuschlagenden Positionen (für Zuschlagspositionen der Art "GemäßListe").
+    /// </summary>
+    public List<ZuBezuschlagendePosition> ZuBezuschlagendePositionen { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Liste von Positionen, die dieser Position untergeordnet sind (Unterbeschreibungen unter
+    /// einer Leistungsposition oder Ausführungsbeschreibungstexte unter einer Ausführungsbeschreibung).
+    /// </summary>
+    public List<LvPosition> Unterpositionen { get; set; }
 }
 
+/// <summary>
+/// Für GAEB-Zuschlagspositionen: Art des Zuschlags.
+/// </summary>
+public enum GaebZuschlagsart
+{
+    /// <summary>
+    /// Zuschlag auf auf alle davorstehenden Positionen.
+    /// </summary>
+    AufAlleDavor,
+    
+    /// <summary>
+    /// Zuschlag auf alle als "ZuBezuschlagen" markierten davorstehenden Positionen.
+    /// </summary>
+    AufMarkierteDavor,
+
+    /// <summary>
+    /// Zuschlag auf gelistete Positionen.
+    /// </summary>
+    GemäßListe
+}
+
+public class ZuBezuschlagendePosition : BaseObject
+{
+    public Guid PositionsId { get; set; }
+
+    public decimal? Menge { get; set; }
+}
+
+/// <summary>
+/// Ein LV-Item, d.h. ein Gruppenelement (z.B. Leistungsgruppe oder Titel) oder eine Position.
+/// </summary>
 public class LvItemBase : BaseObject
 {
     public Guid Id { get; set; }
@@ -2514,6 +2731,11 @@ public class LvItemBase : BaseObject
     /// Entfällt-Flag. Nur für GAEB.
     /// </summary>
     public bool Entfällt { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class NachlassInfo
@@ -2674,11 +2896,6 @@ public class LvPosition : LvItemBase
     /// <summary>
     /// Nur für GAEB
     /// </summary>
-    public bool WirdBezuschlagt { get; set; }
-
-    /// <summary>
-    /// Nur für GAEB
-    /// </summary>
     public bool IstFreieBietermenge { get; set; }
     
     /// <summary>
@@ -2687,9 +2904,31 @@ public class LvPosition : LvItemBase
     public BedarfspositionArt BedarfspositionArt { get; set; }
     
     /// <summary>
-    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen)
+    /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen).
     /// </summary>
     public decimal? Zuschlagsprozentsatz { get; set; }
+
+    /// <summary>
+    /// Nur für GAEB: Zuschlagsart (für Zuschlagspositionen)
+    /// </summary>
+    public GaebZuschlagsart? Zuschlagsart { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Markierung von zu bezuschlagenden Leistungspositionen.
+    /// Zuschlagspositionen der Art "AufMarkierteDavor" nehmen darauf Bezug.
+    /// </summary>
+    public bool WirdBezuschlagt { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Liste von zu bezuschlagenden Positionen (für Zuschlagspositionen der Art "GemäßListe").
+    /// </summary>
+    public List<ZuBezuschlagendePosition> ZuBezuschlagendePositionen { get; set; }
+    
+    /// <summary>
+    /// Nur für GAEB: Liste von Positionen, die dieser Position untergeordnet sind (Unterbeschreibungen unter
+    /// einer Leistungsposition oder Ausführungsbeschreibungstexte unter einer Ausführungsbeschreibung).
+    /// </summary>
+    public List<LvPosition> Unterpositionen { get; set; }
 }
 
 /// <summary>
@@ -2825,6 +3064,11 @@ public class Rechnung : BaseObject
     public DateTime? GewährleistungBeginn { get; set; }
     public DateTime? GewährleistungBis { get; set; }
     public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
+    /// </summary>
+    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
 public class Zahlung : BaseObject
@@ -2955,6 +3199,83 @@ public class FormelParameter
 }
 
 #endregion Mengenermittlung
+
+/// <summary>
+/// Enthält den Wert einer Individualeigenschaft (Custom Property). Beim Auslesen ist neben dem Feld
+/// 'ValueType' immer genau eines der übrigen '...Value'-Felder befüllt (abhängig vom Datentyp), sofern ein
+/// Wert vorhanden ist, ansonsten sind alle Felder (außer 'ValueType') null.
+/// </summary>
+public class CustomPropertyValue : BaseObject
+{
+    /// <summary>
+    /// Der Typ der Individualeigenschaft als Enum-Wert. Ist beim Auslesen immer befüllt. Wird beim
+    /// Befüllen ignoriert.
+    /// </summary>
+    public CustomPropertyType? ValueType { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als String darstellbar ist.
+    /// </summary>
+    public string StringValue { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als Decimal darstellbar ist.
+    /// </summary>
+    public decimal? DecimalValue { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als Ganzzahl (Typ long) darstellbar ist.
+    /// </summary>
+    public long? IntegerValue { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als Wahrheitswert (true/false) darstellbar ist.
+    /// </summary>
+    public bool? BooleanValue { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als Datumswert (ohne Zeitzone) darstellbar ist.
+    /// </summary>
+    public DateTime? DateTimeValue { get; set; }
+    
+    /// <summary>
+    /// Der Wert, falls dieser als Datumswert mit Zeitzone darstellbar ist.
+    /// </summary>
+    public DateTimeOffset? DateTimeWithTimeZoneValue { get; set; }
+
+    /// <summary>
+    /// Der Wert, falls dieser als Zeitspanne darstellbar ist.
+    /// </summary>
+    public TimeSpan? TimeSpanValue { get; set; }
+
+    /// <summary>
+    /// Der Wert, falls dieser als Geo-Koordinate darstellbar ist.
+    /// </summary>
+    public GeoCoordinate GeoCoordinateValue { get; set; }
+}
+
+/// <summary>
+/// Der Typ einer Individualeigenschaft (Custom Property).
+/// </summary>
+public enum CustomPropertyType
+{
+    Text,
+    Date,
+    Decimal,
+    Boolean,
+    GeoCoordinate,
+    Url,
+    DirectoryPath,
+    FilePath,
+    DateAndTime,
+    DateAndTimeWithTimeZone,
+    Integer,
+    Memo,
+    EMailAddress,
+    Time,
+    Duration,
+    PhoneNumber
+}
 
 /// <summary>
 /// Ein einfacher Geldbetrag (inklusive Währung).

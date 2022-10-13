@@ -34,6 +34,9 @@ namespace Nevaris.Build.ClientApi
         [Post("/build/projekte/{projektId}/leistungsverzeichnisse")]
         Task<Leistungsverzeichnis> CreateLeistungsverzeichnis(string projektId, [Body] NewLvInfo newLvInfo);
 
+        [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
+        Task UpdateLeistungsverzeichnis(string projektId, Guid lvId, [Body] Leistungsverzeichnis lv);
+        
         [Delete("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
         Task DeleteLeistungsverzeichnis(string projektId, Guid lvId);
 
