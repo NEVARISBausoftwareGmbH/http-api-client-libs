@@ -15,11 +15,11 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>4.2.0: ClientApi für Build 2023.0: Unterstützung für Individualeigenschaften (Custom Properties) + weitere LV-Eigenschaften
-4.2.2: Fix für UpdateLeistungsverzeichnis (war irrtümlich als Post-Operation markiert)</PackageReleaseNotes>
-    <PackageVersion>4.2.2</PackageVersion>
-    <AssemblyVersion>4.2.2</AssemblyVersion>
-    <FileVersion>4.2.2</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 1:
+4.2.3-2023.0.1: Unterstützung für Zahlungsbedingungen</PackageReleaseNotes>
+    <PackageVersion>4.2.3-2023.0.1</PackageVersion>
+    <AssemblyVersion>4.2.3</AssemblyVersion>
+    <FileVersion>4.2.3</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
