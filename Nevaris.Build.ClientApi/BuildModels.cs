@@ -2117,6 +2117,7 @@ public class LvDetails : BaseObject
     
     public DateTime? GewährleistungEnde { get; set; }
     
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GewaehrleistungEinheit? GewährleistungEinheit { get; set; }
     
     public DateTime? Angebotsfrist { get; set; }
