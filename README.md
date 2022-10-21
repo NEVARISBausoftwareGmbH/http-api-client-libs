@@ -1,6 +1,6 @@
 # http-api-client-libs für NEVARIS Build 2023.0
 
-## Nevaris.Build.ClientApi 4.2.1
+## Nevaris.Build.ClientApi 4.2.3
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.0 Sie ist auch als
@@ -8,18 +8,34 @@ von NEVARIS Build 2023.0 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-Im Vergleich zur Versoin 2.x (für Build 2022.1) gibt es ab Version 4.0.0
+### 4.2.3 (für Build 23.0.22293.484)
+
+- Der Zugriff auf sonstige Eigenschaften von Materialien (abrufbar z.B. über _IStammApi.GetAllBetriebsmittel_) ist jetzt über die Property _BetriebsmittelMaterialDetails.Sonstiges_ möglich.
+- Die Funktion _IStammApi.UpdateBetriebsmittelKostenCollection_ zum Aktualisieren mehrerer Betriebsmittel erlaubt jetzt auch die
+Übergabe von weiteren Kosten (Ansatzzeilen).
+
+### 4.2.0 (für Build 23.0.22280.498)
+
+- Unterstützung für Individualeigenschaften: Mehrere Klassen haben jetzt eine Property _CustomPropertyValues_, die
+den Zugriff auf Individualeigenschaften erlauben. Die Definition von Individualeigenschaften muss weiterhin über
+den Administrationsbereich von Build erfolgen, die API erlaubt aber den Zugriff auf die Werte.
+
+### 4.0.0
+
+Im Vergleich zur Version 2.x (für Build 2022.1) gibt es ab Version 4.0.0
 nun die Möglichkeit, Leistungsverzeichnisse über die API zu erstellen und zu manipulieren
 (Erzeugen, Ändern und Löschen von Positionen und Knoten). Die relevanten
-Endpukte sind:
+Funktionen sind:
 
-- /build/projekte/{projektId}/leistungsverzeichnisse
-- /build/projekte/{projektId}/lvknoten
-- /build/projekte/{projektId}/lvpositionen
+- _IProjektApi.GetLeistungsverzeichnisse_
+- _IProjektApi.GetLeistungsverzeichnis_
+- _IProjektApi.GetLvKnoten_
+- _IProjektApi.GetLvPosition_
 
-Beim Auslesen eines Leistungsverzeichnisses per
-/build/projekte/{projektId}/leistungsverzeichnisse/{lvId} hat sich der 
-Aufbau der zurückgegebenen Objekte leicht geändert, daher sind hier
+sowie die zugehörigen Update- und Delete-Funktionen.
+
+Beim Auslesen eines Leistungsverzeichnisses per _IProjektApi.GetLeistungsverzeichnis_
+hat sich der Aufbau der zurückgegebenen Objekte leicht geändert, daher sind hier
 eventuell Anpassungen an bestehenden Client-Applikationen vorzunehmen.
 
 ## Beispielcode ##
