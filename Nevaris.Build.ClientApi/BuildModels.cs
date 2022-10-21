@@ -918,9 +918,18 @@ public class BetriebsmittelKostenUpdateInfo : BaseObject
     /// Das KostenebeneId-Feld muss befüllt sein, denn es identifiziert dieses Kostenobjekt
     /// innerhalb des zugehörigen Betriebsmittels. Kostenobjekte auf dem Betriebsmittel, die im System
     /// vorhanden sind, aber keine Entsprechung in dieser Liste haben, werden gelöscht.
-    /// Eine leere Liste führt zur Löschen aller Kostenobjekte. Falls null, passiert dagegen nichts.
+    /// Eine leere Liste führt zur Löschung aller Kostenobjekte. Falls null, passiert dagegen nichts.
     /// </summary>
     public List<BetriebsmittelKosten> Kosten { get; set; }
+    
+    /// <summary>
+    /// Liste mit weiteren Kosten (Ansatzzeilen) für das Betriebsmittel. Falls ungleich null, werden die
+    /// bestehenden Ansatzzeilen aktualsiert. Bestehende Ansatzzeilen auf dem Betriebsmittel, die keine
+    /// Entsprechung in dieser Liste haben, werden gelöscht, neu in dieser Liste hinzugekommene
+    /// werden neu erzeugt. Eine leere Liste führt zur Löschung aller Ansatzzeilen.
+    /// Falls null, passiert dagegen nichts.
+    /// </summary>
+    public List<KalkulationsZeile> WeitereKosten { get; set; }
 }
 
 /// <summary>
@@ -1135,6 +1144,28 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public int? WarengruppeNebenmaterial { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Enthält zusätzliche Material-Eigenschaften.
+    /// </summary>
+    public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
+}
+
+public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
+{
+    public decimal? GewichtJeEinheitInT { get; set; }
+    
+    public decimal? TransportvolumenJeEinheitInM3 { get; set; }
+    
+    public string Rabattgruppe { get; set; }
+    
+    public string Lieferant { get; set; }
+    
+    public string AlternativeNummer { get; set; }
+    
+    public bool? Markierung { get; set; }
+    
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelGerätDetails : BaseObject
@@ -2086,7 +2117,6 @@ public class LvDetails : BaseObject
     
     public DateTime? GewährleistungEnde { get; set; }
     
-    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GewaehrleistungEinheit? GewährleistungEinheit { get; set; }
     
     public DateTime? Angebotsfrist { get; set; }
@@ -2156,80 +2186,9 @@ public class LvDetails : BaseObject
     public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
 
     /// <summary>
-    /// Die Zahlungsbedingung für das LV.
-    /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungLV { get; set; }
-    
-    /// <summary>
-    /// Die Zahlungsbedingung für die Abschlagrechnung.
-    /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungAbschlagsrechnung { get; set; }
-    
-    /// <summary>
-    /// Die Zahlungsbedingung für die Schlussrechnung.
-    /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungSchlussrechnung { get; set; }
-
-    /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
-}
-
-/// <summary>
-/// Eine Zahlungsbedingung für ein Leistungsverzeichnis oder eine Rechnung. Besteht aus einer Fälligkeit
-/// und maximal 3 Skonti.
-/// </summary>
-public class Zahlungsbedingung
-{
-    public string Nummer { get; set; }
-
-    public string Bezeichnung { get; set; }
-    
-    public string Beschreibung { get; set; }
-    
-    public Fälligkeit Fälligkeit { get; set; }
-    
-    public int? Postlaufzeit { get; set; }
-    
-    public Skonto Skonto1 { get; set; }
-    
-    public Skonto Skonto2 { get; set; }
-    
-    public Skonto Skonto3 { get; set; }
-}
-
-/// <summary>
-/// Eine Fälligkeit, bestehend aus einer Laufzeit und einer Einheit (Tage, Werktage, Wochen, Monate).
-/// </summary>
-public class Fälligkeit
-{
-    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
-    public FälligkeitEinheit Einheit { get; set; } = FälligkeitEinheit.Tage;
-    
-    public int? Laufzeit { get; set; }
-}
-
-/// <summary>
-/// Ein Skonto, bestehend aus einer Fälligkeit und einem Prozentsatz.
-/// </summary>
-public class Skonto
-{
-    public Fälligkeit Fälligkeit { get; set; }
-
-    public decimal? Prozentsatz { get; set; }
-}
-
-/// <summary>
-/// Die Einheit einer Fälligkeit (Tage, Werktage, Wochen, Monate).
-/// Default ist Tage.
-/// </summary>
-public enum FälligkeitEinheit
-{
-    Tage = 0,
-    Werktage = 1,
-    Wochen = 2,
-    Monate = 3
 }
 
 /// <summary>
@@ -3136,11 +3095,6 @@ public class Rechnung : BaseObject
     public DateTime? GewährleistungBeginn { get; set; }
     public DateTime? GewährleistungBis { get; set; }
     public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
-
-    /// <summary>
-    /// Die Zahlungsbedingung dieser Rechnung.
-    /// </summary>
-    public Zahlungsbedingung Zahlungsbedingung { get; set; }
     
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
