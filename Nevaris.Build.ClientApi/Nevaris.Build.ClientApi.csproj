@@ -16,8 +16,8 @@
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 1:
-4.2.3-2023.0.1: Unterstützung für Zahlungsbedingungen</PackageReleaseNotes>
-    <PackageVersion>4.2.3-2023.0.1</PackageVersion>
+4.2.3: Unterstützung für sonstige Eigenschaften von Materialien; Möglichkeit, per UpdateBetriebsmittelKostenCollection neben Kosten auch weitere Kosten zu aktualisieren</PackageReleaseNotes>
+    <PackageVersion>4.2.3</PackageVersion>
     <AssemblyVersion>4.2.3</AssemblyVersion>
     <FileVersion>4.2.3</FileVersion>
   </PropertyGroup>
