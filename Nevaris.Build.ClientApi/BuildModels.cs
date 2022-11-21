@@ -2187,9 +2187,80 @@ public class LvDetails : BaseObject
     public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
 
     /// <summary>
+    /// Die Zahlungsbedingung für das LV.
+    /// </summary>
+    public Zahlungsbedingung ZahlungsbedingungLV { get; set; }
+    
+    /// <summary>
+    /// Die Zahlungsbedingung für die Abschlagrechnung.
+    /// </summary>
+    public Zahlungsbedingung ZahlungsbedingungAbschlagsrechnung { get; set; }
+    
+    /// <summary>
+    /// Die Zahlungsbedingung für die Schlussrechnung.
+    /// </summary>
+    public Zahlungsbedingung ZahlungsbedingungSchlussrechnung { get; set; }
+
+    /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+}
+
+/// <summary>
+/// Eine Zahlungsbedingung für ein Leistungsverzeichnis oder eine Rechnung. Besteht aus einer Fälligkeit
+/// und maximal 3 Skonti.
+/// </summary>
+public class Zahlungsbedingung
+{
+    public string Nummer { get; set; }
+
+    public string Bezeichnung { get; set; }
+    
+    public string Beschreibung { get; set; }
+    
+    public Fälligkeit Fälligkeit { get; set; }
+    
+    public int? Postlaufzeit { get; set; }
+    
+    public Skonto Skonto1 { get; set; }
+    
+    public Skonto Skonto2 { get; set; }
+    
+    public Skonto Skonto3 { get; set; }
+}
+
+/// <summary>
+/// Eine Fälligkeit, bestehend aus einer Laufzeit und einer Einheit (Tage, Werktage, Wochen, Monate).
+/// </summary>
+public class Fälligkeit
+{
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public FälligkeitEinheit Einheit { get; set; } = FälligkeitEinheit.Tage;
+    
+    public int? Laufzeit { get; set; }
+}
+
+/// <summary>
+/// Ein Skonto, bestehend aus einer Fälligkeit und einem Prozentsatz.
+/// </summary>
+public class Skonto
+{
+    public Fälligkeit Fälligkeit { get; set; }
+
+    public decimal? Prozentsatz { get; set; }
+}
+
+/// <summary>
+/// Die Einheit einer Fälligkeit (Tage, Werktage, Wochen, Monate).
+/// Default ist Tage.
+/// </summary>
+public enum FälligkeitEinheit
+{
+    Tage = 0,
+    Werktage = 1,
+    Wochen = 2,
+    Monate = 3
 }
 
 /// <summary>
@@ -3096,6 +3167,11 @@ public class Rechnung : BaseObject
     public DateTime? GewährleistungBeginn { get; set; }
     public DateTime? GewährleistungBis { get; set; }
     public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
+
+    /// <summary>
+    /// Die Zahlungsbedingung dieser Rechnung.
+    /// </summary>
+    public Zahlungsbedingung Zahlungsbedingung { get; set; }
     
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
