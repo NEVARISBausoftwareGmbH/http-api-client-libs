@@ -8,7 +8,7 @@ von NEVARIS Build 2023.0 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.2.4
+### 4.2.4 (für Build 23.0.22320.690)
 
 - Unterstützung für Zahlungsbedingungen. Das Leistungsverzeichnis (abrufbar über _IProjektApi.GetLeistungsverzeichnis_)
 erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
