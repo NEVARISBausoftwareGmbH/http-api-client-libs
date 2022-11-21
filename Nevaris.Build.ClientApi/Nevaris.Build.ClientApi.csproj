@@ -15,11 +15,15 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 2:
+    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 2 (23.0.22320.690)
 4.2.4: Unterstützung für Zahlungsbedingungen (Leistungsverzeichnisse und Rechnungen)</PackageReleaseNotes>
-    <PackageVersion>4.2.4-2023.0.2</PackageVersion>
+    <PackageVersion>4.2.4</PackageVersion>
     <AssemblyVersion>4.2.4</AssemblyVersion>
     <FileVersion>4.2.4</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -27,4 +31,7 @@
     <PackageReference Include="Refit.Newtonsoft.Json" Version="6.3.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 </Project>
