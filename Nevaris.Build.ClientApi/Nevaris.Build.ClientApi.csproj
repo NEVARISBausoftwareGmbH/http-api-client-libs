@@ -15,11 +15,12 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 2 (23.0.22320.690)
-4.2.4: Unterstützung für Zahlungsbedingungen (Leistungsverzeichnisse und Rechnungen)</PackageReleaseNotes>
-    <PackageVersion>4.2.4</PackageVersion>
-    <AssemblyVersion>4.2.4</AssemblyVersion>
-    <FileVersion>4.2.4</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 3
+4.2.5: Neue Felder: BetriebsmittelLohnDetails.AlternativeNummer; BetriebsmittelGerätDetails.AlternativeNummer; BetriebsmittelSonstigeKostenDetails.AlternativeNummer
+GetAllBetriebsmittel: Parameter mitDetails hat jetzt den Default-Wert true</PackageReleaseNotes>
+    <PackageVersion>4.2.5-2023.0.3</PackageVersion>
+    <AssemblyVersion>4.2.5</AssemblyVersion>
+    <FileVersion>4.2.5</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -32,6 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
+    <None Include="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>

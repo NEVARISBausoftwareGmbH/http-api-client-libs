@@ -768,13 +768,16 @@ public class NewZuschlagsartInfo : BaseObject
 public class DbBetriebsmittelGruppe
 {
     public string Bezeichnung { get; set; }
+    
     public BetriebsmittelArt? Art { get; set; }
 }
 
 public class ZuschlagsartGruppe : BaseObject
 {
     public ZuschlagsTyp? Art { get; set; }
+    
     public ZuschlagsBasis? Berechnung { get; set; }
+    
     public bool HatZwischensumme { get; set; }
 }
 
@@ -881,6 +884,7 @@ public class NewBetriebsmittelInfo : BaseObject
     /// <summary>
     /// Die Art des zu erzeugenden Betriebsmittels. Kann eine Gruppe sein.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public BetriebsmittelArt Art { get; set; }
 
     public string Nummer { get; set; }
@@ -948,6 +952,7 @@ public class Betriebsmittel : BaseObject
     /// </summary>
     public Guid? ParentGruppeId { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public BetriebsmittelArt Art { get; set; }
 
     public string Nummer { get; set; }
@@ -959,23 +964,23 @@ public class Betriebsmittel : BaseObject
 
     public string Bezeichnung { get; set; }
 
-
     public bool? Leistungsfähig { get; set; }
 
     public string Einheit { get; set; }
 
     /// <summary>
-    /// Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel definiert sind).
-    /// Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
+    /// (Detailinfo) Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel definiert
+    /// sind). Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
     /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich Kosten.
     /// </summary>
     public List<BetriebsmittelKosten> Kosten { get; set; }
 
     /// <summary>
-    /// Enthält berechnete Kosten und Preise. Diese sind abhängig von der gewählten Kosten- und Zuschlagsebene.
-    /// Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
-    /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
+    /// (Detailinfo) Enthält berechnete Kosten und Preise. Diese sind abhängig von der gewählten Kosten- und
+    /// Zuschlagsebene. Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen
+    /// befüllt. Allerdings erlaubt der Aufruf
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
     /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich berechneter Kosten und Preise.
     /// Wird bei Schreiboperationen ignoriert.
     /// </summary>
@@ -997,37 +1002,58 @@ public class Betriebsmittel : BaseObject
     public BetriebsmittelDetails Details { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel eine Gruppe ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel eine Gruppe ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true oder mitGruppen = true befüllt.
     /// </summary>
     public BetriebsmittelGruppeDetails GruppeDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel ein Lohn ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel ein Lohn ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelLohnDetails LohnDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel ein Material ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel ein Material ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelMaterialDetails MaterialDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel eine Gerät ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel eine Gerät ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelGerätDetails GerätDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel ein Sonstige-Kosten-Objekt ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel ein Sonstige-Kosten-Objekt ist, enthält dieses Objekt die passenden
+    /// Eigenschaften. Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelSonstigeKostenDetails SonstigeKostenDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel ein Nachunternehmer ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel ein Nachunternehmer ist, enthält dieses Objekt die passenden
+    /// Eigenschaften. Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelNachunternehmerDetails NachunternehmerDetails { get; set; }
 
     /// <summary>
-    /// Falls das Betriebsmittel ein Baustein ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// (Detailinfo) Falls das Betriebsmittel ein Baustein ist, enthält dieses Objekt die passenden Eigenschaften.
+    /// Beim Abrufen von allen Betriebsmitteln per
+    /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
+    /// im Fall von mitDetails = true befüllt.
     /// </summary>
     public BetriebsmittelBausteinDetails BausteinDetails { get; set; }
 
@@ -1117,6 +1143,8 @@ public class BetriebsmittelLohnDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public int? WarengruppeUmlagekosten { get; set; }
+    
+    public string AlternativeNummer { get; set; }
 }
 
 public class BetriebsmittelMaterialDetails : BaseObject
@@ -1146,7 +1174,7 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeNebenmaterial { get; set; }
     
     /// <summary>
-    /// (Detailinfo) Enthält zusätzliche Material-Eigenschaften.
+    /// Enthält zusätzliche Material-Eigenschaften.
     /// </summary>
     public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1227,8 +1255,10 @@ public class BetriebsmittelGerätDetails : BaseObject
 
     public int? WarengruppeListenpreisgerätGemeinkosten { get; set; }
 
+    public string AlternativeNummer { get; set; }
+
     /// <summary>
-    /// (Detailinfo) Enthält zusätzliche Geräte-Eigenschaften.
+    /// Enthält zusätzliche Geräte-Eigenschaften.
     /// </summary>
     public BetriebsmittelGerätDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1279,6 +1309,10 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
 
     public string Kostenart6 { get; set; }
 
+    public string Kostenart7 { get; set; }
+
+    public string Kostenart8 { get; set; }
+
     public string KostenartGemeinkosten { get; set; }
 
     public int? WarengruppeKostenanteil1 { get; set; }
@@ -1298,6 +1332,8 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
     public int? WarengruppeKostenanteil8 { get; set; }
 
     public int? WarengruppeGemeinkosten { get; set; }
+    
+    public string AlternativeNummer { get; set; }
 }
 
 public class BetriebsmittelNachunternehmerDetails : BaseObject
@@ -1602,10 +1638,13 @@ public class KalkulationsZeile : BaseObject
 public class KalkulationsZeileBetriebsmittelDetails : BaseObject
 {
     public Guid BetriebsmittelId { get; set; }
+    
     public BetriebsmittelArt? BetriebsmittelArt { get; set; } // aus Performancegründen speichern wir hier auch (optional) die Betriebsmittelart ab
 
     public string Ansatz { get; set; }
+    
     public string Variable { get; set; }
+    
     public string BasNummer { get; set; }
 }
 
