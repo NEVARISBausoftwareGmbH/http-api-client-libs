@@ -1,12 +1,28 @@
 # http-api-client-libs für NEVARIS Build 2023.0
 
-## Nevaris.Build.ClientApi 4.2.4
+## Nevaris.Build.ClientApi 4.2.5
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.0 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 4.2.5 (für Build 23.0 Patch 3)
+
+- Feld _AlternativeNummer_ für die Betriebsmitteltypen Lohn, Gerrät und sonstige Kosten (in den
+Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).
+- Die Funktion _GetAllBetriebsmittel_ (enthalten sowohl in _IStammApi_ als auch _IProjektApi_) verhält sich nun
+etwas anders bei Übergabe von _mitDetails = false_. Bislang führte dieses Argument dazu, dass die
+betriebsmittelspezifischen Detailfelder (z.B. _Betriebsmittel.LohnDetails_ für Lohn) in den zurückgegebenen
+Objekten ungleich null waren, die darin enthaltenen Objekten selbst jedoch nur unvollständig befüllt waren. Das war
+ein Fehlverhalten, das zum Rücksetzen von Werten führen konnte, wenn das zurückgegebene Objekte anschließend
+an _IStammApi.UpdateBetriebsmittel_ (bzw. _IProjektApi.UpdateBetriebsmittel_) übergeben wurde. Ab Version 4.2.5 werden die Detailfelder
+im Fall _mitDetails = false_ die Detailfelder daher nicht mehr befüllt. Allerdings wurde der Defaultwert für den Parameter
+_mitDetails_ von false auf true geändert, da das Auslesen der Detailinformationen üblicherweise erwünscht ist
+und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. Die meisten Client-Applikationen
+dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
+erkannbaren Auswirkungen hat.
 
 ### 4.2.4 (für Build 23.0.22320.690)
 
