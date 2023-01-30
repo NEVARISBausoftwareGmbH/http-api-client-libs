@@ -3,12 +3,22 @@
 ## Nevaris.Build.ClientApi 4.2.5
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2023.0 Sie ist auch als
+von NEVARIS Build 2023.1 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.2.5 (für Build 23.0 Patch 3)
+### 4.3.0 (für Build 2023.1)
+
+- Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
+Dazu gibt es die neue Klasse _ServerOrdner_ sowie passende neue Felder in
+_Speicherort_: _RootServerOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
+kann per _Projekt.ServerOrdnerId_ und _NewProjektInfo.ServerOrdnerId_ bestimmt werden.
+- Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitServerOrdnern_.
+- Die Operation _IStammApi.UpdateSpeicherort_ wurde hinzugefügt, mit der Speicherorte verändert werden können
+  (einschließlich der Ordner-Struktur).
+
+### 4.2.5 (für Build 2023.0 Patch 3 – 23.0.23011.872)
 
 - Feld _AlternativeNummer_ für die Betriebsmitteltypen Lohn, Gerrät und sonstige Kosten (in den
 Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).
@@ -24,26 +34,26 @@ und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. 
 dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
 erkannbaren Auswirkungen hat.
 
-### 4.2.4 (für Build 23.0.22320.690)
+### 4.2.4 (für Build 2023.0 Patch 2 –23.0.22320.690)
 
 - Unterstützung für Zahlungsbedingungen. Das Leistungsverzeichnis (abrufbar über _IProjektApi.GetLeistungsverzeichnis_)
 erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
  (Properties :_ZahlungsbedingungLV_, _ZahlungsbedingungAbschlagsrechnung_, _ZahlungsbedingungSchlussrechnung_).
 Analog dazu gibt es für Rechnungen die neu hinzugekommene Property _Rechnung.Zahlungsbedingung_. 
 
-### 4.2.3 (für Build 23.0.22293.484)
+### 4.2.3 (für Build 2023.0 Patch 1 –23.0.22293.484)
 
 - Der Zugriff auf sonstige Eigenschaften von Materialien (abrufbar z.B. über _IStammApi.GetAllBetriebsmittel_) ist jetzt über die Property _BetriebsmittelMaterialDetails.Sonstiges_ möglich.
 - Die Funktion _IStammApi.UpdateBetriebsmittelKostenCollection_ zum Aktualisieren mehrerer Betriebsmittel erlaubt jetzt auch die
 Übergabe von weiteren Kosten (Ansatzzeilen).
 
-### 4.2.0 (für Build 23.0.22280.498)
+### 4.2.0 (für Build 2023.0 – 23.0.22280.498)
 
 - Unterstützung für Individualeigenschaften: Mehrere Klassen haben jetzt eine Property _CustomPropertyValues_, die
 den Zugriff auf Individualeigenschaften erlauben. Die Definition von Individualeigenschaften muss weiterhin über
 den Administrationsbereich von Build erfolgen, die API erlaubt aber den Zugriff auf die Werte.
-
-### 4.0.0
+  
+### 4.0.0 (für Build 2022.2)
 
 Im Vergleich zur Version 2.x (für Build 2022.1) gibt es ab Version 4.0.0
 nun die Möglichkeit, Leistungsverzeichnisse über die API zu erstellen und zu manipulieren

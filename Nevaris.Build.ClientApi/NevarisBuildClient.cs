@@ -101,7 +101,7 @@ public class NevarisBuildClient : IDisposable
         return new VersionCheckResult(clientVersion: clientVersion, apiVersion: apiVersion);
     }
 
-    static readonly RefitSettings _refitSettings = new RefitSettings
+    private static readonly RefitSettings _refitSettings = new RefitSettings
     {
         ContentSerializer = new NewtonsoftJsonContentSerializer(new JsonSerializerSettings
         {

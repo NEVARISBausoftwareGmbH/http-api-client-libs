@@ -362,7 +362,7 @@ public class Speicherort : BaseObject
     public string Bezeichnung { get; set; }
 
     /// <summary>
-    /// Falls der Speicherort ein Ordner ist, enthält dieses Objekt die passenden Informationen.
+    /// Falls der Speicherort ein Dateiordner ist, enthält dieses Objekt die passenden Informationen.
     /// </summary>
     public OrdnerInfo OrdnerInfo { get; set; }
 
@@ -372,9 +372,50 @@ public class Speicherort : BaseObject
     public DatenbankInfo DatenbankInfo { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Projekten an diesem Speicherort.
+    /// (Detailinfo) Liste aller Projekten an diesem Speicherort (unabhängig davon, ob sich diese in einem
+    /// Server-Ordner oder auf der Wurzelebene befinden).
     /// </summary>
     public List<ProjektInfo> ProjektInfos { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Projekten an diesem Speicherort auf der Wurzelebene.
+    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitServerOrdnern = true
+    /// übergeben wurde.
+    /// </summary>
+    public List<ProjektInfo> RootProjektInfos { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Ordnern innerhalb dieses Speicherorts (auf Wurzelebene).
+    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitServerOrdnern = true
+    /// übergeben wurde.
+    /// </summary>
+    public List<ServerOrdner> RootServerOrdnerList { get; set; }
+}
+
+/// <summary>
+/// Ein Ordner ("virtueller Ordner") innerhalb eines Server-Speicherorts.
+/// </summary>
+public class ServerOrdner : BaseObject
+{
+    /// <summary>
+    /// Die ID des Ordners (nicht sichtbar on der Oberfläche).
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Der Ordnername, wie er in der Navigationsleiste in der Projektverwaltung zu sehen ist.
+    /// </summary>
+    public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Projekten in diesem Ordner.
+    /// </summary>
+    public List<ProjektInfo> ProjektInfos { get; set; }
+
+    /// <summary>
+    /// Liste mit untergeordneten Ordnern.
+    /// </summary>
+    public List<ServerOrdner> OrdnerList { get; set; }
 }
 
 public class OrdnerInfo : BaseObject
@@ -411,6 +452,12 @@ public class Projekt : BaseObject
 {
     public string Id { get; set; }
 
+    /// <summary>
+    /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Server-Ordners, in dem das Projekt abgelegt ist
+    /// (innerhalb seines Speicherorts). Falls null, liegt das Projekt auf der Wurzelebene.
+    /// </summary>
+    public Guid? ServerOrdnerId { get; set; }
+    
     /// <summary>
     /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
     /// </summary>
@@ -472,6 +519,12 @@ public class NewProjektInfo : BaseObject
     /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
     /// </summary>
     public string MandantId { get; set; }
+
+    /// <summary>
+    /// Für Server-Speicherorte: Die ID des Server-Ordners, in dem das Projekt abgelegt wird. Falls null,
+    /// wird das Projekt auf der Wurzelebene angelegt.
+    /// </summary>
+    public Guid? ServerOrdnerId { get; set; }
 
     /// <summary>
     /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
@@ -738,6 +791,7 @@ public class GlobaleVariable : BaseObject
     public string Variable { get; set; }
     public bool? IstKalkulationsVariable { get; set; }
     public string Ansatz { get; set; }
+    public string Kommentar { get; set; }
 }
 
 public class Warengruppe : BaseObject
@@ -3504,7 +3558,7 @@ public class Money : Collection<SimpleMoney>
 /// Ein berechneter Wert (z.B. Nettobetrag einer Leistungsgruppe). Es sind nur die für den jeweiligen Wertetyp
 /// relevanten Felder befüllt.
 /// </summary>
-public class Rechenwert
+public class Rechenwert : BaseObject
 {
     /// <summary>
     /// Identifiziert den Wertetyp (z.B. "Lv_Listenpreis_Brutto").
@@ -3543,7 +3597,7 @@ public class Rechenwert
 /// <summary>
 /// Enthält alle Rechenwerte des Projekts einschließlich der Leistungsverzeichnisse.
 /// </summary>
-public class ProjektRechenwerte
+public class ProjektRechenwerte : BaseObject
 {
     /// <summary>
     /// Die Rechenwerte, gegliedert nach LV-Art.
@@ -3559,7 +3613,7 @@ public class ProjektRechenwerte
 /// <summary>
 /// Enthält die Rechenwerte eines Leistungsverzeichnisses.
 /// </summary>
-public class LvRechenwerte
+public class LvRechenwerte : BaseObject
 {
     /// <summary>
     /// ID des Leistungsverzeichnisses.

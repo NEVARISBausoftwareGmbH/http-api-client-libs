@@ -15,12 +15,13 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 3
-4.2.5: Neue Felder: BetriebsmittelLohnDetails.AlternativeNummer; BetriebsmittelGerätDetails.AlternativeNummer; BetriebsmittelSonstigeKostenDetails.AlternativeNummer
-GetAllBetriebsmittel: Parameter mitDetails hat jetzt den Default-Wert true</PackageReleaseNotes>
-    <PackageVersion>4.2.5-2023.0.3</PackageVersion>
-    <AssemblyVersion>4.2.5</AssemblyVersion>
-    <FileVersion>4.2.5</FileVersion>
+    <PackageReleaseNotes>ClientApi 4.3.0 für Build 2023.1:
+Unterstützung für Server-Ordner in Speicherorten (Klasse: Speicherort).
+Neue Operation: UpdateSpeicherort.
+GetSpeicherort um zwei Parameter (mitProjektInfos, mitServerOrdnern) erweitert.</PackageReleaseNotes>
+    <PackageVersion>4.3.0-2023.1</PackageVersion>
+    <AssemblyVersion>4.3.0</AssemblyVersion>
+    <FileVersion>4.3.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
