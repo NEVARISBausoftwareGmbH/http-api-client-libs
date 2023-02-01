@@ -1,6 +1,6 @@
 # http-api-client-libs für NEVARIS Build 2023.0
 
-## Nevaris.Build.ClientApi 4.2.5
+## Nevaris.Build.ClientApi 4.2.6
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.0 Sie ist auch als
@@ -8,7 +8,7 @@ von NEVARIS Build 2023.0 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.2.5 (für Build 23.0 Patch 3)
+### 4.2.5 + 4.2.6 (für Build 23.0.23011.872)
 
 - Feld _AlternativeNummer_ für die Betriebsmitteltypen Lohn, Gerrät und sonstige Kosten (in den
 Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).

@@ -15,16 +15,22 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2023.0 Patch 3
-4.2.5: Neue Felder: BetriebsmittelLohnDetails.AlternativeNummer; BetriebsmittelGerätDetails.AlternativeNummer; BetriebsmittelSonstigeKostenDetails.AlternativeNummer
-GetAllBetriebsmittel: Parameter mitDetails hat jetzt den Default-Wert true</PackageReleaseNotes>
-    <PackageVersion>4.2.5-2023.0.3</PackageVersion>
-    <AssemblyVersion>4.2.5</AssemblyVersion>
-    <FileVersion>4.2.5</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 23.0.23011.872
+4.2.6: Neue Felder: BetriebsmittelLohnDetails.AlternativeNummer; BetriebsmittelGerätDetails.AlternativeNummer; BetriebsmittelSonstigeKostenDetails.AlternativeNummer
+GetAllBetriebsmittel: Parameter mitDetails hat jetzt den Default-Wert true
+XML Docs überarbeitet</PackageReleaseNotes>
+    <PackageVersion>4.2.6</PackageVersion>
+    <AssemblyVersion>4.2.6</AssemblyVersion>
+    <FileVersion>4.2.6</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishDocumentationFiles>true</PublishDocumentationFiles>
   </PropertyGroup>
 
   <ItemGroup>
