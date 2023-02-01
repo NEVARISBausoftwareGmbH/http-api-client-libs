@@ -15,17 +15,27 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi 4.3.0 für Build 2023.1:
-Unterstützung für Server-Ordner in Speicherorten (Klasse: Speicherort).
+    <PackageReleaseNotes>ClientApi 4.3.1 für Build 2023.1:
+Unterstützung für Server-Ordner in Speicherorten (Speicherort.RootOrdnerList).
 Neue Operation: UpdateSpeicherort.
-GetSpeicherort um zwei Parameter (mitProjektInfos, mitServerOrdnern) erweitert.</PackageReleaseNotes>
-    <PackageVersion>4.3.0-2023.1</PackageVersion>
-    <AssemblyVersion>4.3.0</AssemblyVersion>
-    <FileVersion>4.3.0</FileVersion>
+GetSpeicherort um zwei Parameter (mitProjektInfos, mitOrdnern) erweitert.</PackageReleaseNotes>
+    <PackageVersion>4.3.1-2023.1</PackageVersion>
+    <AssemblyVersion>4.3.1</AssemblyVersion>
+    <FileVersion>4.3.1</FileVersion>
+  </PropertyGroup>
+
+  <!-- PDB-Dateien inkludieren -->
+  <PropertyGroup>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishDocumentationFiles>true</PublishDocumentationFiles>
   </PropertyGroup>
 
   <ItemGroup>

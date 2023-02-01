@@ -22,6 +22,9 @@ namespace Nevaris.Build.ClientApi;
 /// </summary>
 public class NevarisBuildClientOptions
 {
+    /// <summary>
+    /// Timeout für Requests.
+    /// </summary>
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(100);
 }
 
@@ -53,11 +56,17 @@ public class NevarisBuildClient : IDisposable
         FinanceApi = RestService.For<IFinanceApi>(HttpClient, _refitSettings);
     }
 
+    /// <summary>
+    /// Schließt die zugrundeliegende HTTP-Verbindung zum Server.
+    /// </summary>
     public void Dispose()
     {
         HttpClient.Dispose();
     }
 
+    /// <summary>
+    /// Der zugrundeliegende <see cref="HttpClient"/>.
+    /// </summary>
     public HttpClient HttpClient { get; }
 
     /// <summary>
@@ -111,7 +120,7 @@ public class NevarisBuildClient : IDisposable
         })
     };
 
-    public class JsonContractResolver : CamelCasePropertyNamesContractResolver
+    private class JsonContractResolver : CamelCasePropertyNamesContractResolver
     {
         public JsonContractResolver()
         {

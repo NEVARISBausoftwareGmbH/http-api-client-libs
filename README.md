@@ -8,13 +8,13 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.3.0 (für Build 2023.1)
+### 4.3.1 (für Build 2023.1)
 
 - Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
-Dazu gibt es die neue Klasse _ServerOrdner_ sowie passende neue Felder in
-_Speicherort_: _RootServerOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
-kann per _Projekt.ServerOrdnerId_ und _NewProjektInfo.ServerOrdnerId_ bestimmt werden.
-- Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitServerOrdnern_.
+Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
+_Speicherort_: _RootOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
+kann per _Projekt.SpeicherortOrdnerId_ und _NewProjektInfo.SpeicherortOrdnerId_ bestimmt werden.
+- Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitOrdnern_.
 - Die Operation _IStammApi.UpdateSpeicherort_ wurde hinzugefügt, mit der Speicherorte verändert werden können
   (einschließlich der Ordner-Struktur).
 

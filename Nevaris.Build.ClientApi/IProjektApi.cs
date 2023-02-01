@@ -192,6 +192,7 @@ public interface IProjektApi
     /// <summary>
     /// Liefert die zu einem Leistungsverzeichnis (Auftrag) gehörenden Aufmaßblätter.
     /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
     /// <param name="lvId">LV-ID</param>
     /// <param name="mengenArt">Die gewünschte Mengenart</param>
     [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}")]

@@ -68,18 +68,18 @@ public interface IStammApi
     /// <param name="speicherortId">Speicherort-ID</param>
     /// <param name="mitProjektInfos">Falls true (= Default), werden auch die Projekte des
     /// Speicherorts ermittelt und in <see cref="Speicherort.ProjektInfos"/> abgelegt.</param>
-    /// <param name="mitServerOrdnern">Falls true (= Default), werden auch Informationen zu den
-    /// Ordnern innherhalb dieses Speicherorts mitgeliefert (Properties <see cref="Speicherort.RootServerOrdnerList"/>
+    /// <param name="mitOrdnern">Falls true (= Default), werden auch Informationen zu den
+    /// Ordnern innherhalb dieses Speicherorts mitgeliefert (Properties <see cref="Speicherort.RootOrdnerList"/>
     /// und <see cref="Speicherort.RootProjektInfos"/>).
     /// Nur relevant für Server-Speicherorte.</param>
     [Get("/build/global/speicherorte/{speicherortId}")]
-    Task<Speicherort> GetSpeicherort(Guid speicherortId, bool mitProjektInfos = true, bool mitServerOrdnern = true);
+    Task<Speicherort> GetSpeicherort(Guid speicherortId, bool mitProjektInfos = true, bool mitOrdnern = true);
 
     /// <summary>
     /// Aktualisiert den Speicherort mit der angegebenen ID. Diese Operation erlaubt keine Projektoperationen
     /// (Verschieben/Löschen/Erstellen von Projekten). (Die Property <see cref="Speicherort.RootProjektInfos"/> wird
     /// ignoriert.) Der schreibende Zugriff auf Server-Ordner ist jedoch über die Property
-    /// <see cref="Speicherort.RootServerOrdnerList"/> möglich (auch das Erstellen/Löschen/Anlegen von Server-Ordnern).
+    /// <see cref="Speicherort.RootOrdnerList"/> möglich (auch das Erstellen/Löschen/Anlegen von Server-Ordnern).
     /// </summary>
     /// <param name="speicherortId">Speicherort-ID</param>
     /// <param name="speicherort">Speicherort mit den neuen Werten.</param>

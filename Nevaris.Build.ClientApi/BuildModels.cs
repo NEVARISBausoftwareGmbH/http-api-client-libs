@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+#pragma warning disable CS1591
 
 namespace Nevaris.Build.ClientApi;
 
@@ -363,6 +364,7 @@ public class Speicherort : BaseObject
 
     /// <summary>
     /// Falls der Speicherort ein Dateiordner ist, enthält dieses Objekt die passenden Informationen.
+    /// Der Begriff 'Ordner' sollte nicht mit Ordnern in Speicherorten (<see cref="RootOrdnerList"/>).
     /// </summary>
     public OrdnerInfo OrdnerInfo { get; set; }
 
@@ -379,23 +381,23 @@ public class Speicherort : BaseObject
 
     /// <summary>
     /// (Detailinfo) Liste von Projekten an diesem Speicherort auf der Wurzelebene.
-    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitServerOrdnern = true
+    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitOrdnern = true
     /// übergeben wurde.
     /// </summary>
     public List<ProjektInfo> RootProjektInfos { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Ordnern innerhalb dieses Speicherorts (auf Wurzelebene).
-    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitServerOrdnern = true
+    /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitOrdnern = true
     /// übergeben wurde.
     /// </summary>
-    public List<ServerOrdner> RootServerOrdnerList { get; set; }
+    public List<SpeicherortOrdner> RootOrdnerList { get; set; }
 }
 
 /// <summary>
-/// Ein Ordner ("virtueller Ordner") innerhalb eines Server-Speicherorts.
+/// Ein Ordner innerhalb eines Speicherorts (nur für Datenbank-Speicherorte).
 /// </summary>
-public class ServerOrdner : BaseObject
+public class SpeicherortOrdner : BaseObject
 {
     /// <summary>
     /// Die ID des Ordners (nicht sichtbar on der Oberfläche).
@@ -415,7 +417,7 @@ public class ServerOrdner : BaseObject
     /// <summary>
     /// Liste mit untergeordneten Ordnern.
     /// </summary>
-    public List<ServerOrdner> OrdnerList { get; set; }
+    public List<SpeicherortOrdner> OrdnerList { get; set; }
 }
 
 public class OrdnerInfo : BaseObject
@@ -453,11 +455,11 @@ public class Projekt : BaseObject
     public string Id { get; set; }
 
     /// <summary>
-    /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Server-Ordners, in dem das Projekt abgelegt ist
+    /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Ordners, in dem das Projekt abgelegt ist
     /// (innerhalb seines Speicherorts). Falls null, liegt das Projekt auf der Wurzelebene.
     /// </summary>
-    public Guid? ServerOrdnerId { get; set; }
-    
+    public Guid? SpeicherortOrdnerId { get; set; }
+
     /// <summary>
     /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
     /// </summary>
@@ -521,10 +523,10 @@ public class NewProjektInfo : BaseObject
     public string MandantId { get; set; }
 
     /// <summary>
-    /// Für Server-Speicherorte: Die ID des Server-Ordners, in dem das Projekt abgelegt wird. Falls null,
+    /// Für Server-Speicherorte: Die ID des Ordners, in dem das Projekt abgelegt wird. Falls null,
     /// wird das Projekt auf der Wurzelebene angelegt.
     /// </summary>
-    public Guid? ServerOrdnerId { get; set; }
+    public Guid? SpeicherortOrdnerId { get; set; }
 
     /// <summary>
     /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
