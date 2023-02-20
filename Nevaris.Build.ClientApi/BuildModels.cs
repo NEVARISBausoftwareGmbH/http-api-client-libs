@@ -3225,6 +3225,9 @@ public enum MeldungSeverity
 /// </summary>
 public class ImportLvInfo
 {
+    /// <summary>
+    /// Zu importierende Datei befindet sich am Server.
+    /// </summary>
     public string DateipfadAmServer { get; set; }
 }
 
