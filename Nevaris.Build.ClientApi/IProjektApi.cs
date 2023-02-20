@@ -72,6 +72,17 @@ public interface IProjektApi
     Task<Leistungsverzeichnis> CreateLeistungsverzeichnis(string projektId, [Body] NewLvInfo newLvInfo);
 
     /// <summary>
+    /// Die Methode nimmt einen Dateipfad vom Server entgegen, prüft diese Datei ob es sich um einen LV Datenträger handelt 
+    /// und startet je nach Norm den entsprechenden Importvorgang an. Zurückgegeben wird das erzeugte Leistungsverzeichnis 
+    /// inkl. der Meldungen die im Zuges Importvorgangs erzeugt wurden.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="importLvInfo">Information wo sich die zu importierende Datenträger Quelle befindet.</param>
+    /// <returns></returns>
+    [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerServerDateipfad")]
+    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerServerDateipfad(string projektId, [Body] ImportLvInfo importLvInfo);
+
+    /// <summary>
     /// Aktualisiert ein Leistungsverzeichnis.
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
