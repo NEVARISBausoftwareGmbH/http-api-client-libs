@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 #pragma warning disable CS1591
@@ -452,7 +453,18 @@ public class ProjektInfo : BaseObject
 /// </summary>
 public class Projekt : BaseObject
 {
+    /// <summary>
+    /// Die Projekt-ID im Format "[Speicherort-Guid].[Projekt-Guid]", wie sie in den URLs für Projekt-Endpunkte
+    /// (/build/projekte/{projektId}/...) vorkommt. Identifiziert ein Projekt Speicherort-übergreifend.
+    /// </summary>
     public string Id { get; set; }
+
+    /// <summary>
+    /// Die ID des Projekts als Guid (ohne Speicherort-Information). Diese ID kommt zum Einsatz, wenn ein Projekt
+    /// als Kostenebene oder Zuschlagsebene in Betriebsmitteln auftaucht, z.B. in der Property
+    /// <see cref="BetriebsmittelKosten.KostenebeneId"/>.
+    /// </summary>
+    public Guid Guid { get; set; }
 
     /// <summary>
     /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Ordners, in dem das Projekt abgelegt ist
@@ -505,6 +517,71 @@ public class Projekt : BaseObject
     /// Liste von Leistungszeiträumen, die in diesem Projekt enthalten sind.
     /// </summary>
     public List<Leistungszeitraum> Leistungszeiträume { get; set; }
+
+    public BetriebsmittelStammArt? BetriebsmittelStammArt { get; set; }
+
+    /// <summary>
+    /// Für ÖNORM-Stämme: Die Kalkulationsversion (kann nicht nachträglich geändert werden).
+    /// </summary>
+    public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
+
+    public int? RechengenauigkeitMengen { get; set; } // = NachkommastellenAnsatz
+    public int? RechengenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreise
+    public int? DarstellungsgenauigkeitMengen { get; set; } // = NachkommastellenAnsatzUI
+    public int? DarstellungsgenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreiseUI
+
+    public Guid LohnRootGruppeId { get; set; }
+    public Guid MaterialRootGruppeId { get; set; }
+    public Guid GerätRootGruppeId { get; set; }
+    public Guid SonstigeKostenRootGruppeId { get; set; }
+    public Guid NachunternehmerRootGruppeId { get; set; }
+    public Guid BausteinRootGruppeId { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
+    /// </summary>
+    public BetriebsmittelStammBezeichnungen Bezeichnungen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
+    /// Über dieses Feld wird bestimmt, wie viele Zuschlagsspalten in den Kosten- und Zuschlagskatalogen angeboten
+    /// werden und wie diese heißen.
+    /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
+    /// Zuschlagsart enthalten (es darf nicht mehr geben).
+    /// </summary>
+    public List<Zuschlagsart> Zuschlagsarten { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen
+    /// (nur für ÖNORM relevant).
+    /// </summary>
+    public List<Zuschlagsgruppe> Zuschlagsgruppen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Für GAEB: Die Einträge im Reiter "Zuschlagsberechnung". Legt die Berechnungsmethode
+    /// für die einzelnen Zuschlagstypen (z.B. AGK) fest.
+    /// </summary>
+    public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Gerätefaktoren.
+    /// </summary>
+    public List<Gerätefaktor> Gerätefaktoren { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von globalen Variablen.
+    /// </summary>
+    public List<GlobaleVariable> GlobaleVariablen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von Warengruppen.
+    /// </summary>
+    public List<Warengruppe> Warengruppen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Liste von DbBetriebsmittelGruppen.
+    /// </summary>
+    public List<DbBetriebsmittelGruppe> DbBetriebsmittelGruppen { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
@@ -608,17 +685,23 @@ public class BetriebsmittelStamm : BaseObject
     public List<Zuschlagskatalog> Zuschlagskataloge { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen.
-    /// </summary>
-    public List<Zuschlagsgruppe> Zuschlagsgruppen { get; set; }
-
-    /// <summary>
     /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
-    /// Über dieses Feld wird bestimmt, wie viele Zuschlagsspalten in den Kosten- und Zuschlagskatalogen angeboten werden und wie diese heißen.
+    /// Über dieses Feld wird bestimmt, wie viele Zuschlagsspalten in den Kosten- und Zuschlagskatalogen angeboten
+    /// werden und wie diese heißen.
     /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
     /// Zuschlagsart enthalten (es darf nicht mehr geben).
     /// </summary>
     public List<Zuschlagsart> Zuschlagsarten { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) ÖNORM: Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen.
+    /// </summary>
+    public List<Zuschlagsgruppe> Zuschlagsgruppen { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Die Einträge im Grid "Zuschlagsberechnung" (nur für GAEB relevant).
+    /// </summary>
+    public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Gerätefaktoren.
@@ -639,11 +722,6 @@ public class BetriebsmittelStamm : BaseObject
     /// (Detailinfo) Liste von DbBetriebsmittelGruppen.
     /// </summary>
     public List<DbBetriebsmittelGruppe> DbBetriebsmittelGruppen { get; set; }
-
-    /// <summary>
-    /// (Detailinfo) Die Einträge im Grid "Zuschlagsberechnung" (nur GAEB-Stämme).
-    /// </summary>
-    public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
@@ -777,22 +855,105 @@ public enum GeräteArt
     Listenpreisgerät
 }
 
+/// <summary>
+/// Ein Gerätefaktor zur Verwendung in einem Betriebsmittelstamm oder in den Betriebsmitteln eines Projekts.
+/// </summary>
 public class Gerätefaktor : BaseObject
 {
     public string Nummer { get; set; }
+
     public GeräteArt? Art { get; set; }
+
     public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// ist nur für Betriebsmittelstämme befüllt. Im Projektfall ist dieser Wert kostenebenenabhängig und
+    /// steht in <see cref="Werte"/>.
+    /// </summary>
     public decimal? AbminderungsfaktorAV { get; set; }
+
+    /// <summary>
+    /// ist nur für Betriebsmittelstämme befüllt. Im Projektfall ist dieser Wert kostenebenenabhängig und
+    /// steht in <see cref="Werte"/>.
+    /// </summary>
     public decimal? AbminderungsfaktorRepLohn { get; set; }
+
+    /// <summary>
+    /// ist nur für Betriebsmittelstämme befüllt. Im Projektfall ist dieser Wert kostenebenenabhängig und
+    /// steht in <see cref="Werte"/>.
+    /// </summary>
     public decimal? AbminderungsfaktorRepMaterial { get; set; }
+
+    /// <summary>
+    /// ist nur für Betriebsmittelstämme befüllt. Im Projektfall ist dieser Wert kostenebenenabhängig und
+    /// steht in <see cref="Werte"/>.
+    /// </summary>
+    public decimal? StundenProMonat { get; set; }
+
+    /// <summary>
+    /// Nur für Projekte: Die (kostenebenenabhängigen) Werte
+    /// </summary>
+    public List<GerätefaktorWert> Werte { get; set; }
+}
+
+public class GerätefaktorWert
+{
+    public Guid KostenebeneId { get; set; }
+
+    public decimal? AbminderungsfaktorAV { get; set; }
+    
+    public decimal? AbminderungsfaktorRepLohn { get; set; }
+    
+    public decimal? AbminderungsfaktorRepMaterial { get; set; }
+    
     public decimal? StundenProMonat { get; set; }
 }
 
+/// <summary>
+/// Eine globale Variable zur Verwendung in einem Betriebsmittelstamm oder in den Betriebsmitteln eines Projekts.
+/// </summary>
 public class GlobaleVariable : BaseObject
 {
+    /// <summary>
+    /// Variablenname
+    /// </summary>
     public string Variable { get; set; }
+
     public bool? IstKalkulationsVariable { get; set; }
+
+    /// <summary>
+    /// Nur für Betriebsmittelstämme: Enthält den Ansatz (= Berechnungsformel). Im Projektfall steht der
+    /// Ansatz kostenebenenabhängig in <see cref="Ansätze"/>.
+    /// </summary>
     public string Ansatz { get; set; }
+
+    /// <summary>
+    /// Nur für Betriebsmittelstämme: Enthält einen optionalen Kommentar. Im Projektfall steht der
+    /// Kommentar kostenebenenabhängig in <see cref="Ansätze"/>.
+    /// </summary>
+    public string Kommentar { get; set; }
+
+    /// <summary>
+    /// Nur für Projekte: Die (kostenebenenabhängigen) Ansätze
+    /// </summary>
+    public List<GlobaleVariableAnsatz> Ansätze { get; set; }
+}
+
+public class GlobaleVariableAnsatz : BaseObject
+{
+    /// <summary>
+    /// Identifiziert die Kostenebene, auf der dieser Ansatz definiert ist.
+    /// </summary>
+    public Guid KostenebeneId { get; set; }
+
+    /// <summary>
+    /// Der Ansatz (= Berechnungsformel)
+    /// </summary>
+    public string Ansatz { get; set; }
+    
+    /// <summary>
+    /// Optionaler Kommentar
+    /// </summary>
     public string Kommentar { get; set; }
 }
 
@@ -828,6 +989,10 @@ public class DbBetriebsmittelGruppe
     public BetriebsmittelArt? Art { get; set; }
 }
 
+/// <summary>
+/// (Detailinfo) Für GAEB: Ein Eintrag im Reiter "Zuschlagsberechnung". Legt die Berechnungsmethode
+/// für einen Zuschlagstypen (z.B. AGK) fest.
+/// </summary>
 public class ZuschlagsartGruppe : BaseObject
 {
     public ZuschlagsTyp? Art { get; set; }
@@ -844,8 +1009,9 @@ public enum ZuschlagsBasis
 }
 
 /// <summary>
-/// Beschreibt einen Zuschläg, der in einem Betriebsmittelstamm zur Verfügung steht. Der Wert des Zuschlags
-/// wird per Zuschlagskatalog.ZuschlagsgruppenWerte festgelegt.
+/// Für ÖNORM: Beschreibt einen Zuschlag, der in einem Betriebsmittelstamm zur Verfügung steht.
+/// Wird per <see cref="BetriebsmittelZuschlag.ZuschlagsgruppenNummer"/> referenziert.
+/// Die Liste der verfügbaren Zuschlagsgruppen erhält man über <see cref="BetriebsmittelStamm.Zuschlagsgruppen"/>.
 /// </summary>
 public class Zuschlagsgruppe : BaseObject
 {
@@ -857,28 +1023,58 @@ public class Zuschlagsgruppe : BaseObject
     /// Wird derzeit nicht genutzt.
     /// </summary>
     public int? Stufe { get; set; }
+
+    /// <summary>
+    /// Die eigentlichen Zuschlagssätze für diese Zuschlagsgruppe. Ist eine Liste und nicht einzelner Wert,
+    /// da jeder Zuschlagssatz individuell pro Kostenebene festgelegt werden kann.
+    /// </summary>
+    public List<ZuschlagsgruppenWert> Werte { get; set; }
 }
 
 /// <summary>
-/// Der Wert einer Zuschlagsgruppe innerhalb eines Zuschlagskatalogs.
+/// ÖNORM: Der Wert (= Zuschlagssatz) einer <see cref="Zuschlagsgruppe"/> innerhalb eines <see cref="Zuschlagskatalog"/>s.
 /// </summary>
 public class ZuschlagsgruppenWert : BaseObject
 {
     /// <summary>
-    /// Verweist auf eine Zuschlagsgruppe.
+    /// Die ID der Kostenebene, für die dieser Zuschlagssatz festgelegt ist.
     /// </summary>
+    public Guid ZuschlagsebeneId { get; set; }
+
+    /// <summary>
+    /// Die Nummer der <see cref="Zuschlagsgruppe"/>, zu der dieser Wert gehört.
+    /// Wurde nur für <see cref="Zuschlagskatalog.ZuschlagsgruppenWerte"/> benötigt, das mittelerweile aber
+    /// abgekündigt ist. 
+    /// </summary>
+    [Obsolete("Wurde nur für Zuschlagskatalog.ZuschlagsgruppenWerte benötigt, das aber abgekündigt ist.")]
     public string ZuschlagsgruppenNummer { get; set; }
 
+    /// <summary>
+    /// Der Zuschlagssatz (= Zuschlag in Prozent).
+    /// </summary>
     public decimal? Wert { get; set; }
+    
+    // TODO Weitere Properties wie ZuschlagGewinn implementieren
 }
 
 /// <summary>
 /// Eine Zuschlagsart. Beschreibt eine Zuschlagsspalte in den Kosten- und Zuschlagskatalogen.
+/// Ein konketer Zuschlag auf einem Betriebsmittel für eine Zuschlagsart wird per <see cref="BetriebsmittelZuschlag"/>
+/// spezifiziert.
 /// </summary>
 public class Zuschlagsart : BaseObject
 {
+    /// <summary>
+    /// Der Index der Zuschlagart. Identifiziert die Zuschlagsart innerhalb des Betriebsmittelstamms
+    /// oder Projekts. Per <see cref="BetriebsmittelZuschlag.ArtIndex"/> wird darauf verweisen.
+    /// </summary>
     public int Index { get; set; }
+    
     public string Bezeichnung { get; set; }
+    
+    /// <summary>
+    /// Für GAEB: Der Zuschlagstyp (z.B. AGK).
+    /// </summary>
     public ZuschlagsTyp? Typ { get; set; }
 }
 
@@ -887,25 +1083,54 @@ public enum ZuschlagsTyp
     Agk, Bgk, Gewinn, Wagnis
 }
 
+/// <summary>
+/// Ein Kostenkatalog eines <see cref="BetriebsmittelStamm"/>s. Ein Kostenkatalog dient als Kostenebene, d.h.
+/// seine ID kann an alle Operationen übergeben werden, die einen "kostenebeneId"-Paramater entgegennehmen.
+/// </summary>
 public class Kostenkatalog : BaseObject
 {
+    /// <summary>
+    /// Die ID des Kostenkatalogs (= kostenebeneId). Für Kosten, die an diesem Kostenkatalog festgemacht sind,
+    /// enthält <see cref="BetriebsmittelKosten.KostenebeneId"/> diese ID.
+    /// </summary>
     public Guid Id { get; set; }
+    
     public string Nummer { get; set; }
+
     public string Bezeichnung { get; set; }
+    
     public string Beschreibung { get; set; }
+    
     public bool IstStandard { get; set; }
 
     public Guid? ParentKostenkatalogId { get; set; }
 }
 
+/// <summary>
+/// Ein Zuschlagskatalog eines <see cref="BetriebsmittelStamm"/>s. Ein Kostenkatalog dient als Zuschlagsebene, d.h.
+/// seine ID kann an alle Operationen übergeben werden, die einen "zuschlagsebeneId"-Paramater entgegennehmen.
+/// </summary>
 public class Zuschlagskatalog : BaseObject
 {
+    /// <summary>
+    /// Die ID des Zuschlagskatalogs (= zuschlagsebeneId). Für Zuschläge, die an diesem Zuschlagskatalog
+    /// festgemacht sind, enthält <see cref="BetriebsmittelZuschlag.ZuschlagsebeneId"/> diese ID.
+    /// </summary>
     public Guid Id { get; set; }
+
     public string Nummer { get; set; }
+    
     public string Bezeichnung { get; set; }
+    
     public string Beschreibung { get; set; }
+    
     public bool IstStandard { get; set; }
 
+    /// <summary>
+    /// Sollte nicht mehr verwendet werden. Stattdessen sind für ÖNORM-Stämme die Zuschlägssätze über
+    /// <see cref="Zuschlagsgruppe.Werte"/> ansprechbar.
+    /// </summary>
+    [Obsolete("Sollte nicht mehr verwendet werden. Stattdessen sind für ÖNORM-Stämme die Zuschlägssätze über Zuschlagsgruppe.Werte ansprechbar.")]
     public List<ZuschlagsgruppenWert> ZuschlagsgruppenWerte { get; set; }
 }
 
@@ -1025,7 +1250,7 @@ public class Betriebsmittel : BaseObject
     public string Einheit { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel definiert
+    /// (Detailinfo) Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel festgelegt
     /// sind). Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
     /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich Kosten.
@@ -1048,7 +1273,11 @@ public class Betriebsmittel : BaseObject
     public List<KalkulationsZeile> WeitereKosten { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Die Zuschläge, die auf diesem Betriebsmittel definiert sind.
+    /// (Detailinfo) Liste von Zuschlägen (einer pro Zuschlagsebene, auf der die Zuschlaäge für dieses Betriebsmittel
+    /// festgelegt sind).
+    /// Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
+    /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
+    /// über den "mitZuschlägen"-Parameter das Auslesen meherer Betriebsmittel einschließlich Kosten.
     /// </summary>
     public List<BetriebsmittelZuschlag> Zuschläge { get; set; }
 
@@ -1142,22 +1371,28 @@ public class BetriebsmittelDetails : BaseObject
 }
 
 /// <summary>
-/// Ein Zuschlag , der auf einem Betriebsmittel definiert ist.
+/// Ein Zuschlag, der auf einem Betriebsmittel definiert ist.
 /// </summary>
 public class BetriebsmittelZuschlag : BaseObject
 {
     /// <summary>
-    /// Verweist auf eine ZuschlagsartGruppe.
+    /// Für ÖNORM: Verweist auf eine <see cref="Zuschlagsgruppe"/>.
+    /// Die Liste der verfügbaren Zuschlagsgruppen erhält man über <see cref="BetriebsmittelStamm.Zuschlagsgruppen"/>.
     /// </summary>
     public string ZuschlagsgruppenNummer { get; set; }
 
     /// <summary>
-    /// Verweist auf eine Zuschlagsart.
+    /// Für GAEB: Der Zuschlag als Prozentwert.
+    /// </summary>
+    public decimal? Wert { get; set; }
+    
+    /// <summary>
+    /// Verweist auf eine Zuschlagsart (<see cref="Zuschlagsart.Index"/>).
     /// </summary>
     public int ArtIndex { get; set; }
 
     /// <summary>
-    /// Die ID des Kosten- oder Zuschlagskatalogs.
+    /// Die ID der Kostenebene, auf der der Zuschlag festgelegt ist.
     /// </summary>
     public Guid ZuschlagsebeneId { get; set; }
 }
@@ -1639,7 +1874,7 @@ public class KalkulationsZeile : BaseObject
 {
     /// <summary>
     /// Die ID ist bei GET-Zugriffen immer befüllt. Für PUT-Operationen, d.h. für
-    /// PUT /build/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId} und
+    /// PUT /build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId} und
     /// PUT /build/global/betriebsmittel/{betriebsmittelId}
     /// kann sie fehlen. In diesem Fall wird die Zeile neu angelegt.
     /// </summary>
@@ -3229,6 +3464,11 @@ public class ImportLvInfo
     /// Zu importierende Datei befindet sich am Server.
     /// </summary>
     public string DateipfadAmServer { get; set; }
+
+    /// <summary>
+    /// Zu importierende Datei wird vom Client mitgeliefert.
+    /// </summary>
+    public IFormFile DateiVonClient { get; set; }
 }
 
 #endregion Leistungsverzeichnis
