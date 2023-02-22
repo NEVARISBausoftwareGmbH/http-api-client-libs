@@ -1,0 +1,7 @@
+﻿{
+  "baseUrl": "http://localhost:8500",
+  "speicherortBezeichnung": "SQL Server",
+  "projektBezeichnung": "API Test",
+  "lvBezeichnungQuelle": "LV Quelle",
+  "lvBezeichnungZiel": "LV Ziel"
+}
