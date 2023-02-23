@@ -14,7 +14,7 @@ namespace Lv_Viewer
         {
             InitializeComponent();
 
-            Model = new(this);            
+            Model = new(this);
         }
 
         private ViewModel? _model;
@@ -57,7 +57,7 @@ namespace Lv_Viewer
             {
                 //Bieterlücken werden grün dargestellt.
                 sb = new(FormattedTextTemplate.GetVorlageBieter());
-            }            
+            }
 
             if (xmlText != null)
             {
@@ -76,6 +76,11 @@ namespace Lv_Viewer
         internal void ClearFormattedText()
         {
             LoadHtmlText();
+        }
+
+        private void ButtonLvImportieren_Click(object sender, RoutedEventArgs e)
+        {
+            Model?.LeistungsverzeichnisImportieren();
         }
     }
 }

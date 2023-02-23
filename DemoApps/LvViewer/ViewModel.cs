@@ -2,9 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
+using Microsoft.Win32;
 using Nevaris.Build.ClientApi;
+using Refit;
 
 namespace Lv_Viewer
 {
@@ -30,9 +34,9 @@ namespace Lv_Viewer
         private async void Run()
         {
             SpeicherOrteOrdners.Clear();
-            
+
             if (Client == null) return;
-            
+
             try
             {
                 if (Client != null)
@@ -43,7 +47,7 @@ namespace Lv_Viewer
                     foreach (var projektServer in projektServers)
                     {
                         var projektServerDetailed = await Client.StammApi.GetSpeicherort(projektServer.Id);
-                        
+
                         // Wurzelebene
                         SpeicherOrteOrdners.Add(
                             new SpeicherortOrdnerViewModel(
@@ -64,10 +68,10 @@ namespace Lv_Viewer
 
                                 SpeicherOrteOrdners.Add(
                                     new SpeicherortOrdnerViewModel(
-                                        projektServerDetailed, 
+                                        projektServerDetailed,
                                         ordner: ordner,
                                         pfad: pfad));
-                                
+
                                 AddOrdners(ordner.OrdnerList, parentPfad: pfad);
                             }
                         }
@@ -78,7 +82,7 @@ namespace Lv_Viewer
             {
                 MessageBox.Show(ex.Message);
                 return;
-            }            
+            }
         }
 
         public void Dispose()
@@ -96,11 +100,11 @@ namespace Lv_Viewer
         public SpeicherortOrdnerViewModel? SelectedSpeicherOrt
         {
             get { return _selectedSpeicherortOrdner; }
-            set 
+            set
             {
                 _selectedSpeicherortOrdner = value;
                 UpdateProjektListe();
-                OnPropertyChanged(nameof(SelectedSpeicherOrt)); 
+                OnPropertyChanged(nameof(SelectedSpeicherOrt));
             }
         }
 
@@ -116,7 +120,7 @@ namespace Lv_Viewer
             {
                 Projekte.Add(p);
             }
-        }        
+        }
 
         public ObservableCollection<ProjektInfo> Projekte { get; } = new();
 
@@ -125,11 +129,11 @@ namespace Lv_Viewer
         public ProjektInfo? SelectedProjekt
         {
             get { return _selectedProjekt; }
-            set 
-            { 
+            set
+            {
                 _selectedProjekt = value;
                 LoadLvs();
-                OnPropertyChanged(nameof(SelectedProjekt)); 
+                OnPropertyChanged(nameof(SelectedProjekt));
             }
         }
 
@@ -138,9 +142,9 @@ namespace Lv_Viewer
         public MengenArtViewItem? SelectedMenge
         {
             get { return _selectedMenge; }
-            set 
-            { 
-                _selectedMenge = value; 
+            set
+            {
+                _selectedMenge = value;
                 OnPropertyChanged(nameof(SelectedMenge));
                 //LV mit neuer Menge neu laden.
                 LoadLv(SelectedLv);
@@ -164,9 +168,9 @@ namespace Lv_Viewer
         private async void LoadLvs()
         {
             _mainWindow.SetWaitSpinner(false);
-            Lvs.Clear();           
+            Lvs.Clear();
             if (SelectedProjekt != null && Client != null)
-            {                
+            {
                 Projekt? projekt = null;
                 try
                 {
@@ -185,7 +189,7 @@ namespace Lv_Viewer
                         Lvs.Add(lv);
                     }
                 }
-            }            
+            }
         }
 
         public ObservableCollection<Leistungsverzeichnis> Lvs { get; } = new();
@@ -195,10 +199,10 @@ namespace Lv_Viewer
         public Leistungsverzeichnis? SelectedLv
         {
             get { return _selectedLv; }
-            set 
+            set
             {
                 _selectedLv = value;
-                OnPropertyChanged(nameof(SelectedLv));               
+                OnPropertyChanged(nameof(SelectedLv));
                 LoadLv(value);
                 LoadMengen();
             }
@@ -216,8 +220,8 @@ namespace Lv_Viewer
             LvDetails?.Dispose();
             _mainWindow.ClearFormattedText();
             if (lv != null && SelectedProjekt != null && Client != null)
-            {                
-                _mainWindow.SetWaitSpinner(true);                
+            {
+                _mainWindow.SetWaitSpinner(true);
                 Leistungsverzeichnis? newLv = null;
                 try
                 {
@@ -236,9 +240,102 @@ namespace Lv_Viewer
                 if (newLv != null)
                 {
                     LvDetails = new LeistungsverzeichnisWrapper(newLv, SelectedMenge);
-                    _mainWindow.SetTreeViewSource();                    
+                    _mainWindow.SetTreeViewSource();
                 }
-            }            
+            }
+        }
+
+        #region IsLvAuswaehlen
+
+        /// <summary>
+        /// Backingfield für die Property IsLvAuswaehlen
+        /// </summary>
+        private bool _isLvAuswaehlen = true;
+
+        /// <summary>
+        /// IsLvAuswaehlen
+        /// </summary>
+        public bool IsLvAuswaehlen
+        {
+            get { return _isLvAuswaehlen; }
+            set { _isLvAuswaehlen = value; OnPropertyChanged(nameof(IsLvAuswaehlen)); }
+        }
+
+        #endregion IsLvAuswaehlen
+
+        #region IsLvImportieren
+
+        /// <summary>
+        /// Backingfield für die Property IsLvImportieren
+        /// </summary>
+        private bool _isLvImportieren;
+
+        /// <summary>
+        /// IsLvImportieren
+        /// </summary>
+        public bool IsLvImportieren
+        {
+            get { return _isLvImportieren; }
+            set { _isLvImportieren = value; OnPropertyChanged(nameof(IsLvImportieren)); }
+        }
+
+        #endregion IsLvImportieren
+
+        /// <summary>
+        /// Methode zum Importieren eines Leistungsvezeichnis Datenträger und Anzeige des daraus erzeugten
+        /// Leistungsverzeichnis.
+        /// </summary>
+        internal async void LeistungsverzeichnisImportieren()
+        {
+            _mainWindow.SetWaitSpinner(false);
+            if (SelectedProjekt == null)
+            {
+                MessageBox.Show("Bitte wählen Sie ein Projekt aus.");
+                return;
+            }
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Multiselect = false;
+            openFileDialog.AddExtension = true;
+            openFileDialog.Filter = "ÖNORM A2063 LV (*.onlv)|*.onlv";
+            if (openFileDialog.ShowDialog() == true)
+            {
+                _mainWindow.SetWaitSpinner(true);
+                var fileInfo = new FileInfo(openFileDialog.FileName);
+                FileInfoPart fileInfoPart = new FileInfoPart(fileInfo, fileInfo.Name);
+                var importResult = Client?.ProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei(SelectedProjekt.Id, fileInfoPart);
+                await importResult;
+                if (importResult?.Result != null)
+                {
+                    /* Das Resultat des Importvorgangs ist ein Leistungsverzeichnis und Meldungen die 
+                     * während des Importvorganges entstanden sind. */
+                    var importieresLv = importResult.Result.ImportieresLeistungsverzeichnis;
+                    var meldungenVonImporter = importResult.Result.ImporterMeldungen;
+
+                    if (importieresLv == null)
+                    {
+                        MessageBox.Show("Es wurde kein Leistungsverzeichnis importiert.");
+                    }
+                    else
+                    {
+                        // Das erzeugte LV anzeigen.
+                        SelectedLv = importieresLv;
+                    }
+
+                    _mainWindow.SetWaitSpinner(false);
+                    if (meldungenVonImporter?.Any() == true)
+                    {
+                        StringBuilder sb = new();
+                        sb.AppendLine("Meldungen aus Importer: ");
+                        foreach (var meldung in meldungenVonImporter)
+                        {
+                            sb.AppendLine(meldung.Severity.ToString() + ": " + meldung.Text + " " + meldung.Wert);
+                            sb.AppendLine();
+                        }
+                        MessageBox.Show(sb.ToString(), "Importer Meldungen", MessageBoxButton.OK);
+                    }
+                }
+                _mainWindow.SetWaitSpinner(false);
+            }
         }
     }
 }
