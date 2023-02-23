@@ -3458,17 +3458,12 @@ public enum MeldungSeverity
 /// Objekt enthält Informationen darüber wo sich die Quelle des zu importierenden 
 /// LVs befindet.
 /// </summary>
-public class ImportLvInfo
+public class ImportLvVonServerpfad
 {
     /// <summary>
     /// Zu importierende Datei befindet sich am Server.
     /// </summary>
-    public string DateipfadAmServer { get; set; }
-
-    /// <summary>
-    /// Zu importierende Datei wird vom Client mitgeliefert.
-    /// </summary>
-    public IFormFile DateiVonClient { get; set; }
+    public string Dateipfad { get; set; }
 }
 
 #endregion Leistungsverzeichnis
