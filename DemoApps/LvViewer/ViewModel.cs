@@ -288,7 +288,7 @@ namespace Lv_Viewer
         internal async void LeistungsverzeichnisImportieren()
         {
             _mainWindow.SetWaitSpinner(false);
-            if (SelectedProjekt == null)
+            if (SelectedProjekt == null || Client == null)
             {
                 MessageBox.Show("Bitte wählen Sie ein Projekt aus.");
                 return;
@@ -302,38 +302,36 @@ namespace Lv_Viewer
                 _mainWindow.SetWaitSpinner(true);
                 var fileInfo = new FileInfo(openFileDialog.FileName);
                 FileInfoPart fileInfoPart = new FileInfoPart(fileInfo, fileInfo.Name);
-                var importResult = Client?.ProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei(SelectedProjekt.Id, fileInfoPart);
-                await importResult;
-                if (importResult?.Result != null)
+                var importResult = await Client.ProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei(SelectedProjekt.Id, fileInfoPart);
+
+                /* Das Resultat des Importvorgangs ist ein Leistungsverzeichnis und Meldungen die 
+                 * während des Importvorganges entstanden sind. */
+                var importieresLv = importResult.ImportieresLeistungsverzeichnis;
+                var meldungenVonImporter = importResult.ImporterMeldungen;
+
+                if (importieresLv == null)
                 {
-                    /* Das Resultat des Importvorgangs ist ein Leistungsverzeichnis und Meldungen die 
-                     * während des Importvorganges entstanden sind. */
-                    var importieresLv = importResult.Result.ImportieresLeistungsverzeichnis;
-                    var meldungenVonImporter = importResult.Result.ImporterMeldungen;
-
-                    if (importieresLv == null)
-                    {
-                        MessageBox.Show("Es wurde kein Leistungsverzeichnis importiert.");
-                    }
-                    else
-                    {
-                        // Das erzeugte LV anzeigen.
-                        SelectedLv = importieresLv;
-                    }
-
-                    _mainWindow.SetWaitSpinner(false);
-                    if (meldungenVonImporter?.Any() == true)
-                    {
-                        StringBuilder sb = new();
-                        sb.AppendLine("Meldungen aus Importer: ");
-                        foreach (var meldung in meldungenVonImporter)
-                        {
-                            sb.AppendLine(meldung.Severity.ToString() + ": " + meldung.Text + " " + meldung.Wert);
-                            sb.AppendLine();
-                        }
-                        MessageBox.Show(sb.ToString(), "Importer Meldungen", MessageBoxButton.OK);
-                    }
+                    MessageBox.Show("Es wurde kein Leistungsverzeichnis importiert.");
                 }
+                else
+                {
+                    // Das erzeugte LV anzeigen.
+                    SelectedLv = importieresLv;
+                }
+
+                _mainWindow.SetWaitSpinner(false);
+                if (meldungenVonImporter?.Any() == true)
+                {
+                    StringBuilder sb = new();
+                    sb.AppendLine("Meldungen aus Importer: ");
+                    foreach (var meldung in meldungenVonImporter)
+                    {
+                        sb.AppendLine(meldung.Severity.ToString() + ": " + meldung.Text + " " + meldung.Wert);
+                        sb.AppendLine();
+                    }
+                    MessageBox.Show(sb.ToString(), "Importer Meldungen", MessageBoxButton.OK);
+                }
+
                 _mainWindow.SetWaitSpinner(false);
             }
         }

@@ -34,14 +34,14 @@ und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. 
 dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
 erkannbaren Auswirkungen hat.
 
-### 4.2.4 (für Build 2023.0 Patch 2 –23.0.22320.690)
+### 4.2.4 (für Build 2023.0 Patch 2 – 23.0.22320.690)
 
 - Unterstützung für Zahlungsbedingungen. Das Leistungsverzeichnis (abrufbar über _IProjektApi.GetLeistungsverzeichnis_)
 erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
  (Properties :_ZahlungsbedingungLV_, _ZahlungsbedingungAbschlagsrechnung_, _ZahlungsbedingungSchlussrechnung_).
 Analog dazu gibt es für Rechnungen die neu hinzugekommene Property _Rechnung.Zahlungsbedingung_. 
 
-### 4.2.3 (für Build 2023.0 Patch 1 –23.0.22293.484)
+### 4.2.3 (für Build 2023.0 Patch 1 – 23.0.22293.484)
 
 - Der Zugriff auf sonstige Eigenschaften von Materialien (abrufbar z.B. über _IStammApi.GetAllBetriebsmittel_) ist jetzt über die Property _BetriebsmittelMaterialDetails.Sonstiges_ möglich.
 - Die Funktion _IStammApi.UpdateBetriebsmittelKostenCollection_ zum Aktualisieren mehrerer Betriebsmittel erlaubt jetzt auch die
