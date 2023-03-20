@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+#pragma warning disable CS1591
 
 namespace Nevaris.Build.ClientApi.Fianance
 {

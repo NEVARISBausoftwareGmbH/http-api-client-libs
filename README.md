@@ -1,14 +1,30 @@
 # http-api-client-libs für NEVARIS Build 2023.0
 
-## Nevaris.Build.ClientApi 4.2.6
+## Nevaris.Build.ClientApi 4.3.1
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2023.0 Sie ist auch als
+von NEVARIS Build 2023.1 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.2.5 + 4.2.6 (für Build 23.0.23011.872)
+### 4.3.1 (für Build 2023.1)
+
+- Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
+Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
+_Speicherort_: _RootOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
+kann per _Projekt.SpeicherortOrdnerId_ und _NewProjektInfo.SpeicherortOrdnerId_ bestimmt werden.
+- Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitOrdnern_.
+- Die Operation _IStammApi.UpdateSpeicherort_ wurde hinzugefügt, mit der Speicherorte verändert werden können
+  (einschließlich der Ordner-Struktur).
+- Betriebsmittelverwaltung: Zahlreiche Bugfixes sowie fehlende Properties ergänzt,
+insbesondere für den Zugriff auf Projekt-Betriebsmittel (z.B. neue Properties
+wie _Projekt.Zuschlagsarten_ und _Projekt.Gerätefaktoren_).
+- Neue Funktionen zum Anlegen eines Leistungsverzeichnisses auf Basis eines Datenträgers:
+_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerServerDateipfad_ und
+_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_.
+
+### 4.2.5 (für Build 2023.0 Patch 3 – 23.0.23011.872)
 
 - Feld _AlternativeNummer_ für die Betriebsmitteltypen Lohn, Gerrät und sonstige Kosten (in den
 Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).
@@ -24,7 +40,7 @@ und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. 
 dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
 erkannbaren Auswirkungen hat.
 
-### 4.2.4 (für Build 23.0.22320.690)
+### 4.2.4 (für Build 2023.0 Patch 2 – 23.0.22320.690)
 
 - Unterstützung für Zahlungsbedingungen. Das Leistungsverzeichnis (abrufbar über _IProjektApi.GetLeistungsverzeichnis_)
 erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
