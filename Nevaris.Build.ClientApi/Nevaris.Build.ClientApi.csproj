@@ -16,10 +16,10 @@
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageReleaseNotes>ClientApi 4.3.1 für Build 2023.1:
-Unterstützung für Server-Ordner in Speicherorten (Speicherort.RootOrdnerList).
-Neue Operation: UpdateSpeicherort.
-GetSpeicherort um zwei Parameter (mitProjektInfos, mitOrdnern) erweitert.</PackageReleaseNotes>
-    <PackageVersion>4.3.1-2023.1</PackageVersion>
+- Unterstützung für Server-Ordner in Speicherorten
+- Erweiterungen in der Betriebsmittelverwaltung
+- Funktionen zum Import von LV-Datenträgern</PackageReleaseNotes>
+    <PackageVersion>4.3.1</PackageVersion>
     <AssemblyVersion>4.3.1</AssemblyVersion>
     <FileVersion>4.3.1</FileVersion>
   </PropertyGroup>

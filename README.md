@@ -1,6 +1,6 @@
 # http-api-client-libs für NEVARIS Build 2023.0
 
-## Nevaris.Build.ClientApi 4.2.5
+## Nevaris.Build.ClientApi 4.3.1
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.1 Sie ist auch als
@@ -17,6 +17,12 @@ kann per _Projekt.SpeicherortOrdnerId_ und _NewProjektInfo.SpeicherortOrdnerId_ 
 - Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitOrdnern_.
 - Die Operation _IStammApi.UpdateSpeicherort_ wurde hinzugefügt, mit der Speicherorte verändert werden können
   (einschließlich der Ordner-Struktur).
+- Betriebsmittelverwaltung: Zahlreiche Bugfixes sowie fehlende Properties ergänzt,
+insbesondere für den Zugriff auf Projekt-Betriebsmittel (z.B. neue Properties
+wie _Projekt.Zuschlagsarten_ und _Projekt.Gerätefaktoren_).
+- Neue Funktionen zum Anlegen eines Leistungsverzeichnisses auf Basis eines Datenträgers:
+_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerServerDateipfad_ und
+_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_.
 
 ### 4.2.5 (für Build 2023.0 Patch 3 – 23.0.23011.872)
 
@@ -97,9 +103,24 @@ foreach (var speicherort in speicherorte)
 }
 ```
 
-### http-api-demo-clients ###
+### Demo-Apps ###
 
-Eine Solution mit komplexeren Client-Applikationen steht in einem eigenen git-Repository zur Verfügung: [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+Die Solution _http-api-client-libs.sln_ enthält neben dem Quellcode der Nevaris.Build.ClientApi
+auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2023.1 über
+die Nevaris.Build.ClientApi demonstrieren.
+
+* *EinfacherApiClient:* Minimale Konsolenapplikation, die die Verwendung der Nevaris.Build.ClientApi zeigt.
+* *AdressConsoleApp:* Konsolenapplikation, die den Zugriff auf globale Adressen demonstriert.
+  Die notwendigen Einstellungen (unter anderem die Basis-URL des Zielsystems) müssen in der Datei _Settings.json_ eingetragen werden.
+* *AbrechnungConsoleApp:* Konsolenapplikation, die den Lesezugriff auf Abrechnungsdaten (Positionsblöcke mit Aufmaßzeilen) eines Projekts demonstriert.
+  Die Basis-URL des Zielsystems sowie die Informationen zur Projektidentifikation müssen in _Settings.json_ eingetragen werden.
+* *LvKopierenApp:* Konsolenapplikation, die ein Leistungsverzeichnis dupliziert, indem es alle Positionen und Gruppen einzeln kopiert.
+  Quelle und Ziel müssen in _Settings.json_ eingetragen werden.
+* *LV Viewer:* WPF-Applikation, die das Auslesen eines Leistungsverzeichnisses demonstriert. Speicherort, Projekt und Leistungsverzeichnis
+  können über die grafische Oberfläche ausgewählt werden.
+* *KalkulationApp:* Ähnlich dem LV Viewer erlaubt diese App die Auswahl eines Leistungsverzeichnisses, darüber hinaus ist ein lesender Zugriff
+  auf die enthaltenen Kalkulationen möglich.
+* *BetriebsmittelStammApp:* WPF-Applikation, die Betriebsmittelstämme von einem System in ein anderes kopiert.
 
 ## Voraussetzungen ##
 
