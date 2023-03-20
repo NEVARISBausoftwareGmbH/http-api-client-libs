@@ -8,7 +8,7 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.3.1 (für Build 2023.1)
+### 4.3.1 (für Build 2023.1 – 23.1.23075.791)
 
 - Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
 Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
