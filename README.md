@@ -11,55 +11,55 @@ von NEVARIS Build 2023.1 Sie ist auch als
 ### 4.3.1 (für Build 2023.1 – 23.1.23075.791)
 
 - Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
-Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
-_Speicherort_: _RootOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
-kann per _Projekt.SpeicherortOrdnerId_ und _NewProjektInfo.SpeicherortOrdnerId_ bestimmt werden.
+  Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
+  _Speicherort_: _RootOrdnerList_, _RootProjektInfos_. Die Zuordnung eines Projekts zu einem Ordner
+  kann per _Projekt.SpeicherortOrdnerId_ und _NewProjektInfo.SpeicherortOrdnerId_ bestimmt werden.
 - Die Operation _IStammApi.GetSpeicherort_ wurde um zwei Parameter erweitert: _mitProjektInfos_ und _mitOrdnern_.
 - Die Operation _IStammApi.UpdateSpeicherort_ wurde hinzugefügt, mit der Speicherorte verändert werden können
   (einschließlich der Ordner-Struktur).
 - Betriebsmittelverwaltung: Zahlreiche Bugfixes sowie fehlende Properties ergänzt,
-insbesondere für den Zugriff auf Projekt-Betriebsmittel (z.B. neue Properties
-wie _Projekt.Zuschlagsarten_ und _Projekt.Gerätefaktoren_).
+  insbesondere für den Zugriff auf Projekt-Betriebsmittel (z.B. neue Properties
+  wie _Projekt.Zuschlagsarten_ und _Projekt.Gerätefaktoren_).
 - Neue Funktionen zum Anlegen eines Leistungsverzeichnisses auf Basis eines Datenträgers:
-_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerServerDateipfad_ und
-_IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_.
+  _IProjektApi.CreateLeistungsverzeichnisAusDatentraegerServerDateipfad_ und
+  _IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_.
 
 ### 4.2.5 (für Build 2023.0 Patch 3 – 23.0.23011.872)
 
 - Feld _AlternativeNummer_ für die Betriebsmitteltypen Lohn, Gerrät und sonstige Kosten (in den
-Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).
+  Klassen _BetriebsmittelLohnDetails_, _BetriebsmittelGerätDetails_ und _BetriebsmittelSonstigeKostenDetails_).
 - Die Funktion _GetAllBetriebsmittel_ (enthalten sowohl in _IStammApi_ als auch _IProjektApi_) verhält sich nun
-etwas anders bei Übergabe von _mitDetails = false_. Bislang führte dieses Argument dazu, dass die
-betriebsmittelspezifischen Detailfelder (z.B. _Betriebsmittel.LohnDetails_ für Lohn) in den zurückgegebenen
-Objekten ungleich null waren, die darin enthaltenen Objekten selbst jedoch nur unvollständig befüllt waren. Das war
-ein Fehlverhalten, das zum Rücksetzen von Werten führen konnte, wenn das zurückgegebene Objekte anschließend
-an _IStammApi.UpdateBetriebsmittel_ (bzw. _IProjektApi.UpdateBetriebsmittel_) übergeben wurde. Ab Version 4.2.5 werden die Detailfelder
-im Fall _mitDetails = false_ die Detailfelder daher nicht mehr befüllt. Allerdings wurde der Defaultwert für den Parameter
-_mitDetails_ von false auf true geändert, da das Auslesen der Detailinformationen üblicherweise erwünscht ist
-und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. Die meisten Client-Applikationen
-dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
-erkannbaren Auswirkungen hat.
+  etwas anders bei Übergabe von _mitDetails = false_. Bislang führte dieses Argument dazu, dass die
+  betriebsmittelspezifischen Detailfelder (z.B. _Betriebsmittel.LohnDetails_ für Lohn) in den zurückgegebenen
+  Objekten ungleich null waren, die darin enthaltenen Objekten selbst jedoch nur unvollständig befüllt waren. Das war
+  ein Fehlverhalten, das zum Rücksetzen von Werten führen konnte, wenn das zurückgegebene Objekte anschließend
+  an _IStammApi.UpdateBetriebsmittel_ (bzw. _IProjektApi.UpdateBetriebsmittel_) übergeben wurde. Ab Version 4.2.5 werden die Detailfelder
+  im Fall _mitDetails = false_ die Detailfelder daher nicht mehr befüllt. Allerdings wurde der Defaultwert für den Parameter
+  _mitDetails_ von false auf true geändert, da das Auslesen der Detailinformationen üblicherweise erwünscht ist
+  und zudem hinsichtlich der Performance keine großen Nachteile mit sich bringt. Die meisten Client-Applikationen
+  dürften ohenhin bislang immer explizit _mitDetails = true_ übergeben haben, womit diese Änderung keine
+  erkannbaren Auswirkungen hat.
 
 ### 4.2.4 (für Build 2023.0 Patch 2 – 23.0.22320.690)
 
 - Unterstützung für Zahlungsbedingungen. Das Leistungsverzeichnis (abrufbar über _IProjektApi.GetLeistungsverzeichnis_)
-erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
- (Properties :_ZahlungsbedingungLV_, _ZahlungsbedingungAbschlagsrechnung_, _ZahlungsbedingungSchlussrechnung_).
-Analog dazu gibt es für Rechnungen die neu hinzugekommene Property _Rechnung.Zahlungsbedingung_. 
+  erlaubt nun über die Property _LvDetails_ den Zugriff (lesend und schreibend) auf die Zahlungsbedingungen
+  (Properties :_ZahlungsbedingungLV_, _ZahlungsbedingungAbschlagsrechnung_, _ZahlungsbedingungSchlussrechnung_).
+  Analog dazu gibt es für Rechnungen die neu hinzugekommene Property _Rechnung.Zahlungsbedingung_.
 
-### 4.2.3 (für Build 23.0.22293.484)
+### 4.2.3 (für Build 2023.0 Patch 1 – 23.0.22293.484)
 
 - Der Zugriff auf sonstige Eigenschaften von Materialien (abrufbar z.B. über _IStammApi.GetAllBetriebsmittel_) ist jetzt über die Property _BetriebsmittelMaterialDetails.Sonstiges_ möglich.
 - Die Funktion _IStammApi.UpdateBetriebsmittelKostenCollection_ zum Aktualisieren mehrerer Betriebsmittel erlaubt jetzt auch die
-Übergabe von weiteren Kosten (Ansatzzeilen).
+  Übergabe von weiteren Kosten (Ansatzzeilen).
 
-### 4.2.0 (für Build 23.0.22280.498)
+### 4.2.0 (für Build 2023.0 – 23.0.22280.498)
 
 - Unterstützung für Individualeigenschaften: Mehrere Klassen haben jetzt eine Property _CustomPropertyValues_, die
-den Zugriff auf Individualeigenschaften erlauben. Die Definition von Individualeigenschaften muss weiterhin über
-den Administrationsbereich von Build erfolgen, die API erlaubt aber den Zugriff auf die Werte.
+  den Zugriff auf Individualeigenschaften erlauben. Die Definition von Individualeigenschaften muss weiterhin über
+  den Administrationsbereich von Build erfolgen, die API erlaubt aber den Zugriff auf die Werte.
 
-### 4.0.0
+### 4.0.0 (für Build 2022.2)
 
 Im Vergleich zur Version 2.x (für Build 2022.1) gibt es ab Version 4.0.0
 nun die Möglichkeit, Leistungsverzeichnisse über die API zu erstellen und zu manipulieren
@@ -103,9 +103,24 @@ foreach (var speicherort in speicherorte)
 }
 ```
 
-### http-api-demo-clients ###
+### Demo-Apps ###
 
-Eine Solution mit komplexeren Client-Applikationen steht in einem eigenen git-Repository zur Verfügung: [http-api-demo-clients](https://github.com/NEVARISBausoftwareGmbH/http-api-demo-clients).
+Die Solution _http-api-client-libs.sln_ enthält neben dem Quellcode der Nevaris.Build.ClientApi
+auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2023.1 über
+die Nevaris.Build.ClientApi demonstrieren.
+
+* *EinfacherApiClient:* Minimale Konsolenapplikation, die die Verwendung der Nevaris.Build.ClientApi zeigt.
+* *AdressConsoleApp:* Konsolenapplikation, die den Zugriff auf globale Adressen demonstriert.
+  Die notwendigen Einstellungen (unter anderem die Basis-URL des Zielsystems) müssen in der Datei _Settings.json_ eingetragen werden.
+* *AbrechnungConsoleApp:* Konsolenapplikation, die den Lesezugriff auf Abrechnungsdaten (Positionsblöcke mit Aufmaßzeilen) eines Projekts demonstriert.
+  Die Basis-URL des Zielsystems sowie die Informationen zur Projektidentifikation müssen in _Settings.json_ eingetragen werden.
+* *LvKopierenApp:* Konsolenapplikation, die ein Leistungsverzeichnis dupliziert, indem es alle Positionen und Gruppen einzeln kopiert.
+  Quelle und Ziel müssen in _Settings.json_ eingetragen werden.
+* *LV Viewer:* WPF-Applikation, die das Auslesen eines Leistungsverzeichnisses demonstriert. Speicherort, Projekt und Leistungsverzeichnis
+  können über die grafische Oberfläche ausgewählt werden.
+* *KalkulationApp:* Ähnlich dem LV Viewer erlaubt diese App die Auswahl eines Leistungsverzeichnisses, darüber hinaus ist ein lesender Zugriff
+  auf die enthaltenen Kalkulationen möglich.
+* *BetriebsmittelStammApp:* WPF-Applikation, die Betriebsmittelstämme von einem System in ein anderes kopiert.
 
 ## Voraussetzungen ##
 
@@ -127,7 +142,7 @@ Der Port, über den die RESTful API erreichbar ist, ist konfigurierbar (der Stan
 ![SetupBusinessdienstKonfiguration](Docs/SetupBusinessdienstKonfiguration.png)
 
 Die im Setup getätigten Einstellungen führen dazu, dass in der Nevaris.config
-dieser Eintrag erzeugt wird, der den Businessdienst dazu veranlasst, die RESTful API 
+dieser Eintrag erzeugt wird, der den Businessdienst dazu veranlasst, die RESTful API
 am Port 8500 bereitzustellen:
 
 ````xml
