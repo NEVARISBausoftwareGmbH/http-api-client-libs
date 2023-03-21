@@ -296,7 +296,7 @@ namespace Lv_Viewer
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Multiselect = false;
             openFileDialog.AddExtension = true;
-            openFileDialog.Filter = "ÖNORM A2063 LV (*.onlv)|*.onlv";
+            openFileDialog.Filter = "Leistungsverzeichnis|*.ONLV;*.D81; *.D82; *.D83; *.D85; *.D86; *.P81; *.P82; *.P83; *.P85; *.P86; *.X80; *.X81; *.X82; *.X83; *.X85; *.X86";
             if (openFileDialog.ShowDialog() == true)
             {
                 _mainWindow.SetWaitSpinner(true);
