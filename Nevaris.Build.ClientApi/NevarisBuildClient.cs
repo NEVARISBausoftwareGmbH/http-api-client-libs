@@ -37,6 +37,11 @@ public class NevarisBuildClientOptions
 public class NevarisBuildClient : IDisposable
 {
     /// <summary>
+    /// Gibt an, ob in <see cref="Dispose"/> der zugrundeliegende <see cref="HttpClient"/> geschlossen werden soll.
+    /// </summary>
+    private readonly bool _keepHttpClientOpen;
+
+    /// <summary>
     /// Konstruktor.
     /// </summary>
     /// <param name="hostUrl">Die Basis-URL, auf der die API bereitgestellt wird, z.B. "http://localhost:8500".</param>
@@ -51,17 +56,39 @@ public class NevarisBuildClient : IDisposable
             Timeout = options.Timeout
         };
 
+        _keepHttpClientOpen = false;
+
         ProjektApi = RestService.For<IProjektApi>(HttpClient, _refitSettings);
         StammApi = RestService.For<IStammApi>(HttpClient, _refitSettings);
         FinanceApi = RestService.For<IFinanceApi>(HttpClient, _refitSettings);
     }
 
     /// <summary>
-    /// Schließt die zugrundeliegende HTTP-Verbindung zum Server.
+    /// Alternativer Konstruktor, der direkt einen <see cref="HttpClient"/> entgegennimmt.
+    /// </summary>
+    /// <param name="httpClient"></param>
+    public NevarisBuildClient(HttpClient httpClient)
+    {
+        HttpClient = httpClient;
+
+        _keepHttpClientOpen = true;
+        
+        ProjektApi = RestService.For<IProjektApi>(HttpClient, _refitSettings);
+        StammApi = RestService.For<IStammApi>(HttpClient, _refitSettings);
+        FinanceApi = RestService.For<IFinanceApi>(HttpClient, _refitSettings);
+    }
+
+    /// <summary>
+    /// Schließt den <see cref="HttpClient"/> (d.h. die zugrundeliegende HTTP-Verbindung zum Server), außer
+    /// der HttpClient wurde per <see cref="NevarisBuildClient(System.Net.Http.HttpClient)"/>-Konstruktor
+    /// von außen mitgegeben.
     /// </summary>
     public void Dispose()
     {
-        HttpClient.Dispose();
+        if (!_keepHttpClientOpen)
+        {
+            HttpClient.Dispose();
+        }
     }
 
     /// <summary>
