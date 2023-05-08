@@ -8,6 +8,15 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.4.0 (für Build 2023.1 Patch 2 – 23.1.23125.540)
+
+- Neue Properties _Projekt.BetriebsmittelStammId_, _Projekt.BetriebsmittelStammNummer_,
+  _Projekt.BetriebsmittelStammBezeichnung_: Erlauben die Abfrage des Betriebsmittelstamms, der
+  dem Projekt zugeordnet ist (nur lesender Zugriff).
+- Neue Properties _GlobaleVariable.Wert_ und _GlobaleVariableAnsatz.Wert_: Ermöglichen das Auslesen
+  des berechneten Werts eines Variablenansatzes (im Betriebsmittelstamm oder kostenebenenabhängig
+  im Projekt).
+
 ### 4.3.1 (für Build 2023.1 – 23.1.23075.791)
 
 - Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:

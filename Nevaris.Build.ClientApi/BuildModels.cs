@@ -131,14 +131,14 @@ public class AdresseKurzInfo : BaseObject
     public override string ToString() => $"{Code}: {Name}";
 }
 
-public class GeoCoordinate
+public class GeoCoordinate : BaseObject
 {
     public double Latitude { get; set; }
 
     public double Longitude { get; set; }
 }
 
-public class NewAdresseInfo
+public class NewAdresseInfo : BaseObject
 {
     public AdressArt AdressArt { get; set; }
 
@@ -168,7 +168,7 @@ public enum ZugeordneteAdresseRolle
     Mitbewerber = 50
 }
 
-public class LvZugeordneteAdresse
+public class LvZugeordneteAdresse : BaseObject
 {
     public ZugeordneteAdresseRolle Rolle { get; set; }
 
@@ -518,10 +518,37 @@ public class Projekt : BaseObject
     /// </summary>
     public List<Leistungszeitraum> Leistungszeiträume { get; set; }
 
-    public BetriebsmittelStammArt? BetriebsmittelStammArt { get; set; }
+    /// <summary>
+    /// Die ID des Betriebsmittelstamms, der für dieses Projekt hinerlegt ist. Kann nicht direkt gesetzt werden,
+    /// sondern wird beim erstmaligen Anlegen einer Kalkulation befüllt.
+    /// Der Betriebsmittelstamm kann per GET /build/global/betriebsmittelstaemme/{betriebsmittelstammId}
+    /// abgefragt werden.
+    /// Es ist möglich, dass es zu der hier hinterlegten ID keinen Betriebsmittelstamm gibt, da z.B.
+    /// der Betriebsmittelstamm nachträglich gelöscht worden sein kann, wovon das Projekt jedoch nichts mitbekommt.
+    /// </summary>
+    public Guid? BetriebsmittelStammId { get; set; }
+    
+    /// <summary>
+    /// Die Nummer des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
+    /// befüllt ist und wenn die Betriebsmittelstamm-ID auf einen existierenden Betriebsmittelstamm verweist.
+    /// </summary>
+    public string BetriebsmittelStammNummer { get; set; }
 
     /// <summary>
-    /// Für ÖNORM-Stämme: Die Kalkulationsversion (kann nicht nachträglich geändert werden).
+    /// Die Bezeichnung des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
+    /// befüllt ist und wenn die Betriebsmittelstamm-ID auf einen existierenden Betriebsmittelstamm verweist.
+    /// </summary>
+    public string BetriebsmittelStammBezeichnung { get; set; }
+
+    /// <summary>
+    /// Die Art des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
+    /// befüllt ist.
+    /// </summary>
+    public BetriebsmittelStammArt? BetriebsmittelStammArt { get; set; }
+    
+    /// <summary>
+    /// Für ÖNORM-Stämme: Die Kalkulationsversion des zugewiesenen Betriebsmittelstamms
+    /// Ist befüllt, wenn <see cref="BetriebsmittelStammId"/> befüllt ist.
     /// </summary>
     public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
 
@@ -530,11 +557,40 @@ public class Projekt : BaseObject
     public int? DarstellungsgenauigkeitMengen { get; set; } // = NachkommastellenAnsatzUI
     public int? DarstellungsgenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreiseUI
 
+    /// <summary>
+    /// Die ID der Wurzel-Lohngruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid LohnRootGruppeId { get; set; }
+
+    /// <summary>
+    /// Die ID der Wurzel-Materialgruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid MaterialRootGruppeId { get; set; }
+    
+    /// <summary>
+    /// Die ID der Wurzel-Gerätegruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid GerätRootGruppeId { get; set; }
+    
+    /// <summary>
+    /// Die ID der Wurzel-Sonstige-Kosten-Gruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid SonstigeKostenRootGruppeId { get; set; }
+
+    /// <summary>
+    /// Die ID der Wurzel-Nachunternehmergruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid NachunternehmerRootGruppeId { get; set; }
+    
+    /// <summary>
+    /// Die ID der Wurzel-Bausteingruppe des Projekts. Das zugehörige Objekt ist per
+    /// /build/projekte/{projektId}/betriebsmittel/{betriebsmittelId} abrufbar.
+    /// </summary>
     public Guid BausteinRootGruppeId { get; set; }
 
     /// <summary>
@@ -819,7 +875,7 @@ public class Kostenart : BaseObject
 /// <summary>
 /// Informationen zu einer neu zu erzeugenden Kostenart.
 /// </summary>
-public class NewKostenartInfo
+public class NewKostenartInfo : BaseObject
 {
     public string Bezeichnung { get; set; }
     public string Nummer { get; set; }
@@ -896,7 +952,7 @@ public class Gerätefaktor : BaseObject
     public List<GerätefaktorWert> Werte { get; set; }
 }
 
-public class GerätefaktorWert
+public class GerätefaktorWert : BaseObject
 {
     public Guid KostenebeneId { get; set; }
 
@@ -919,6 +975,7 @@ public class GlobaleVariable : BaseObject
     /// </summary>
     public string Variable { get; set; }
 
+    [Obsolete("Dieses Flag war nur von interner Bedeutung und wird nicht mehr unterstützt.")]
     public bool? IstKalkulationsVariable { get; set; }
 
     /// <summary>
@@ -927,6 +984,13 @@ public class GlobaleVariable : BaseObject
     /// </summary>
     public string Ansatz { get; set; }
 
+    /// <summary>
+    /// Nur für Betriebsmittelstämme: Der berechnete Wert (d.h. das Ergebnis des Ansatzes).
+    /// Im Projektfall steht der Wert kostenebenenabhängig in <see cref="Ansätze"/>.
+    /// Wird für Schreibzugriffe ignoriert.
+    /// </summary>
+    public decimal? Wert { get; set; }
+    
     /// <summary>
     /// Nur für Betriebsmittelstämme: Enthält einen optionalen Kommentar. Im Projektfall steht der
     /// Kommentar kostenebenenabhängig in <see cref="Ansätze"/>.
@@ -939,10 +1003,14 @@ public class GlobaleVariable : BaseObject
     public List<GlobaleVariableAnsatz> Ansätze { get; set; }
 }
 
+/// <summary>
+/// Ein kostenebenenabhängiger Variablenansatz einer Projektvariablen (<see cref="GlobaleVariable"/>).
+/// </summary>
 public class GlobaleVariableAnsatz : BaseObject
 {
     /// <summary>
-    /// Identifiziert die Kostenebene, auf der dieser Ansatz definiert ist.
+    /// Identifiziert die Kostenebene, auf der dieser Ansatz definiert ist. Dies ist
+    /// die ID des Projekts oder eine der Kalkulationen. 
     /// </summary>
     public Guid KostenebeneId { get; set; }
 
@@ -950,7 +1018,13 @@ public class GlobaleVariableAnsatz : BaseObject
     /// Der Ansatz (= Berechnungsformel)
     /// </summary>
     public string Ansatz { get; set; }
-    
+
+    /// <summary>
+    /// Der berechnete Wert (d.h. das Ergebnis des Ansatzes). Wird für Schreibzugriffe
+    /// ignoriert.
+    /// </summary>
+    public decimal? Wert { get; set; }
+
     /// <summary>
     /// Optionaler Kommentar
     /// </summary>
@@ -982,7 +1056,7 @@ public class NewZuschlagsartInfo : BaseObject
     public ZuschlagsTyp? Zuschlagstyp { get; set; }
 }
 
-public class DbBetriebsmittelGruppe
+public class DbBetriebsmittelGruppe : BaseObject
 {
     public string Bezeichnung { get; set; }
 
@@ -2050,7 +2124,8 @@ public enum GliederungsArt
     TitelGliederung = 1,
 
     /// <summary>
-    /// Ohne Gliederung
+    /// Ohne Gliederung (für GAEB). Wenn bei der Erzeugung eines ÖNORM-LVs dieser Wert angegeben wird
+    /// (via <see cref="LvDetails.GliederungsArt"/>), wird ein LV mit LG-Gliederung erzeugt.
     /// </summary>
     OhneGliederung = 2,
 
@@ -2320,7 +2395,7 @@ public class NewLvInfo : BaseObject
     public LvStatus? Status { get; set; }
 
     /// <summary>
-    /// Erforderliches Objekt mit Detailinformationen zum neuen LV.
+    /// (Optional) Objekt mit Detailinformationen zum neuen LV.
     /// </summary>
     public LvDetails LvDetails { get; set; }
 
@@ -2541,7 +2616,7 @@ public class LvDetails : BaseObject
 /// Eine Zahlungsbedingung für ein Leistungsverzeichnis oder eine Rechnung. Besteht aus einer Fälligkeit
 /// und maximal 3 Skonti.
 /// </summary>
-public class Zahlungsbedingung
+public class Zahlungsbedingung : BaseObject
 {
     public string Nummer { get; set; }
 
@@ -2563,7 +2638,7 @@ public class Zahlungsbedingung
 /// <summary>
 /// Eine Fälligkeit, bestehend aus einer Laufzeit und einer Einheit (Tage, Werktage, Wochen, Monate).
 /// </summary>
-public class Fälligkeit
+public class Fälligkeit : BaseObject
 {
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public FälligkeitEinheit Einheit { get; set; } = FälligkeitEinheit.Tage;
@@ -2574,7 +2649,7 @@ public class Fälligkeit
 /// <summary>
 /// Ein Skonto, bestehend aus einer Fälligkeit und einem Prozentsatz.
 /// </summary>
-public class Skonto
+public class Skonto : BaseObject
 {
     public Fälligkeit Fälligkeit { get; set; }
 
@@ -2605,7 +2680,7 @@ public enum GewaehrleistungEinheit
 /// <summary>
 /// Enthält BInärdaten zu Grafiken, die dem LV zugeordnet sind.
 /// </summary>
-public class LvBildDetails
+public class LvBildDetails : BaseObject
 {
     /// <summary>
     /// Die Bild-Daten des LV-Bildes, falls vorhanden.
@@ -2616,7 +2691,7 @@ public class LvBildDetails
 /// <summary>
 /// Ein Bild im Format png, jpeg, svg oder gif.
 /// </summary>
-public class Bild
+public class Bild : BaseObject
 {
     /// <summary>
     /// Name des Bilds (üblicherweise Dateiname ohne Verzeichnispfad)
@@ -2643,7 +2718,7 @@ public enum BildFormat
     Svg
 }
 
-public class Variantenzusammenstellung
+public class Variantenzusammenstellung : BaseObject
 {
     public string Nummer { get; set; }
 
@@ -2652,7 +2727,7 @@ public class Variantenzusammenstellung
     public string Beschreibung { get; set; }
 }
 
-public class Zuordnungskennzeichen
+public class Zuordnungskennzeichen : BaseObject
 {
     public string Nummer { get; set; }
 
@@ -2670,7 +2745,7 @@ public class Zuordnungskennzeichen
     public Dictionary<string, int> VariantenzusammenstellungToVariante { get; set; }
 }
 
-public class Variante
+public class Variante : BaseObject
 {
     /// <summary>
     /// Nummer der Variante (identifiziert die Variante innerhalb ihres Zuordnungskennzeichen).
@@ -3171,7 +3246,7 @@ public class LvItemBase : BaseObject
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
-public class NachlassInfo
+public class NachlassInfo : BaseObject
 {
     /// <summary>
     /// Aufschläge/Nachlässe pro Preisanteil (idertifiziert über den Preisanteil-Code, z.B. "L" für Lohn).
@@ -3185,7 +3260,7 @@ public class NachlassInfo
     public Nachlass EinheitspreisNachlass { get; set; }
 }
 
-public class Nachlass
+public class Nachlass : BaseObject
 {
     public AufschlagNachlassArt Art { get; set; }
 
@@ -3426,22 +3501,37 @@ public class LvItemErgebnisse : BaseObject
 /// Enthält ein importieres Leistungsverzeichnis mit den vom 
 /// Importer erzeugten Meldungen.
 /// </summary>
-public class LeistungsverzeichnisMitImportMeldungen
+public class LeistungsverzeichnisMitImportMeldungen : BaseObject
 {
     public Leistungsverzeichnis ImportieresLeistungsverzeichnis { get; set; }
+
     public List<ResultInfo> ImporterMeldungen { get; set; }
 }
 
 /// <summary>
-/// Objekt zur Auswertung von diversen Meldung die z.B. bei 
-/// Importvorgängen entstehen. 
+/// Objekt zur Auswertung von diversen Meldung, die z.B. bei Importvorgängen entstehen. 
 /// </summary>
-public class ResultInfo
+public class ResultInfo : BaseObject
 {
+    /// <summary>
+    /// Meldungstext (z.B. Fehlermeldung).
+    /// </summary>
     public string Text { get; set; }
-    public object Tag { get; set; }
+
+    /// <summary>
+    /// Schweregrad der Meldung.
+    /// </summary>
     public MeldungSeverity Severity { get; set; }
+
+    /// <summary>
+    /// Wert der betroffenen Property, sofern relevant.
+    /// </summary>
     public object Wert { get; set; }
+
+    /// <summary>
+    /// Zusätzliche meldungsspezifische Informationen.
+    /// </summary>
+    public object Tag { get; set; }
 }
 
 /// <summary>
@@ -3458,7 +3548,7 @@ public enum MeldungSeverity
 /// Objekt enthält Informationen darüber wo sich die Quelle des zu importierenden 
 /// LVs befindet.
 /// </summary>
-public class ImportLvVonServerpfad
+public class ImportLvVonServerpfad : BaseObject
 {
     /// <summary>
     /// Zu importierende Datei befindet sich am Server.
@@ -3667,13 +3757,13 @@ public enum AufmaßzeilenArt
     Kommentar
 }
 
-public class Formel
+public class Formel : BaseObject
 {
     public int Id { get; set; }
     public List<FormelParameter> Params { get; set; }
 }
 
-public class FormelParameter
+public class FormelParameter : BaseObject
 {
     public string Name { get; set; }
     public decimal? Value { get; set; }
@@ -3762,7 +3852,7 @@ public enum CustomPropertyType
 /// <summary>
 /// Ein einfacher Geldbetrag (inklusive Währung).
 /// </summary>
-public class SimpleMoney
+public class SimpleMoney : BaseObject
 {
     public SimpleMoney(string currency, decimal? value)
     {

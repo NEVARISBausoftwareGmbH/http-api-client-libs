@@ -72,24 +72,24 @@ public interface IProjektApi
     Task<Leistungsverzeichnis> CreateLeistungsverzeichnis(string projektId, [Body] NewLvInfo newLvInfo);
 
     /// <summary>
-    /// Die Methode nimmt einen Dateipfad vom Server entgegen, prüft diese Datei ob es sich um einen LV Datenträger handelt 
-    /// und startet je nach Norm den entsprechenden Importvorgang an. Zurückgegeben wird das erzeugte Leistungsverzeichnis 
-    /// inkl. der Meldungen die im Zuges Importvorgangs erzeugt wurden.
+    /// Nimmt eine Datei vom Server entgegen, prüft, ob es sich um einen LV-Datenträger handelt 
+    /// und importiert die Datei. Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
+    /// Meldungen, die im Zuge des Importvorgangs entstehen.
     /// </summary>
+    /// <remarks>Diese Methode kann ausschließlich ÖNORM A2063 Dateien entgegennehmen.</remarks>
     /// <param name="projektId">Projekt-ID</param>
-    /// <param name="importLvInfo">Information wo sich die zu importierende Datenträger Quelle befindet.</param>
-    /// <returns></returns>
+    /// <param name="importLvInfo">Information über die Datenträger-Quelle</param>  
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerServerDateipfad")]
     Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerServerDateipfad(string projektId, [Body] ImportLvVonServerpfad importLvInfo);
 
     /// <summary>
-    /// Die Methode nimmt eine Datei vom Client entgegen, prüft diese Datei ob es sich um einen LV Datenträger handelt 
-    /// und startet je nach Norm den entsprechenden Importvorgang an. Zurückgegeben wird das erzeugte Leistungsverzeichnis 
-    /// inkl. der Meldungen die im Zuges Importvorgangs erzeugt wurden.
+    /// Nimmt eine Datei vom Client entgegen, prüft, ob es sich um einen LV-Datenträger handelt 
+    /// und importiert die Datei. Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
+    /// Meldungen, die im Zuge des Importvorgangs entstehen.
     /// </summary>
+    /// <remarks>Diese Methode kann ausschließlich ÖNORM A2063 Dateien entgegennehmen.</remarks>
     /// <param name="projektId">Projekt-ID</param>
-    /// <param name="clientFile">Das einzulesende Client File.</param>
-    /// <returns></returns>
+    /// <param name="clientFile">Die zu importierende Datei</param>  
     [Multipart]
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerClientDatei")]
     Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(string projektId, [AliasAs("Datei")] FileInfoPart clientFile);

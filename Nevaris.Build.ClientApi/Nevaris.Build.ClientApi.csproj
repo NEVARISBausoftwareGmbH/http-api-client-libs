@@ -15,15 +15,16 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi 4.3.1 für Build 2023.1:
-- Unterstützung für Server-Ordner in Speicherorten
-- Erweiterungen in der Betriebsmittelverwaltung
-- Funktionen zum Import von LV-Datenträgern
-ClientApi 4.3.2:
-- NevarisBuildClient: Alternativen Konstruktor hinzugefügt, der einen HttpClient entgegennimmt</PackageReleaseNotes>
-    <PackageVersion>4.3.2</PackageVersion>
-    <AssemblyVersion>4.3.2</AssemblyVersion>
-    <FileVersion>4.3.2</FileVersion>
+    <PackageReleaseNotes>ClientApi 4.4.0 für Build 2023.1 Patch 2:
+- Neue Properties _Projekt.BetriebsmittelStammId_, _Projekt.BetriebsmittelStammNummer_,
+  _Projekt.BetriebsmittelStammBezeichnung_: Erlauben die Abfrage des Betriebsmittelstamms, der
+  dem Projekt zugeordnet ist (nur lesender Zugriff).
+- Neue Properties _GlobaleVariable.Wert_ und _GlobaleVariableAnsatz.Wert_: Ermöglichen das Auslesen
+  des berechneten Werts eines Variablenansatzes (im Betriebsmittelstamm oder kostenebenenabhängig
+  im Projekt).</PackageReleaseNotes>
+    <PackageVersion>4.4.0</PackageVersion>
+    <AssemblyVersion>4.4.0</AssemblyVersion>
+    <FileVersion>4.4.0</FileVersion>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->

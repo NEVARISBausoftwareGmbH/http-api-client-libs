@@ -7,6 +7,13 @@ try
     // erst beim ersten API-Aufruf (hier: client.StammApi.GetSpeicherorte()).
     using var client = new NevarisBuildClient("http://localhost:8500");
 
+    // API-Version abfragen und auf Kompatibilität mit Client überprüfen
+    var versionCheckResult = await client.CheckVersion();
+    if (!versionCheckResult.AreVersionsCompatible)
+    {
+        throw new InvalidOperationException($"Versionskonflikt: API: {versionCheckResult.ApiVersion}, client: {versionCheckResult.ClientVersion}");
+    }
+
     // Auslesen der Speicherorte
     var speicherorte = await client.StammApi.GetSpeicherorte();
 
