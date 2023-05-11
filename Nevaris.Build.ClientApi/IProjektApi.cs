@@ -116,7 +116,7 @@ public interface IProjektApi
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="knotenId">Knoten-ID</param>
-    [Get("/build/projekte/{projektId}/lvknoten")]
+    [Get("/build/projekte/{projektId}/lvknoten/{knotenId}")]
     Task<LvKnoten> GetLvKnoten(string projektId, Guid knotenId);
 
     /// <summary>
@@ -141,7 +141,7 @@ public interface IProjektApi
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="positionId">Positions-ID</param>
-    [Get("/build/projekte/{projektId}/lvpositionen")]
+    [Get("/build/projekte/{projektId}/lvpositionen/{positionId}")]
     Task<LvPosition> GetLvPosition(string projektId, Guid positionId);
 
     /// <summary>
