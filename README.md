@@ -8,7 +8,7 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.4.0 + 4.4.1 (für Build 2023.1 Patch 2 – 23.1.23125.540)
+### 4.4.0 + 4.4.1 + 4.4.2 (für Build 2023.1 Patch 2 – 23.1.23125.540)
 
 - Neue Properties _Projekt.BetriebsmittelStammId_, _Projekt.BetriebsmittelStammNummer_,
   _Projekt.BetriebsmittelStammBezeichnung_: Erlauben die Abfrage des Betriebsmittelstamms, der
@@ -17,6 +17,7 @@ von NEVARIS Build 2023.1 Sie ist auch als
   des berechneten Werts eines Variablenansatzes (im Betriebsmittelstamm oder kostenebenenabhängig
   im Projekt).
 - (4.4.1) Fix für _IProjektApi.GetLvPosition/GetLvKnoten_ (fehlende Parameterübergabe an die API)
+- (4.4.2) Lesezugriff auf Projektadressen ermöglicht (_IProjektApi.GetAdressen_, _IProjektApi.GetAdresse_)
 
 ### 4.3.1 (für Build 2023.1 – 23.1.23075.791)
 
