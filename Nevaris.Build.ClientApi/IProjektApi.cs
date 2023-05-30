@@ -36,6 +36,21 @@ public interface IProjektApi
     Task DeleteProjekt(string projektId);
 
     /// <summary>
+    /// Liefert alle Adressen eines Projekts.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    [Get("/build/projekte/{projektId}/adressen")]
+    Task<List<Adresse>> GetAdressen(string projektId);
+
+    /// <summary>
+    /// Liefert die Projektadresse mit der angegebenen ID.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="id">Adress-ID</param>
+    [Get("/build/projekte/{projektId}/adressen/{id}")]
+    Task<Adresse> GetAdresse(string projektId, Guid id);
+
+    /// <summary>
     /// Liefert alle Leistungsverzeichnisse eines Projekts (ohne Inhalte wie Positionen, Titel usw.).
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>

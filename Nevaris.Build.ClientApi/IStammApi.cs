@@ -27,7 +27,7 @@ public interface IStammApi
     Task<List<Adresse>> GetAdressen();
 
     /// <summary>
-    /// Liefert die Adresse mit dem angegebenen Code.
+    /// Liefert die globale Adresse mit dem angegebenen Code.
     /// </summary>
     /// <param name="code">Adresscode</param>
     [Get("/build/global/adressen/{code}")]

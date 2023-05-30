@@ -23,10 +23,12 @@
   des berechneten Werts eines Variablenansatzes (im Betriebsmittelstamm oder kostenebenenabhängig
   im Projekt).
 ClientApi 4.4.1 für Build 2023.1 Patch 2:
-- Fix für IProjektApi.GetLvPosition/GetLvKnoten (fehlende Parameterübergabe an die API)</PackageReleaseNotes>
-    <PackageVersion>4.4.1</PackageVersion>
-    <AssemblyVersion>4.4.1</AssemblyVersion>
-    <FileVersion>4.4.1</FileVersion>
+- Fix für IProjektApi.GetLvPosition/GetLvKnoten (fehlende Parameterübergabe an die API)
+ClientApi 4.4.2 für Build 2023.1 Patch 2:
+- Lesezugriff auf Projektadressen ermöglicht (IProjektApi.GetAdressen, IProjektApi.GetAdresse) </PackageReleaseNotes>
+    <PackageVersion>4.4.2</PackageVersion>
+    <AssemblyVersion>4.4.2</AssemblyVersion>
+    <FileVersion>4.4.2</FileVersion>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->
