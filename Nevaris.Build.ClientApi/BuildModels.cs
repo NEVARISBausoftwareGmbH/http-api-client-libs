@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 #pragma warning disable CS1591
 
 namespace Nevaris.Build.ClientApi;
@@ -19,7 +15,7 @@ public class VersionInfo : BaseObject
     public string ProgramVersion { get; set; }
 
     /// <summary>
-    /// Die Versionsnummer der HTTP API. Diese folgt den Regeln der sematischen Versionierung.
+    /// Die Versionsnummer der HTTP API. Diese folgt den Regeln der semantischen Versionierung.
     /// </summary>
     public string ApiVersion { get; set; }
 }
@@ -39,6 +35,70 @@ public enum GesperrtArt
     Bereich,
     Hinweis
 }
+
+#nullable enable
+
+/// <summary>
+/// Eine Einheit.
+/// </summary>
+/// <remarks>Derzeit werden nur globale Einheiten unterstützt.</remarks>
+public class Einheit : BaseObject
+{
+        /// <summary>
+        /// Der Code (= "Nummer") der Einheit. Dient im Fall von globalen Einheiten als Schlüssel. 
+        /// </summary>
+        public string? Code { get; set; }
+
+        public string? Bezeichnung { get; set; }
+
+        public string? Beschreibung { get; set; }
+
+        public int? AnzahlNachkommestellen { get; set; }
+
+        public string? BezeichnungOeNORMA { get; set; }
+
+        public string? BezeichnungOeNORMB { get; set; }
+
+        public string? BezeichnungGAEB90 { get; set; }
+
+        public string? BezeichnungGAEB2000 { get; set; }
+
+        public string? BezeichnungGAEBXML { get; set; }
+
+        public string? Synonym1 { get; set; }
+
+        public string? Synonym2 { get; set; }
+
+        public string? Synonym3 { get; set; }
+
+        public string? Synonym4 { get; set; }
+
+        public string? Synonym5 { get; set; }
+
+        public string? Synonym6 { get; set; }
+
+        public string? Synonym7 { get; set; }
+
+        public string? Synonym8 { get; set; }
+
+        public string? Synonym9 { get; set; }
+
+        public string? Synonym10 { get; set; }
+
+        public decimal? Umrechnungsfaktor { get; set; }
+
+        public int? Rundung { get; set; }
+
+        public decimal? Aufschlag { get; set; }
+
+        public string? CodeUnEce { get; set; }
+        
+        public string? FinanceMengeneinheit { get; set; }
+
+        public override string? ToString() => Code;
+}
+
+#nullable restore
 
 /// <summary>
 /// Ein Mandant. Im integrierten Betrieb kommt dieser aus Finance.
@@ -1442,6 +1502,10 @@ public class BetriebsmittelDetails : BaseObject
 
     public string DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
 
+    /// <summary>
+    /// Der Zeitpunkt der letzten Änderung. Wird bei Schreiboperationen ignoriert.
+    /// </summary>
+    public DateTimeOffset? ModificationDate { get; set; }
 }
 
 /// <summary>
@@ -1510,6 +1574,11 @@ public class BetriebsmittelLohnDetails : BaseObject
     public int? WarengruppeUmlagekosten { get; set; }
 
     public string AlternativeNummer { get; set; }
+    
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelMaterialDetails : BaseObject
@@ -1539,7 +1608,13 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeNebenmaterial { get; set; }
 
     /// <summary>
-    /// Enthält zusätzliche Material-Eigenschaften.
+    /// Im Fall eines Abgleichs mit dem kaufmännischen System NEVARIS Finance
+    /// enthält diese Eigenschaft die Artikel-Nummer von Finance.
+    /// </summary>
+    public string FinanceArtikelNummer { get; set; }
+    
+    /// <summary>
+    /// Enthält zusätzliche Material-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1558,6 +1633,9 @@ public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
 
     public bool? Markierung { get; set; }
 
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
     public bool? ExternePreiswartung { get; set; }
 }
 
@@ -1623,7 +1701,12 @@ public class BetriebsmittelGerätDetails : BaseObject
     public string AlternativeNummer { get; set; }
 
     /// <summary>
-    /// Enthält zusätzliche Geräte-Eigenschaften.
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
+
+    /// <summary>
+    /// Enthält zusätzliche Geräte-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelGerätDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1699,6 +1782,11 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public string AlternativeNummer { get; set; }
+    
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelNachunternehmerDetails : BaseObject
@@ -1738,6 +1826,11 @@ public class BetriebsmittelNachunternehmerDetails : BaseObject
     public int? WarengruppeKostenanteil8 { get; set; }
 
     public int? WarengruppeGemeinkosten { get; set; }
+    
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelBausteinDetails : BaseObject

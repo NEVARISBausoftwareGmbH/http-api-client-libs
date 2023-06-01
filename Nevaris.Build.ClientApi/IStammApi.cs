@@ -21,6 +21,12 @@ public interface IStammApi
     Task<VersionInfo> GetVersion();
 
     /// <summary>
+    /// Liefert alle globalen Einheiten.
+    /// </summary>
+    [Get("/build/global/einheiten")]
+    Task<List<Einheit>> GetEinheiten();
+
+    /// <summary>
     /// Liefert alle globalen Adressen.
     /// </summary>
     [Get("/build/global/adressen")]
