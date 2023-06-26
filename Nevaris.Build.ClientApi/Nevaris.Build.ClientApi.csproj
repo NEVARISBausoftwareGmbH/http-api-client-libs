@@ -15,10 +15,10 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2024</PackageReleaseNotes>
-    <PackageVersion>4.5.2-2024</PackageVersion>
-    <AssemblyVersion>4.5.2</AssemblyVersion>
-    <FileVersion>4.5.2</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 2023.1 Patch 3: Verbesserungen und Erweiterungen im Bereich Projektadressen, Kostenarten und Notizen</PackageReleaseNotes>
+    <PackageVersion>4.5.0-2023.1.3</PackageVersion>
+    <AssemblyVersion>4.5.0</AssemblyVersion>
+    <FileVersion>4.5.0</FileVersion>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->

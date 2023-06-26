@@ -8,6 +8,33 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.5.0 (für Build 2023.1 Patch 3)
+
+- Neue Methoden für den Schreibzugriff auf Projektadressen: _IProjektApi.CreateAdresse/UpdateAdresse/DeleteAdresse_.
+- Neu: Übernahme einer globalen Adresse in ein Projekt. Dazu ist beim Aufruf von _IProjektApi.CreateAdresse_
+der Code der globalen Adresse in _NewProjektAdresseInfo.GlobaleAdresseCode_ zu übergeben.
+- Neue Properties in _Adresse_:
+  - _Nummer_ (die an der Oberfläche angezeigte Nummer der Adresse; ist für Projektadressen änderbar)
+  - Für Projektadressen: _KonzernId_, _KonzernId_ (Verweise auf andere Adressen), _Notiz_
+  - Für globale Adressen: _BildDetails_ (enthält Bilddaten)
+- Beim Anlegen einer neuen globalen Personenadresse per _IStammApi.CreateAdresse_ konnte der Name nicht mitgegeben
+werden. Dies wurde behoben: Es gibt nun die Properties _NewAdresseInfo.Nachname_ und _NewAdresseInfo.Vorname_.
+Analoges gilt für Projektadressen.
+- _IStammApi.GetAdresse_: Neuer optionaler Parameter _mitBildDetails_, um das einer globalen Adresse
+  zugeordnete Bild abzurufen (in _Adresse.BildDetails_).
+- Der Zugriff auf (globale) Kostenarten funktionierte bislang nicht korrekt in Zusammenhang mit der Einstellung
+_Mandantenbezug aktiv_, da es in diesem Fall mehrere Kostenartenstrukturen (maximal eine pro Mandant/Niederlassung) geben
+kann. Die bestehenden Operationen für den Zugriff auf Kostenarten
+(_IStammApi.GetKostenarten/GetKostenart/CreateKostenart/UpdateKostenart/CreateKostenart_) wurden dazu um
+die Parameter _mandantId_ und _niederlassungId_ erweitert. Diese Parameter müssen im Fall von aktivem
+Mandantenbezug angegeben werden (_niederlassungId_ darf null sein), im Fall von nicht aktivem Mandantenbezug
+muss null übergeben werden. Um alle Kostenartenstrukturen (über alle Mandanten) zu erhalten, gibt
+es die neue Funktion _IStammApi.GetKostenartStrukturen_.
+- An mehreren Stellen gibt unterstützt die API nun den (lesenden und schreibenen) Zugriff auf Notizen
+(im XHTML-Format): _LvItemFormatierteTexte.Notiz_, _LvDetails.RootFormatierteTexte/LvNotiz_,
+_Kalkulation.Notiz_, _KalkulationsBlatt.Notiz_, _Adresse.Notiz_.
+- Lesender Zugriff auf globale Einheiten: _IStammApi.GetEinheiten_
+
 ### 4.4.0 + 4.4.1 + 4.4.2 (für Build 2023.1 Patch 2 – 23.1.23125.540)
 
 - Neue Properties _Projekt.BetriebsmittelStammId_, _Projekt.BetriebsmittelStammNummer_,

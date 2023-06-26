@@ -36,8 +36,10 @@ public interface IStammApi
     /// Liefert die globale Adresse mit dem angegebenen Code.
     /// </summary>
     /// <param name="code">Adresscode</param>
+    /// <param name="mitBildDetails">Falls true (Default: false), wird <see cref="Adresse.BildDetails"/> befüllt
+    /// und (sofern vorhanden) das der Adresse zugeordnete Bild darin transportiert.</param>
     [Get("/build/global/adressen/{code}")]
-    Task<Adresse> GetAdresse(string code);
+    Task<Adresse> GetAdresse(string code, bool mitBildDetails = false);
 
     /// <summary>
     /// Erstellt eine neue Adresse.
@@ -224,30 +226,61 @@ public interface IStammApi
     Task<List<Mandant>> GetMandaten();
 
     /// <summary>
-    /// Liefert alle Kostenarten einschließlich eingebettete Kostenarten.
+    /// Liefert alle Kostenartstrukturen (= Wurzelobjekte, in denen die Kostenarten enthalten sind).
     /// </summary>
+    [Get("/build/global/kostenartstrukturen")]
+    Task<List<KostenartStruktur>> GetKostenartStrukturen();
+
+    /// <summary>
+    /// Liefert alle Kostenarten (als Baum) der zu dem angegebenen Mandanten gehörenden Kostenartenstruktur
+    /// (im Fall von aktivem Mandantenbezug, ansonsten darf kein Mandant angegeben werden und es wird die
+    /// mandantenübergreifende Kostenartenstruktur zurückgegeben). 
+    /// </summary>
+    /// <param name="mandantId">Die ID des Mandanten (erforderlich bei aktivem Mandantenbezug,
+    /// ansonsten muss dieser Wert null sein)</param>
+    /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Get("/build/global/kostenarten")]
-    Task<List<Kostenart>> GetKostenarten();
+    Task<List<Kostenart>> GetKostenarten(string? mandantId = null, string? niederlassungId = null);
 
     /// <summary>
     /// Liefert eine Kostenart.
     /// </summary>
     /// <param name="kostenartNummer">Nummer der Kostenart</param>
+    /// <param name="mandantId">Die ID des Mandanten (erforderlich bei aktivem Mandantenbezug,
+    /// ansonsten muss dieser Wert null sein)</param>
+    /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Get("/build/global/kostenarten/{kostenartNummer}")]
-    Task<Kostenart> GetKostenart(string kostenartNummer);
+    Task<Kostenart> GetKostenart(string kostenartNummer, string? mandantId = null, string? niederlassungId = null);
 
     /// <summary>
     /// Erstellt eine neue Kostenart.
     /// </summary>
     /// <param name="newKostenartInfo">Informationen zur neuen Kostenart</param>
+    /// <param name="mandantId">Die ID des Mandanten (erforderlich bei aktivem Mandantenbezug,
+    /// ansonsten muss dieser Wert null sein)</param>
+    /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Post("/build/global/kostenarten")]
-    Task<Kostenart> CreateKostenart([Body] NewKostenartInfo newKostenartInfo);
+    Task<Kostenart> CreateKostenart(
+        [Body] NewKostenartInfo newKostenartInfo, string? mandantId = null, string? niederlassungId = null);
 
     /// <summary>
     /// Aktualisiert eine Kostenart.
     /// </summary>
     /// <param name="kostenartNummer">Nummer der Kostenart</param>
     /// <param name="kostenart">Kostenart mit den neuen Werten</param>
+    /// <param name="mandantId">Die ID des Mandanten (erforderlich bei aktivem Mandantenbezug,
+    /// ansonsten muss dieser Wert null sein)</param>
+    /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
+    [Put("/build/global/kostenarten/{kostenartNummer}")]
+    Task UpdateKostenart(
+        string kostenartNummer, [Body] Kostenart kostenart, string? mandantId = null, string? niederlassungId = null);
+
+    /// <summary>
+    /// Aktualisiert eine Kostenart.
+    /// </summary>
+    /// <param name="kostenartNummer">Nummer der Kostenart</param>
+    /// <param name="kostenart">Kostenart mit den neuen Werten</param>
+    [Obsolete("Diese Funktion hatte irrtümlich den falschen Namen. Stattdessen sollte UpdateKostenart verwendet werden.")]
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task CreateKostenart(string kostenartNummer, [Body] Kostenart kostenart);
 
@@ -255,6 +288,9 @@ public interface IStammApi
     /// Löscht eine Kostenart.
     /// </summary>
     /// <param name="kostenartNummer">Nummer der Kostenart</param>
+    /// <param name="mandantId">Die ID des Mandanten (erforderlich bei aktivem Mandantenbezug,
+    /// ansonsten muss dieser Wert null sein)</param>
+    /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Delete("/build/global/kostenarten/{kostenartNummer}")]
-    Task DeleteKostenart(string kostenartNummer);
+    Task DeleteKostenart(string kostenartNummer, string? mandantId = null, string? niederlassungId = null);
 }
