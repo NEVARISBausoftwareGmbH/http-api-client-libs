@@ -1698,11 +1698,6 @@ public class BetriebsmittelDetails : BaseObject
     public string StandardAnsatz { get; set; }
 
     public string DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
-
-    /// <summary>
-    /// Der Zeitpunkt der letzten Änderung. Wird bei Schreiboperationen ignoriert.
-    /// </summary>
-    public DateTimeOffset? ModificationDate { get; set; }
 }
 
 /// <summary>
@@ -1771,11 +1766,6 @@ public class BetriebsmittelLohnDetails : BaseObject
     public int? WarengruppeUmlagekosten { get; set; }
 
     public string AlternativeNummer { get; set; }
-    
-    /// <summary>
-    /// Das Feld "Externe Preiswartung".
-    /// </summary>
-    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelMaterialDetails : BaseObject
@@ -1803,12 +1793,6 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public int? WarengruppeNebenmaterial { get; set; }
-
-    /// <summary>
-    /// Im Fall eines Abgleichs mit dem kaufmännischen System NEVARIS Finance
-    /// enthält diese Eigenschaft die Artikel-Nummer von Finance.
-    /// </summary>
-    public string FinanceArtikelNummer { get; set; }
     
     /// <summary>
     /// Enthält zusätzliche Material-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
@@ -1830,9 +1814,6 @@ public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
 
     public bool? Markierung { get; set; }
 
-    /// <summary>
-    /// Das Feld "Externe Preiswartung".
-    /// </summary>
     public bool? ExternePreiswartung { get; set; }
 }
 
@@ -1896,11 +1877,6 @@ public class BetriebsmittelGerätDetails : BaseObject
     public int? WarengruppeListenpreisgerätGemeinkosten { get; set; }
 
     public string AlternativeNummer { get; set; }
-
-    /// <summary>
-    /// Das Feld "Externe Preiswartung".
-    /// </summary>
-    public bool? ExternePreiswartung { get; set; }
 
     /// <summary>
     /// Enthält zusätzliche Geräte-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
@@ -1979,11 +1955,6 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public string AlternativeNummer { get; set; }
-    
-    /// <summary>
-    /// Das Feld "Externe Preiswartung".
-    /// </summary>
-    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelNachunternehmerDetails : BaseObject
@@ -2023,11 +1994,6 @@ public class BetriebsmittelNachunternehmerDetails : BaseObject
     public int? WarengruppeKostenanteil8 { get; set; }
 
     public int? WarengruppeGemeinkosten { get; set; }
-    
-    /// <summary>
-    /// Das Feld "Externe Preiswartung".
-    /// </summary>
-    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelBausteinDetails : BaseObject
