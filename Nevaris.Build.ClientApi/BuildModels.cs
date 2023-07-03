@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 #pragma warning disable CS1591
 
 namespace Nevaris.Build.ClientApi;
@@ -19,7 +15,7 @@ public class VersionInfo : BaseObject
     public string ProgramVersion { get; set; }
 
     /// <summary>
-    /// Die Versionsnummer der HTTP API. Diese folgt den Regeln der sematischen Versionierung.
+    /// Die Versionsnummer der HTTP API. Diese folgt den Regeln der semantischen Versionierung.
     /// </summary>
     public string ApiVersion { get; set; }
 }
@@ -39,6 +35,70 @@ public enum GesperrtArt
     Bereich,
     Hinweis
 }
+
+#nullable enable
+
+/// <summary>
+/// Eine Einheit.
+/// </summary>
+/// <remarks>Derzeit werden nur globale Einheiten unterstützt.</remarks>
+public class Einheit : BaseObject
+{
+        /// <summary>
+        /// Der Code (= "Nummer") der Einheit. Dient im Fall von globalen Einheiten als Schlüssel. 
+        /// </summary>
+        public string? Code { get; set; }
+
+        public string? Bezeichnung { get; set; }
+
+        public string? Beschreibung { get; set; }
+
+        public int? AnzahlNachkommestellen { get; set; }
+
+        public string? BezeichnungOeNORMA { get; set; }
+
+        public string? BezeichnungOeNORMB { get; set; }
+
+        public string? BezeichnungGAEB90 { get; set; }
+
+        public string? BezeichnungGAEB2000 { get; set; }
+
+        public string? BezeichnungGAEBXML { get; set; }
+
+        public string? Synonym1 { get; set; }
+
+        public string? Synonym2 { get; set; }
+
+        public string? Synonym3 { get; set; }
+
+        public string? Synonym4 { get; set; }
+
+        public string? Synonym5 { get; set; }
+
+        public string? Synonym6 { get; set; }
+
+        public string? Synonym7 { get; set; }
+
+        public string? Synonym8 { get; set; }
+
+        public string? Synonym9 { get; set; }
+
+        public string? Synonym10 { get; set; }
+
+        public decimal? Umrechnungsfaktor { get; set; }
+
+        public int? Rundung { get; set; }
+
+        public decimal? Aufschlag { get; set; }
+
+        public string? CodeUnEce { get; set; }
+        
+        public string? FinanceMengeneinheit { get; set; }
+
+        public override string? ToString() => Code;
+}
+
+#nullable restore
 
 /// <summary>
 /// Ein Mandant. Im integrierten Betrieb kommt dieser aus Finance.
@@ -138,11 +198,75 @@ public class GeoCoordinate : BaseObject
     public double Longitude { get; set; }
 }
 
+/// <summary>
+/// Infos zu einer neu anzulegenden globalen Adresse.
+/// </summary>
 public class NewAdresseInfo : BaseObject
 {
+    /// <summary>
+    /// Der Adresscode. Das ist der Wert, der anschließend in <see cref="Adresse.Code"/> und
+    /// <see cref="Adresse.Nummer"/> verfügbar ist. Falls null, wird ein Code automatisch generiert.
+    /// </summary>
+    public string Code { get; set; }
+
+    /// <summary>
+    /// Die Adressart: Organisation oder Person.
+    /// </summary>
     public AdressArt AdressArt { get; set; }
 
+    /// <summary>
+    /// Der Name. Ist für Organisationen der Name der Organisation, für Personen der Nachname, sofern kein solcher
+    /// über das Feld <see cref="Nachname"/> spezifiziert wird.
+    /// </summary>
     public string Name { get; set; }
+
+    /// <summary>
+    /// Für Personenadressen: Der Vorname.
+    /// </summary>
+    public string Vorname { get; set; }
+
+    /// <summary>
+    /// Für Personenadressen: Der Nachname.
+    /// </summary>
+    public string Nachname { get; set; }
+}
+
+/// <summary>
+/// Infos zu einer neu anzulegenden Projektadresse.
+/// </summary>
+public class NewProjektAdresseInfo : BaseObject
+{
+    /// <summary>
+    /// Falls befüllt, wird die Projektadresse durch Übernahme der globalen Adresse mit diesem Code. In diesem
+    /// Fall werden die restlichen Felder in diesem Objekt ignoriert.
+    /// </summary>
+    public string GlobaleAdresseCode { get; set; }
+
+    /// <summary>
+    /// Die Adressart: Organisation oder Person.
+    /// </summary>
+    public AdressArt AdressArt { get; set; }
+
+    /// <summary>
+    /// Der Name. Ist für Organisationen der Name der Organisation, für Personen der Nachname, sofern kein solcher
+    /// über das Feld <see cref="Nachname"/> spezifiziert wird.
+    /// </summary>
+    public string Name { get; set; }
+    
+    /// <summary>
+    /// Für Personenadressen: Der Vorname.
+    /// </summary>
+    public string Vorname { get; set; }
+
+    /// <summary>
+    /// Für Personenadressen: Der Nachname.
+    /// </summary>
+    public string Nachname { get; set; }
+    
+    /// <summary>
+    /// Die optionale Nummer der Adresse (<see cref="Adresse.Code"/>).
+    /// </summary>
+    public string Nummer { get; set; }
 }
 
 public enum ZugeordneteAdresseRolle
@@ -183,14 +307,23 @@ public class LvZugeordneteAdresse : BaseObject
 public class Adresse : BaseObject
 {
     /// <summary>
-    /// Für globale Adressen: Der Code, der die Adresse identifiziert.
+    /// Für globale Adressen: Der interne Code, der die Adresse identifiziert.
+    /// Für Projektadressen: Der Code der globalen Adresse (sofern es eine gibt), aus der diese Projektadresse
+    /// erzeugt wurde (nicht änderbar).
     /// </summary>
     public string Code { get; set; }
 
     /// <summary>
-    /// Für Projektadressen: Die GUID, die die Adresse identifiziert.
+    /// Für Projektadressen: Die GUID, die die Adresse identifiziert. Ist für globale Adressen null.
     /// </summary>
     public Guid? Id { get; set; }
+    
+    /// <summary>
+    /// Die in der Oberfläche sichtbare Nummer er Adresse. Ist für manuell angelegte globale Adressen identisch mit dem
+    /// Code und kann nicht nachträglich geändert werden.
+    /// Für Projektadressen ist dieser Wert optional und änderbar. 
+    /// </summary>
+    public string Nummer { get; set; }
 
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
@@ -199,6 +332,7 @@ public class Adresse : BaseObject
     public string Vorname { get; set; }
     public string Nachname { get; set; }
     public string Kürzel { get; set; }
+    
     public string LandCode { get; set; }
     public bool IstPostfachInVerwendung { get; set; }
     public string Titel { get; set; }
@@ -228,17 +362,67 @@ public class Adresse : BaseObject
     public string SozialesNetzwerk2 { get; set; }
     public string SozialesNetzwerk2Name { get; set; }
     public string Adresszusatz { get; set; }
+    
+    /// <summary>
+    /// Bundesland-Code. Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string BundeslandCode { get; set; }
+
+    /// <summary>
+    /// Landkreis/Bezirks-Code. Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string LandkreisCode { get; set; }
+
+    /// <summary>
+    /// Anrede-Code ("FR", "HR"). Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string AnredeCode { get; set; }
-    public string KonzernCode { get; set; }
-    public string ZentraleCode { get; set; }
+
+    /// <summary>
+    /// Sperrhinweis-Code. Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string SperrhinweisCode { get; set; }
+
+    /// <summary>
+    /// Sprach-Code ("DE", "EN" usw.). Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string SpracheCode { get; set; }
+
+    /// <summary>
+    /// Code für die Adressquelle. Wird nur für globale Adressen genutzt.
+    /// </summary>
     public string AdressQuelleCode { get; set; }
 
+    /// <summary>
+    /// Falls ein Verweis auf eine andere Adresse gesetzt ist, ist das der Code. Nur für globale Adressen relevant.
+    /// </summary>
     public string VerweisAufAdresseCode { get; set; }
+    
+    /// <summary>
+    /// Nur für globale Adressen relevant.
+    /// </summary>
+    public bool IstDuplikat { get; set; }
 
+    /// <summary>
+    /// Nur für globale Adressen: Der Adresscode des zugeordneten Konzerns.
+    /// </summary>
+    public string KonzernCode { get; set; }
+
+    /// <summary>
+    /// Nur für globale Adressen: Der Adresscode der zugeordneten Zentrale.
+    /// </summary>
+    public string ZentraleCode { get; set; }
+
+    /// <summary>
+    /// Nur für Projektadressen: Die Adress-ID des zugeordneten Konzerns.
+    /// </summary>
+    public Guid? KonzernId { get; set; }
+
+    /// <summary>
+    /// Nur für Projektadressen: Die Adress-ID der zugeordneten Zentrale.
+    /// </summary>
+    public Guid? ZentraleId { get; set; }
+    
     public bool IstDebitorVorhanden { get; set; }
     public bool IstKreditorVorhanden { get; set; }
     public string Handelsregister { get; set; }
@@ -250,21 +434,40 @@ public class Adresse : BaseObject
     public GesperrtArt GesperrtArt { get; set; }
     public DateTime? GültigAb { get; set; }
     public DateTime? GültigBis { get; set; }
-    public bool IstDuplikat { get; set; }
     public int? VollständigkeitInProzent { get; set; }
     public decimal? Saldo { get; set; }
     public string ExternerCode { get; set; }
     public string Auslandsvorwahl { get; set; }
     public string DurchwahlFax { get; set; }
     public string DurchwahlZentrale { get; set; }
+    
+    /// <summary>
+    /// Nur für globale Adressen: Eine ID in GUID-Format, die derzeit nur für interne Zwecke genutzt wird.
+    /// </summary>
     public Guid? Guid { get; set; }
+    
     public string Hauptanschlussnummer { get; set; }
     public bool? IsReadOnlyNumber { get; set; }
     public string Ortskennzahl { get; set; }
     public string OutlookEntryId { get; set; }
     public int? Ähnlichkeit { get; set; }
     public GeoCoordinate GeoPosition { get; set; }
+
+    /// <summary>
+    /// Notiz. Für globale Adressen ist dies ein unformatierter Text, für Projektadressen ist dies
+    /// ein formatierter Text (XHTML).
+    /// </summary>
     public string Notiz { get; set; }
+
+    /// <summary>
+    /// Detailinfo (nur für globale Adressen): Optionales Objekt, das das Adress-Bild enthält.
+    /// Diese Property wird nur gesetzt, wenn beim Abrufen der Adresse mitBildDetails = true übergeben wurde. 
+    /// </summary>
+    public AdressBildDetails BildDetails { get; set; }
+    
+    /// <summary>
+    /// Feld "Beschreibung". Nur für globale Adressen relevant.
+    /// </summary>
     public string Beschreibung { get; set; }
 
     public List<Adressat> Adressaten { get; set; }
@@ -276,6 +479,17 @@ public class Adresse : BaseObject
     /// (Detailinfo) Die Individualeigenschaften, die dieser Adresse zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+}
+
+/// <summary>
+/// Enthält Binärdaten zu Grafiken, die einer globalen Adresse zugeordnet sind.
+/// </summary>
+public class AdressBildDetails : BaseObject
+{
+    /// <summary>
+    /// Die Bild-Daten des Adress-Bildes, falls vorhanden (sonst null).
+    /// </summary>
+    public Bild Bild { get; set; }
 }
 
 public class Adressat : BaseObject
@@ -842,6 +1056,37 @@ public class NewBetriebsmittelStammInfo : BaseObject
 }
 
 /// <summary>
+/// Eine Kostenartstruktur, d.h. das Wurzelelement, das die Kostenarten (und Kostenartengruppen) enthält.
+/// Im Fall von aktivem Mandatenbezug muss jede Kostenartstruktur einem Mandanten zugeordnet sein und es gibt
+/// pro Mandant oder Niederlassung maximal eine Kostenartstruktur. Im Fall von nicht aktivem Mandantebezug
+/// gibt es genau eine mandantenübergreifende Kostenartstruktur.
+/// </summary>
+public class KostenartStruktur : BaseObject
+{
+    /// <summary>
+    /// Die Bezeichung der Kostenartstruktur.
+    /// </summary>
+    public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// Die Nummer der Kostenartstruktur.
+    /// </summary>
+    public string Nummer { get; set; }
+
+    /// <summary>
+    /// Bei aktivem Mandantenbezug: Die Mandanten-ID.
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
+    public string MandantenId { get; set; }
+
+    /// <summary>
+    /// Bei aktivem Mandantenbezug: Die Niederlassung-ID (kann null sein).
+    /// </summary>
+    [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
+    public string NiederlassungId { get; set; }
+}
+
+/// <summary>
 /// Eine Kostenart. Kann auch eine Kostenartengruppe sein.
 /// </summary>
 public class Kostenart : BaseObject
@@ -873,12 +1118,24 @@ public class Kostenart : BaseObject
 }
 
 /// <summary>
-/// Informationen zu einer neu zu erzeugenden Kostenart.
+/// Informationen zu einer neu zu erzeugenden Kostenart (oder Kostenartengruppe).
 /// </summary>
 public class NewKostenartInfo : BaseObject
 {
+    /// <summary>
+    /// Die Bezeichnung der neuen Kostenart.
+    /// </summary>
     public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// Die vollständige Nummer der neuen Kostenart (oder Kostenartengruppe), z.B. "7.2.". Ein Punkt (".") wird
+    /// immer als Trennzeichen zwischen zwei Ebenen interpretiert.
+    /// </summary>
     public string Nummer { get; set; }
+
+    /// <summary>
+    /// Falls true, wird einen Kostenartengruppe erzeugt, ansonsten eine Kostenart.
+    /// </summary>
     public bool IstGruppe { get; set; }
 }
 
@@ -1441,7 +1698,6 @@ public class BetriebsmittelDetails : BaseObject
     public string StandardAnsatz { get; set; }
 
     public string DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
-
 }
 
 /// <summary>
@@ -1537,9 +1793,9 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public int? WarengruppeNebenmaterial { get; set; }
-
+    
     /// <summary>
-    /// Enthält zusätzliche Material-Eigenschaften.
+    /// Enthält zusätzliche Material-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1623,7 +1879,7 @@ public class BetriebsmittelGerätDetails : BaseObject
     public string AlternativeNummer { get; set; }
 
     /// <summary>
-    /// Enthält zusätzliche Geräte-Eigenschaften.
+    /// Enthält zusätzliche Geräte-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelGerätDetailsSonstiges Sonstiges { get; set; }
 }
@@ -2244,6 +2500,11 @@ public class Kalkulation : BaseObject
     public KalkulationErgebnisse Ergebnisse { get; set; }
 
     /// <summary>
+    /// Die Notiz (als XHTML), die der Kalkulation zugeordnet ist.
+    /// </summary>
+    public string Notiz { get; set; }
+
+    /// <summary>
     /// Liste von untergeordneten Kalkulationen. Ist nur befüllt, wenn die Kalkulationen
     /// als Teil eines Leistungsverzeichnisses, d.h. per /build/{projektId}/leistungsverzeichnisse/{lvId} geladen wurden.
     /// </summary>
@@ -2276,6 +2537,11 @@ public class KalkulationsBlatt : BaseObject
     public string Nummer { get; set; }
 
     public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// Die Notiz (als XHTML), die diesem Kalkulationsblatt zugeordnet ist.
+    /// </summary>
+    public string Notiz { get; set; }
 
     /// <summary>
     /// (Detailinfo) Objekt mit weiteren Eigenschaften, insbesondere berechnete Werte (z.B. Einheitspreis).
@@ -2410,7 +2676,7 @@ public class NewLvInfo : BaseObject
     public GaebLvDetails GaebLvDetails { get; set; }
 
     /// <summary>
-    /// Optionales Objekt, das das LV-Bild enthält.
+    /// Optionales Objekt mit Binärdaten, die dem LV zugeordnet sind.
     /// </summary>
     public LvBildDetails BildDetails { get; set; }
 }
@@ -2522,7 +2788,6 @@ public class LvDetails : BaseObject
 
     public DateTime? GewährleistungEnde { get; set; }
 
-    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GewaehrleistungEinheit? GewährleistungEinheit { get; set; }
 
     public DateTime? Angebotsfrist { get; set; }
@@ -2605,6 +2870,16 @@ public class LvDetails : BaseObject
     /// Die Zahlungsbedingung für die Schlussrechnung.
     /// </summary>
     public Zahlungsbedingung ZahlungsbedingungSchlussrechnung { get; set; }
+    
+    /// <summary>
+    /// Die formatierten Text (z.B. Notiz), die auf der LV-Wurzelebene festgelegt sind.
+    /// </summary>
+    public LvItemFormatierteTexte RootFormatierteTexte { get; set; }
+    
+    /// <summary>
+    /// Notiz (als formatierter Text), die dem LV zugeordnet ist.
+    /// </summary>
+    public string LvNotiz { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
@@ -2678,12 +2953,12 @@ public enum GewaehrleistungEinheit
 }
 
 /// <summary>
-/// Enthält BInärdaten zu Grafiken, die dem LV zugeordnet sind.
+/// Enthält Binärdaten zu Grafiken, die dem LV zugeordnet sind.
 /// </summary>
 public class LvBildDetails : BaseObject
 {
     /// <summary>
-    /// Die Bild-Daten des LV-Bildes, falls vorhanden.
+    /// Die Bild-Daten des LV-Bildes, falls vorhanden (sonst null).
     /// </summary>
     public Bild Bild { get; set; }
 }
@@ -3279,17 +3554,22 @@ public enum AufschlagNachlassArt
 public class LvItemFormatierteTexte : BaseObject
 {
     /// <summary>
-    /// Der Langtext (im ÖNorm-Format, d.h. mit eingebetteten HTML-Tags).
+    /// Der Langtext (XHTML).
     /// </summary>
     public string Langtext { get; set; }
 
     /// <summary>
-    /// Die Baubeschreibung (im ÖNorm-Format, d.h. mit eingebetteten HTML-Tags).
+    /// Die Baubeschreibung (XHTML).
     /// </summary>
     public string Baubeschreibung { get; set; }
+    
+    /// <summary>
+    /// Die Notiz (XHTML).
+    /// </summary>
+    public string Notiz { get; set; }
 
     /// <summary>
-    /// Nur für GAEB-LVs: Der Kurztext (im ÖNorm-Format, d.h. mit eingebetteten HTML-Tags).
+    /// Nur für GAEB-LVs: Der Kurztext (XHTML).
     /// Für ÖNorm-LVs wird diese Property ignoriert, da dort für Kurztexte
     /// keine Formatierungen unterstützt werden. 
     /// </summary>

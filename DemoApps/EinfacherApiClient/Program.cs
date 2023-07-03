@@ -11,7 +11,8 @@ try
     var versionCheckResult = await client.CheckVersion();
     if (!versionCheckResult.AreVersionsCompatible)
     {
-        throw new InvalidOperationException($"Versionskonflikt: API: {versionCheckResult.ApiVersion}, client: {versionCheckResult.ClientVersion}");
+        throw new InvalidOperationException(
+            $"Versionskonflikt: API: {versionCheckResult.ApiVersion}, client: {versionCheckResult.ClientVersion}");
     }
 
     // Auslesen der Speicherorte
@@ -24,5 +25,5 @@ try
 }
 catch (Refit.ApiException ex)
 {
-    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.Content);
 }

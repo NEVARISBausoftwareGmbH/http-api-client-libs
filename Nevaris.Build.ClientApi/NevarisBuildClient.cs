@@ -66,12 +66,13 @@ public class NevarisBuildClient : IDisposable
     /// <summary>
     /// Alternativer Konstruktor, der direkt einen <see cref="HttpClient"/> entgegennimmt.
     /// </summary>
-    /// <param name="httpClient"></param>
-    public NevarisBuildClient(HttpClient httpClient)
+    /// <param name="httpClient">Der zugrundeliegende <see cref="HttpClient"/></param>
+    /// <param name="keepHttpClientOpen">Falls true (= Default), bleibt der übergebene HttpClient auch
+    /// nach dem <see cref="Dispose"/>-Aufruf geöffnet, ansonsten wird er geschlossen.</param>
+    public NevarisBuildClient(HttpClient httpClient, bool keepHttpClientOpen = true)
     {
         HttpClient = httpClient;
-
-        _keepHttpClientOpen = true;
+        _keepHttpClientOpen = keepHttpClientOpen;
         
         ProjektApi = RestService.For<IProjektApi>(HttpClient, _refitSettings);
         StammApi = RestService.For<IStammApi>(HttpClient, _refitSettings);
@@ -79,9 +80,7 @@ public class NevarisBuildClient : IDisposable
     }
 
     /// <summary>
-    /// Schließt den <see cref="HttpClient"/> (d.h. die zugrundeliegende HTTP-Verbindung zum Server), außer
-    /// der HttpClient wurde per <see cref="NevarisBuildClient(System.Net.Http.HttpClient)"/>-Konstruktor
-    /// von außen mitgegeben.
+    /// Schließt den <see cref="HttpClient"/> (d.h. die zugrundeliegende HTTP-Verbindung zum Server).
     /// </summary>
     public void Dispose()
     {

@@ -51,6 +51,31 @@ public interface IProjektApi
     Task<Adresse> GetAdresse(string projektId, Guid id);
 
     /// <summary>
+    /// Erstellt eine neue Adresse.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="newProjektAdresseInfo">Informationen zur neuen Adresse</param>
+    [Post("/build/projekte/{projektId}/adressen")]
+    Task<Adresse> CreateAdresse(string projektId, [Body] NewProjektAdresseInfo newProjektAdresseInfo);
+
+    /// <summary>
+    /// Aktualisiert eine Projektadresse.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="id">Adress-ID</param>
+    /// <param name="adresse">Adresse mit den neuen Werten</param>
+    [Put("/build/projekte/{projektId}/adressen/{id}")]
+    Task UpdateAdresse(string projektId, Guid id, [Body] Adresse adresse);
+
+    /// <summary>
+    /// Löscht die Adresse mit der angegebenen ID.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="id">Adress-ID</param>
+    [Delete("/build/projekte/{projektId}/adressen/{id}")]
+    Task DeleteAdresse(string projektId, Guid id);
+
+    /// <summary>
     /// Liefert alle Leistungsverzeichnisse eines Projekts (ohne Inhalte wie Positionen, Titel usw.).
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
@@ -69,9 +94,10 @@ public interface IProjektApi
     /// mitgeliefert (in der Property 'RootKalkulationen')</param>
     /// <param name="mitFormatiertenTexten">Falls true (= Default), werden die formatierten Texte (Langtexte
     /// + Baubeschreibungen) mitgeliefert</param>
-    [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}?mengenArt={mengenArt}&mitKnoten={mitKnoten}&mitKalkulationen={mitKalkulationen}")]
+    [Get(
+        "/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}?mengenArt={mengenArt}&mitKnoten={mitKnoten}&mitKalkulationen={mitKalkulationen}")]
     Task<Leistungsverzeichnis> GetLeistungsverzeichnis(
-        string projektId, 
+        string projektId,
         Guid lvId,
         MengenArt mengenArt = MengenArt.Lv,
         bool mitKnoten = true,
@@ -95,7 +121,8 @@ public interface IProjektApi
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="importLvInfo">Information über die Datenträger-Quelle</param>  
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerServerDateipfad")]
-    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerServerDateipfad(string projektId, [Body] ImportLvVonServerpfad importLvInfo);
+    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerServerDateipfad(
+        string projektId, [Body] ImportLvVonServerpfad importLvInfo);
 
     /// <summary>
     /// Nimmt eine Datei vom Client entgegen, prüft, ob es sich um einen LV-Datenträger handelt 
@@ -107,7 +134,8 @@ public interface IProjektApi
     /// <param name="clientFile">Die zu importierende Datei</param>  
     [Multipart]
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerClientDatei")]
-    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(string projektId, [AliasAs("Datei")] FileInfoPart clientFile);
+    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(string projektId,
+        [AliasAs("Datei")] FileInfoPart clientFile);
 
     /// <summary>
     /// Aktualisiert ein Leistungsverzeichnis.
@@ -117,7 +145,7 @@ public interface IProjektApi
     /// <param name="lv">Leistungsverzeichnis mit den neuen Werten</param>
     [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
     Task UpdateLeistungsverzeichnis(string projektId, Guid lvId, [Body] Leistungsverzeichnis lv);
-        
+
     /// <summary>
     /// Löscht das Leistungsverzeichnis mit der angegebenen ID.
     /// </summary>
@@ -222,9 +250,9 @@ public interface IProjektApi
     /// <param name="abrechnungsMerkmale">Geänderte Abrechnungsmerkmale (hierarchisch aufgebaute Liste)</param>
     [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/abrechnungsMerkmale?mengenArt={mengenArt}")]
     Task UpdateAbrechnungsMerkmale(
-        string projektId, 
-        Guid lvId, 
-        [Body] IEnumerable<AbrechnungsMerkmal> abrechnungsMerkmale, 
+        string projektId,
+        Guid lvId,
+        [Body] IEnumerable<AbrechnungsMerkmal> abrechnungsMerkmale,
         MengenArt mengenArt = MengenArt.Abrechnung);
 
     /// <summary>
@@ -234,7 +262,8 @@ public interface IProjektApi
     /// <param name="lvId">LV-ID</param>
     /// <param name="mengenArt">Die gewünschte Mengenart</param>
     [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}")]
-    Task<IEnumerable<Aufmaßblatt>> GetAufmaßblätter(string projektId, Guid lvId, MengenArt mengenArt = MengenArt.Abrechnung);
+    Task<IEnumerable<Aufmaßblatt>> GetAufmaßblätter(string projektId, Guid lvId,
+        MengenArt mengenArt = MengenArt.Abrechnung);
 
     /// <summary>
     /// Ändert die zu einem Leistungsverzeichnis (Auftrag) gehörenden Aufmaßblätter.
@@ -244,7 +273,8 @@ public interface IProjektApi
     /// <param name="aufmaßblätter">Die Aufmaßblätter mit den neuen Werten. Diese Liste sollte auf Basis der zuvor per GET ermittelten Liste erzeugt werden.</param>
     /// <param name="mengenArt">Die gewünschte Mengenart</param>
     [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}")]
-    Task UpdateAufmaßblätter(string projektId, Guid lvId, [Body] IEnumerable<Aufmaßblatt> aufmaßblätter, MengenArt mengenArt = MengenArt.Abrechnung);
+    Task UpdateAufmaßblätter(string projektId, Guid lvId, [Body] IEnumerable<Aufmaßblatt> aufmaßblätter,
+        MengenArt mengenArt = MengenArt.Abrechnung);
 
     /// <summary>
     /// Liefert die zu einem Leistungsverzeichnis (Auftrag) gehörenden Rechnungen.
@@ -307,7 +337,8 @@ public interface IProjektApi
     /// <param name="rechnungId">Falls angegeben, werden nur Positionsblöcke zurückgegeben, die zu dieser Rechnung
     /// gehören.
     /// Falls "00000000-0000-0000-0000-000000000000", wird nach Positionsblöcken ohne Rechnung gefiltert.</param>
-    [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/positionsbloecke?mengenArt?{mengenArt}&mitZeilen={mitZeilen}&aufmassblattId={aufmassblattId}&leistungszeitraumId={leistungszeitraumId}&rechnungId={rechnungId}")]
+    [Get(
+        "/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/positionsbloecke?mengenArt?{mengenArt}&mitZeilen={mitZeilen}&aufmassblattId={aufmassblattId}&leistungszeitraumId={leistungszeitraumId}&rechnungId={rechnungId}")]
     Task<IEnumerable<Positionsblock>> GetPositionsblöcke(
         string projektId,
         Guid lvId,
@@ -324,7 +355,8 @@ public interface IProjektApi
     /// <param name="lvId">LV-ID</param>
     /// <param name="newPositionsblockInfo">Informationen zum neuen Positionsblock</param>
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/positionsbloecke")]
-    Task<Positionsblock> CreatePositionsblock(string projektId, Guid lvId, [Body]NewPositionsblockInfo newPositionsblockInfo);
+    Task<Positionsblock> CreatePositionsblock(string projektId, Guid lvId,
+        [Body] NewPositionsblockInfo newPositionsblockInfo);
 
     /// <summary>
     /// Liefert einen Positionsblock.
@@ -358,7 +390,8 @@ public interface IProjektApi
     /// <param name="kalkulationId">ID der Kalkulation</param>
     /// <param name="mitErgebnissen">Falls true (Default: false), werden auch berechnete Werte mitgeliefert (im Feld KalkulationErgebnisse)</param>
     /// <param name="mengenArt">Die gewünschte Mengenart (Default: LV-Menge)</param>
-    [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen={mitErgebnissen}&mengenArt={mengenArt}")]
+    [Get(
+        "/build/projekte/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen={mitErgebnissen}&mengenArt={mengenArt}")]
     Task<Kalkulation> GetKalkulation(
         string projektId, Guid kalkulationId, bool mitErgebnissen = false, MengenArt mengenArt = MengenArt.Lv);
 
@@ -369,7 +402,8 @@ public interface IProjektApi
     /// <param name="parentKalkulationId">ID der Parent-Kalkulation</param>
     /// <param name="newKalkulationInfo">Informationen zur neuen Kalkulation</param>
     [Post("/build/projekte/{projektId}/kalkulationen/{parentKalkulationId}/kalkulationen")]
-    Task<Kalkulation> CreateUntergeordneteKalkulation(string projektId, Guid parentKalkulationId, [Body] NewKalkulationInfo newKalkulationInfo);
+    Task<Kalkulation> CreateUntergeordneteKalkulation(string projektId, Guid parentKalkulationId,
+        [Body] NewKalkulationInfo newKalkulationInfo);
 
     /// <summary>
     /// Aktualisiert eine Kalkulation. Untergeordnete Kalkulationen werden nicht berücksichtigt.
@@ -409,8 +443,10 @@ public interface IProjektApi
     /// falls es für die angegebene Position noch keines gibt</param>
     /// <param name="includeParentKalkulationen">Falls true (Default: false), werden bei der Suche auch
     /// Parent-Kalkulationen berücksichtigt</param>
-    [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}?createNewIfNecessary={createNewIfNecessary}&includeParentKalkulationen={includeParentKalkulationen}")]
-    Task<KalkulationsBlatt> GetKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId, bool createNewIfNecessary = false, bool includeParentKalkulationen = false);
+    [Get(
+        "/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}?createNewIfNecessary={createNewIfNecessary}&includeParentKalkulationen={includeParentKalkulationen}")]
+    Task<KalkulationsBlatt> GetKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId,
+        bool createNewIfNecessary = false, bool includeParentKalkulationen = false);
 
     /// <summary>
     /// Aktualisiert das Kalkulationsblatt der angegebenen Position (einschließlich Kalkulationszeilen).
@@ -420,7 +456,8 @@ public interface IProjektApi
     /// <param name="positionId">Die Positions-ID</param>
     /// <param name="kalkulationsBlatt">Kalkulationsblatt mit den neuen Werten</param>
     [Put("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}")]
-    Task UpdateKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId, [Body] KalkulationsBlatt kalkulationsBlatt);
+    Task UpdateKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId,
+        [Body] KalkulationsBlatt kalkulationsBlatt);
 
     /// <summary>
     /// Löscht das Kalkulationsblatt der angegebenen Position (einschließlich Kalkulationszeilen).
@@ -444,7 +481,8 @@ public interface IProjektApi
     /// <param name="mitDetails">Falls true (= Default), werden auch die Detailinformationen ermittelt (Properties 'details', 'lohnDetails' usw.).</param>
     /// <param name="kostenebeneId">Die ID der Kostenebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
     /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
-    [Get("/build/projekte/{projektId}/betriebsmittel?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    [Get(
+        "/build/projekte/{projektId}/betriebsmittel?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
     Task<List<Betriebsmittel>> GetAllBetriebsmittel(
         string projektId,
         BetriebsmittelArt? art,
@@ -464,7 +502,8 @@ public interface IProjektApi
     /// <param name="art">Betriebsmittelart (optional: Angabe wird für performanteres Laden genutzt)</param>
     /// <param name="kostenebeneId">Die ID der Kostenebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
     /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
-    [Get("/build/projekte/{projektId}/betriebsmittel/{betriebsmittelId}?art={art}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    [Get(
+        "/build/projekte/{projektId}/betriebsmittel/{betriebsmittelId}?art={art}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
     Task<Betriebsmittel> GetBetriebsmittel(
         string projektId,
         Guid betriebsmittelId,
@@ -497,7 +536,8 @@ public interface IProjektApi
     /// <param name="loescheKalkulationszeilen">Falls true (Default = false), werden auch
     /// die darauf verweisenden Kalkulationszeilen gelöscht. Ansonsten führt das Vorhandensein
     /// derartiger Kalkulationszeilen zu einem 400-Fehler (Bad Request).</param>
-    [Delete("/build/projekte/{projektId}/betriebsmittel/{betriebsmittelId}?loescheKalkulationszeilen={loescheKalkulationszeilen}")]
+    [Delete(
+        "/build/projekte/{projektId}/betriebsmittel/{betriebsmittelId}?loescheKalkulationszeilen={loescheKalkulationszeilen}")]
     Task DeleteBetriebsmittel(string projektId, Guid betriebsmittelId, bool loescheKalkulationszeilen = false);
 
     /// <summary>
