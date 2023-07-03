@@ -8,7 +8,7 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.5.0 (für Build 2023.1 Patch 3)
+### 4.5.0 (für Build 2023.1 Patch 3 – 23.1.23180.703) – _03.07.2023_
 
 - Neue Methoden für den Schreibzugriff auf Projektadressen: _IProjektApi.CreateAdresse/UpdateAdresse/DeleteAdresse_.
 - Neu: Übernahme einer globalen Adresse in ein Projekt. Dazu ist beim Aufruf von _IProjektApi.CreateAdresse_
@@ -35,7 +35,7 @@ es die neue Funktion _IStammApi.GetKostenartStrukturen_.
 _Kalkulation.Notiz_, _KalkulationsBlatt.Notiz_, _Adresse.Notiz_.
 - Lesender Zugriff auf globale Einheiten: _IStammApi.GetEinheiten_
 
-### 4.4.0 + 4.4.1 + 4.4.2 (für Build 2023.1 Patch 2 – 23.1.23125.540)
+### 4.4.0 + 4.4.1 + 4.4.2 (für Build 2023.1 Patch 2 – 23.1.23125.540) – _08.05.2023_
 
 - Neue Properties _Projekt.BetriebsmittelStammId_, _Projekt.BetriebsmittelStammNummer_,
   _Projekt.BetriebsmittelStammBezeichnung_: Erlauben die Abfrage des Betriebsmittelstamms, der
@@ -46,7 +46,7 @@ _Kalkulation.Notiz_, _KalkulationsBlatt.Notiz_, _Adresse.Notiz_.
 - (4.4.1) Fix für _IProjektApi.GetLvPosition/GetLvKnoten_ (fehlende Parameterübergabe an die API)
 - (4.4.2) Lesezugriff auf Projektadressen ermöglicht (_IProjektApi.GetAdressen_, _IProjektApi.GetAdresse_)
 
-### 4.3.1 (für Build 2023.1 – 23.1.23075.791)
+### 4.3.1 (für Build 2023.1 – 23.1.23075.791) – _20.03.2023_
 
 - Unterstützung für lesenden und schreibenden Zugriff auf die Ordner-Struktur von Datenbank-Speicherorten:
   Dazu gibt es die neue Klasse _SpeicherortOrdner_ sowie passende neue Felder in
