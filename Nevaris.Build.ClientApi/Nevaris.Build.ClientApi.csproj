@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</RepositoryUrl>
@@ -14,13 +13,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageReleaseNotes>ClientApi für Build 2023.1 Patch 3: Verbesserungen und Erweiterungen im Bereich Projektadressen, Kostenarten und Notizen</PackageReleaseNotes>
-    <PackageVersion>4.5.0</PackageVersion>
-    <AssemblyVersion>4.5.0</AssemblyVersion>
-    <FileVersion>4.5.0</FileVersion>
+    <PackageVersion>4.6.0-2024.1.4</PackageVersion>
+    <AssemblyVersion>4.6.0</AssemblyVersion>
+    <FileVersion>4.6.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->

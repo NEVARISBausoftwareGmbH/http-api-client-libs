@@ -117,7 +117,6 @@ public interface IProjektApi
     /// und importiert die Datei. Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
     /// Meldungen, die im Zuge des Importvorgangs entstehen.
     /// </summary>
-    /// <remarks>Diese Methode kann ausschließlich ÖNORM A2063 Dateien entgegennehmen.</remarks>
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="importLvInfo">Information über die Datenträger-Quelle</param>  
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerServerDateipfad")]
@@ -129,13 +128,28 @@ public interface IProjektApi
     /// und importiert die Datei. Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
     /// Meldungen, die im Zuge des Importvorgangs entstehen.
     /// </summary>
-    /// <remarks>Diese Methode kann ausschließlich ÖNORM A2063 Dateien entgegennehmen.</remarks>
     /// <param name="projektId">Projekt-ID</param>
-    /// <param name="clientFile">Die zu importierende Datei</param>  
+    /// <param name="clientFile">Die zu importierende Datei als <see cref="FileInfoPart"/></param>
+    [Obsolete("Diese Funktion zum Importieren eines LVs wird künftig nicht mehr angeboten werden. " 
+              + "Stattdessen sollte CreateLeistungsverzeichnisAusByteArray verwendet werden.")]
     [Multipart]
     [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerClientDatei")]
-    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(string projektId,
-        [AliasAs("Datei")] FileInfoPart clientFile);
+    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(
+        string projektId,
+        [AliasAs("Datei")] FileInfoPart clientFile // "Datei" bezieht sich auf ImportLvVonClientdatei (serverseitig)
+    );
+
+    /// <summary>
+    /// Erzeugt ein LV aus einem LV-Datenträger. Der Inhalt des Datenträgers wird als Byte-Array
+    /// übergeben.
+    /// Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
+    /// Meldungen, die im Zuge des Importvorgangs entstehen.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="importLvInfo">Information über die Datenträger-Quelle</param>
+    [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusByteArray")]
+    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusByteArray(
+        string projektId, [Body] ImportLvAusByteArrayInfo importLvInfo);
 
     /// <summary>
     /// Aktualisiert ein Leistungsverzeichnis.
@@ -539,6 +553,18 @@ public interface IProjektApi
     [Delete(
         "/build/projekte/{projektId}/betriebsmittel/{betriebsmittelId}?loescheKalkulationszeilen={loescheKalkulationszeilen}")]
     Task DeleteBetriebsmittel(string projektId, Guid betriebsmittelId, bool loescheKalkulationszeilen = false);
+
+    /// <summary>
+    /// Erzeugt mehrere Betriebsmittel in diesem Projekt durch Übernahme aus einem Betriebsmittelstamm.
+    /// Betriebsmittel, die in den weiteren Kosten verwendet werden, werden ebenfalls übernommen.
+    /// Es werden keine bestehenden Betriebsmittel überschrieben.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="transferInfo">Enthält die IDs der zu übernehmenden Betriebsmittel</param>
+    /// <returns>Ergebnisobjekt, das die Liste der IDs der neu erzeugten Projekt-Betriebsmittel enthält</returns>
+    [Post("/build/projekte/{projektId}/betriebsmittel/create_collection_from_stamm")]
+    Task<BetriebsmittelCollectionTransferResult> CreateBetriebsmittelCollectionFromStamm(
+        string projektId, BetriebsmittelCollectionTransferFromStammInfo transferInfo);
 
     /// <summary>
     /// Liefert die Projektdaten für die Bautagesberichte des Projekt.
