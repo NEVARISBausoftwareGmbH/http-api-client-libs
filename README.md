@@ -8,6 +8,21 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.6.0 (für Build 2023.1 Patch 4 – 23.1.23221.927)
+
+- Zugriff auf Projekteinheiten-/Währungen/-Umsatzsteuern (lesend und schreibend) ermöglicht:
+_Projekt.Einheiten_, _Projekt.Währungen_, _Projekt.Umsatzsteuern_.
+- Neue Funktion _IProjektApi.CreateLeistungsverzeichnisAusByteArray_ zum Importieren eines LVs eingeführt.
+Diese soll die bisherige Funktion _IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_
+erstzen. Die neue Funktion erlaubt die Übergabe des Datenträgers als Byte-Array sowie die Angabe
+der LV-Art (wichtig für den Import in Success X-Projekten, wo
+_ImportLvAusByteArrayInfo.LvArt_ = _LvArt.VereinfachterModus_ übergeben werden sollte).
+- Neue Funktion _IProjektApi.CreateBetriebsmittelCollectionFromStamm_ zur Übernahme von Betriebsmitteln
+aus einem Betriebsmittelstamm in ein Projekt.
+- Fehlende Property _BetriebsmittelNachunternehmerDetails.AlternativeNummer_ ergänzt.
+- _Kalkulation.Nachkommastellen_ abgekündigt. Stattdessen sollten die entsprechenden Properties
+  in der _Projekt_-Klasse verwendet werden (z.B. _Projekt.RechengenauigkeitMengen_).
+
 ### 4.5.0 (für Build 2023.1 Patch 3 – 23.1.23180.703) – _03.07.2023_
 
 - Neue Methoden für den Schreibzugriff auf Projektadressen: _IProjektApi.CreateAdresse/UpdateAdresse/DeleteAdresse_.
