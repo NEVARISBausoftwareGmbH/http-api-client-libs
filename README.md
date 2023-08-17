@@ -1,6 +1,6 @@
 # http-api-client-libs für NEVARIS Build 2023.1
 
-## Nevaris.Build.ClientApi 4.5.0
+## Nevaris.Build.ClientApi 4.6.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.1 Sie ist auch als
