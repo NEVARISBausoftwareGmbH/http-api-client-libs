@@ -8,7 +8,7 @@ von NEVARIS Build 2023.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.6.0 (für Build 2023.1 Patch 4 – 23.1.23221.927)
+### 4.6.0 (für Build 2023.1 Patch 4 – 23.1.23221.927) – _16.08.2023_
 
 - Zugriff auf Projekteinheiten-/Währungen/-Umsatzsteuern (lesend und schreibend) ermöglicht:
 _Projekt.Einheiten_, _Projekt.Währungen_, _Projekt.Umsatzsteuern_.
