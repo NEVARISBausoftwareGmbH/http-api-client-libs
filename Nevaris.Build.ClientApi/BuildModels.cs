@@ -2454,6 +2454,8 @@ public class KalkulationsZeile : BaseObject
     public string Bezeichnung { get; set; }
 
     public string Kommentar { get; set; }
+    
+    public string Markierungskennzeichen { get; set; }
 
     public string Einheit { get; set; }
 
@@ -2900,6 +2902,11 @@ public class NewLvInfo : BaseObject
     /// </summary>
     public string Bezeichnung { get; set; }
 
+    /// <summary>
+    /// Die LV-Art, z.B. Ausschreibung. Muss befüllt sein.
+    /// Für Success X-Projekte sollte hier <see cref="LvArt.VereinfachterModus"/>
+    /// übergeben werden. (Sobald ein LV mit dieser Art existiert, wird das Projekt als Success X-Projekt aufgefasst.)
+    /// </summary>
     public LvArt? Art { get; set; }
 
     /// <summary>
@@ -2907,6 +2914,10 @@ public class NewLvInfo : BaseObject
     /// </summary>
     public NormExakt NormExakt { get; set; }
 
+    /// <summary>
+    /// Der LV-Status. Welche Status erlaubt sind, hängt von der LV-Art ab. Der Standardwert ist
+    /// <see cref="LvStatus.Erstellt"/>.
+    /// </summary>
     public LvStatus? Status { get; set; }
 
     /// <summary>
@@ -3064,8 +3075,17 @@ public class LvDetails : BaseObject
 
     public DateTime? Bearbeitungsstand { get; set; }
 
+    /// <summary>
+    /// Die Zahl der Nachkommastellen für LV-Mengen. Für ÖNORM-LVs ist dies immer 2, für GAEB-LVs immer 3.
+    /// Dieser Wert kann nur ausgelesen, nicht verändert werden.
+    /// </summary>
     public int? NachkommastellenMengen { get; set; }
 
+    /// <summary>
+    /// Die Zahl der Nachkommastellen für Preisanteile. Für ÖNORM-LVs ist dieser Wert immer 2 und kann nicht geändert
+    /// werden. Für GAEB-LVs sind beim Erstellen eines neuen LVs die Werte 2 und 3 erlaubt. Ein nachträgliches
+    /// Ändern ist nicht möglich.
+    /// </summary>
     public int? NachkommastellenPreisanteile { get; set; }
 
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
@@ -3343,8 +3363,15 @@ public enum LvStatus
     NichtBeauftragt = 8
 }
 
+/// <summary>
+/// Enthält normspezifische Detailinformationen (für ÖNORM-LVs).
+/// </summary>
 public class OenormLvDetails : BaseObject
 {
+    /// <summary>
+    /// Die LV-Art. Diese Eigenschaft ist nur für Success X-Projekte relevant. Für Build-Projekt sollte dieser
+    /// Wert nicht geändert werden.
+    /// </summary>
     public OenormLvArt? Art { get; set; }
 
     public bool NachlässeAufEinheitspreis { get; set; }
@@ -3368,6 +3395,9 @@ public class OenormLvDetails : BaseObject
     public int? Abänderungsangebotsnummer { get; set; }
 }
 
+/// <summary>
+/// Enthält normspezifische Detailinformationen (für GAEB-LVs).
+/// </summary>
 public class GaebLvDetails : BaseObject
 {
     public List<GaebGliederungsebene> Gliederungsebenen { get; set; }
