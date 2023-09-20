@@ -2892,6 +2892,26 @@ public class Gliederungsknoten : BaseObject
 /// </summary>
 public class NewLvInfo : BaseObject
 {
+    public NewLvInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung eines LVs auf Basis eines bestehenden LVs ermöglicht.
+    /// </summary>
+    public NewLvInfo(Leistungsverzeichnis sourceLV)
+    {
+        Nummer = sourceLV.Nummer;
+        Bezeichnung = sourceLV.Bezeichnung;
+        Art = sourceLV.Art;
+        NormExakt = sourceLV.NormExakt;
+        Status = sourceLV.Status;
+        LvDetails = sourceLV.LvDetails;
+        OenormLvDetails = sourceLV.OenormLvDetails;
+        GaebLvDetails = sourceLV.GaebLvDetails;
+        BildDetails = sourceLV.BildDetails;
+    }
+    
     /// <summary>
     /// LV-Nummer
     /// </summary>
@@ -3090,8 +3110,14 @@ public class LvDetails : BaseObject
 
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
+    /// <summary>
+    ///  Die Standardwährung des LVs.
+    /// </summary>
     public string Währung { get; set; }
 
+    /// <summary>
+    ///  Die Standard-USt des LVs.
+    /// </summary>
     public string Umsatzsteuer { get; set; }
 
     public string Ausschreibungsart { get; set; }
@@ -3573,6 +3599,28 @@ public class NewLvItemInfo : BaseObject
     {
     }
 
+    protected NewLvItemInfo(LvItemBase sourceItem)
+    {
+        ItemTyp = sourceItem.ItemTyp;
+        Nummer = sourceItem.Nummer;
+        Stichwort = sourceItem.Stichwort;
+        FormatierteTexte = sourceItem.FormatierteTexte;
+        Teilleistungsnummer = sourceItem.Teilleistungsnummer;
+        Markierungskennzeichen = sourceItem.Markierungskennzeichen;
+        Herkunftskennzeichen = sourceItem.Herkunftskennzeichen;
+        IstFixpreis = sourceItem.IstFixpreis;
+        IstIntern = sourceItem.IstIntern;
+        Schreibgeschützt = sourceItem.Schreibgeschützt;
+        LbInfo = sourceItem.LbInfo;
+        Variante = sourceItem.Variante;
+        Zuordnungskennzeichen = sourceItem.Zuordnungskennzeichen;
+        NachlassInfo = sourceItem.NachlassInfo;
+        Entfällt = sourceItem.Entfällt;
+    }
+
+    /// <summary>
+    /// Der Typ des neuen Knoten (z.B. Leistungsgruppe) oder Position (z.B. Leistungsposition). Muss befüllt sein.
+    /// </summary>
     public LvItemTyp ItemTyp { get; set; }
 
     public string Nummer { get; set; }
@@ -3612,13 +3660,75 @@ public class NewLvItemInfo : BaseObject
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
+/// <summary>
+/// Enthält Informationen zu einem neu anzulegenden LV-Knoten.
+/// </summary>
 public class NewLvKnotenInfo : NewLvItemInfo
 {
+    public NewLvKnotenInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung eines neuen Knotens auf Basis eines bestehenden Knotens ermöglicht.
+    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automtisch befüllt, sondern muss vom Anwendungscode
+    /// befüllt werden.
+    /// </summary>
+    public NewLvKnotenInfo(LvKnoten sourceKnoten) : base(sourceKnoten)
+    {
+    }
+
+    /// <summary>
+    /// ID des Parent-Knoten, unter dem der neue Knoten eingehängt werden soll.
+    /// Falls null, wird der neue Knoten (z.B. Leistungsgruppe) auf oberster Ebene erzeugt.
+    /// </summary>
     public Guid? ParentKnotenId { get; set; }
 }
 
+/// <summary>
+/// Enthält Informationen zu einer neu zu erzeugenden LV-Position.
+/// </summary>
 public class NewLvPositionInfo : NewLvItemInfo
 {
+    public NewLvPositionInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung einer neuen Position auf Basis einer bestehenden Position ermöglicht.
+    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automtisch befüllt, sondern muss vom Anwendungscode
+    /// befüllt werden.
+    /// </summary>
+    public NewLvPositionInfo(LvPosition sourcePosition) : base(sourcePosition)
+    {
+        Einheit = sourcePosition.Einheit;
+        Umsatzsteuer = sourcePosition.Umsatzsteuer;
+        Positionsart = sourcePosition.Positionsart;
+        LvMenge = sourcePosition.LvMenge;
+        EinheitSchreibgeschützt = sourcePosition.EinheitSchreibgeschützt;
+        EinheitspreisSchreibgeschützt = sourcePosition.EinheitspreisSchreibgeschützt;
+        TexteSchreibgeschützt = sourcePosition.TexteSchreibgeschützt;
+        LvMengeSchreibgeschützt = sourcePosition.LvMengeSchreibgeschützt;
+        Mehrfachverwendung = sourcePosition.Mehrfachverwendung;
+        Stichwortluecke = sourcePosition.Stichwortluecke;
+        Preisanteile = sourcePosition.Preisanteile;
+        GliederungsKnotenList = sourcePosition.GliederungsKnotenList;
+        IstWesentlichePosition = sourcePosition.IstWesentlichePosition;
+        IstNichtAngeboten = sourcePosition.IstNichtAngeboten;
+        IstBeauftragt = sourcePosition.IstBeauftragt;
+        IstSchwerpunktposition = sourcePosition.IstSchwerpunktposition;
+        IstStundenlohnarbeiten = sourcePosition.IstStundenlohnarbeiten;
+        IstFreieBietermenge = sourcePosition.IstFreieBietermenge;
+        BedarfspositionArt = sourcePosition.BedarfspositionArt;
+        GarantierteAngebotssummeNummer = sourcePosition.GarantierteAngebotssummeNummer;
+        HatGarantierteAngebotssumme = sourcePosition.HatGarantierteAngebotssumme;
+        Zuschlagsprozentsatz = sourcePosition.Zuschlagsprozentsatz;
+        Zuschlagsart = sourcePosition.Zuschlagsart;
+        WirdBezuschlagt = sourcePosition.WirdBezuschlagt;
+        ZuBezuschlagendePositionen = sourcePosition.ZuBezuschlagendePositionen;
+        Unterpositionen = sourcePosition.Unterpositionen;
+    }
+    
     /// <summary>
     /// Die ID des Knoten, unter dem die Position erzeugt wird. Für GAEB-LVs ist auch null erlaubt, um
     /// Positonen (z.B. Zusatztexte) auf oberster Ebene zu erzeugen.
@@ -3626,6 +3736,8 @@ public class NewLvPositionInfo : NewLvItemInfo
     public Guid? ParentKnotenId { get; set; }
 
     public string Einheit { get; set; }
+
+    public string Umsatzsteuer { get; set; }
 
     public LvPositionsart? Positionsart { get; set; }
 
@@ -3643,8 +3755,14 @@ public class NewLvPositionInfo : NewLvItemInfo
 
     public string Stichwortluecke { get; set; }
 
+    /// <summary>
+    /// Die auf der Position festgelegten Preisanteilbeträge.
+    /// </summary>
     public Dictionary<string, Money> Preisanteile { get; set; }
 
+    /// <summary>
+    /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
+    /// </summary>
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
 
     /// <summary>
@@ -3948,6 +4066,8 @@ public class LvPosition : LvItemBase
 {
     public string Einheit { get; set; }
 
+    public string Umsatzsteuer { get; set; }
+
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
 
     public decimal? LvMenge { get; set; }
@@ -3964,8 +4084,14 @@ public class LvPosition : LvItemBase
 
     public string Stichwortluecke { get; set; }
 
+    /// <summary>
+    /// Die auf der Position festgelegten Preisanteilbeträge.
+    /// </summary>
     public Dictionary<string, Money> Preisanteile { get; set; }
 
+    /// <summary>
+    /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
+    /// </summary>
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
 
     /// <summary>
@@ -4063,10 +4189,19 @@ public enum BedarfspositionArt
     MitGesamtbetrag
 }
 
+/// <summary>
+/// Identifiziert einen Gliederungsknoten eines Gliederungskatalogs.
+/// </summary>
 public class LvPositionGliederungsKnoten : BaseObject
 {
+    /// <summary>
+    /// Die ID des Gliederungskatalogs.
+    /// </summary>
     public Guid KatalogId { get; set; }
 
+    /// <summary>
+    /// Die ID des Gliederungsknotens.
+    /// </summary>
     public Guid KnotenId { get; set; }
 }
 
