@@ -8,7 +8,7 @@ von NEVARIS Build 2023.2 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.7.0 (für Build 2023.2 – 23.2.23283.383) – _11.10.2023_
+### 4.7.0 (für Build 2023.2 – 23.2.23283.383) – _16.10.2023_
 
 - _LvPosition_: Neue Properties _Umsatzsteuer_, _GarantierteAngebotssummeNummer_, _HatGarantierteAngebotssumme_.
 - _NewLvInfo_, _NewLvKnotenInfo_, _NewLvPositionInfo_: Es gibt nun zusätzliche Konstruktoren, die ein
