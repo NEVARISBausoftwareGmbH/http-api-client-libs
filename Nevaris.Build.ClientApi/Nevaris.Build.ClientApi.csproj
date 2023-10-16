@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <PackageProjectUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/NEVARISBausoftwareGmbH/http-api-client-libs</RepositoryUrl>
