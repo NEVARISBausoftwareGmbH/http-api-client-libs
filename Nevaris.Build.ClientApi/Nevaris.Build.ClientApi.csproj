@@ -14,13 +14,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
-    <PackageReleaseNotes>ClientApi für Build 2023.1 Patch 4: Verbesserungen und Erweiterungen bei den Betriebsmitteln und beim LV-Import</PackageReleaseNotes>
-    <PackageVersion>4.6.0</PackageVersion>
-    <AssemblyVersion>4.6.0</AssemblyVersion>
-    <FileVersion>4.6.0</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 2023.2: Verbesserungen und Erweiterungen bei Betriebsmitteln und Leistungsverzeichnissen</PackageReleaseNotes>
+    <PackageVersion>4.7.0</PackageVersion>
+    <AssemblyVersion>4.7.0</AssemblyVersion>
+    <FileVersion>4.7.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->

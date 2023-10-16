@@ -1,24 +1,33 @@
-# http-api-client-libs für NEVARIS Build 2023.1
+# http-api-client-libs für NEVARIS Build 2023.2
 
-## Nevaris.Build.ClientApi 4.6.0
+## Nevaris.Build.ClientApi 4.7.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2023.1 Sie ist auch als
+von NEVARIS Build 2023.2 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.7.0 (für Build 2023.2 – 23.2.23283.383) – _11.10.2023_
+
+- _LvPosition_: Neue Properties _Umsatzsteuer_, _GarantierteAngebotssummeNummer_, _HatGarantierteAngebotssumme_.
+- _NewLvInfo_, _NewLvKnotenInfo_, _NewLvPositionInfo_: Es gibt nun zusätzliche Konstruktoren, die ein
+bestehendes _Leistungsverzeichnis/LvKnoten/LvPosition_-Objekt entgegennehmen. Damit lässt sich Kopierfunktionalität
+einfacher implementieren.
+- Betriebsmittel: Die Property _ExternePreiswartung_ ist jetzt auf allen Betriebsmittelklassen verfügbar.
+- _KalkulationsZeile_: Neue Property _Markierungskennzeichen_.
+
 ### 4.6.0 (für Build 2023.1 Patch 4 – 23.1.23221.927) – _16.08.2023_
 
 - Zugriff auf Projekteinheiten-/Währungen/-Umsatzsteuern (lesend und schreibend) ermöglicht:
-_Projekt.Einheiten_, _Projekt.Währungen_, _Projekt.Umsatzsteuern_.
+  _Projekt.Einheiten_, _Projekt.Währungen_, _Projekt.Umsatzsteuern_.
 - Neue Funktion _IProjektApi.CreateLeistungsverzeichnisAusByteArray_ zum Importieren eines LVs eingeführt.
-Diese soll die bisherige Funktion _IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_
-erstzen. Die neue Funktion erlaubt die Übergabe des Datenträgers als Byte-Array sowie die Angabe
-der LV-Art (wichtig für den Import in Success X-Projekten, wo
-_ImportLvAusByteArrayInfo.LvArt_ = _LvArt.VereinfachterModus_ übergeben werden sollte).
+  Diese soll die bisherige Funktion _IProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei_
+  erstzen. Die neue Funktion erlaubt die Übergabe des Datenträgers als Byte-Array sowie die Angabe
+  der LV-Art (wichtig für den Import in Success X-Projekten, wo
+  _ImportLvAusByteArrayInfo.LvArt_ = _LvArt.VereinfachterModus_ übergeben werden sollte).
 - Neue Funktion _IProjektApi.CreateBetriebsmittelCollectionFromStamm_ zur Übernahme von Betriebsmitteln
-aus einem Betriebsmittelstamm in ein Projekt.
+  aus einem Betriebsmittelstamm in ein Projekt.
 - Fehlende Property _BetriebsmittelNachunternehmerDetails.AlternativeNummer_ ergänzt.
 - _Kalkulation.Nachkommastellen_ abgekündigt. Stattdessen sollten die entsprechenden Properties
   in der _Projekt_-Klasse verwendet werden (z.B. _Projekt.RechengenauigkeitMengen_).

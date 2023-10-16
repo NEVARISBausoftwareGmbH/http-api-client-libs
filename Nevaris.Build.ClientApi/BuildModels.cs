@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Newtonsoft.Json;
+// ReSharper disable CollectionNeverUpdated.Global
 #pragma warning disable CS1591
 
 namespace Nevaris.Build.ClientApi;
@@ -1531,6 +1532,24 @@ public class Kostenkatalog : BaseObject
     public bool IstStandard { get; set; }
 
     public Guid? ParentKostenkatalogId { get; set; }
+    
+    /// <summary>
+    /// Im Fall eines Abgleichs mit dem kaufmännischen System NEVARIS Finance
+    /// gibt diese Eigenschaft an, mit welcher Preiskomponente aus Finance dieser Kostenkatalog
+    /// abgeglichen wird. In Finance hat nämlich jeder Artikel drei Preise, und diesen entsprechen
+    /// Build-seitig drei Kostenkataloge. 
+    /// </summary>
+    public FinancePreisIndex? FinancePreisIndex { get; set; }
+}
+
+/// <summary>
+/// Gibt um an, um welchen der drei möglichen Preise eines Finance-Artikel es sich handelt.
+/// </summary>
+public enum FinancePreisIndex
+{
+    ArbeitsmittelPreis1,
+    ArbeitsmittelPreis2,
+    ArbeitsmittelPreis3
 }
 
 /// <summary>
@@ -1879,6 +1898,10 @@ public class BetriebsmittelDetails : BaseObject
 
     public string DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
 
+    /// <summary>
+    /// Der Zeitpunkt der letzten Änderung. Wird bei Schreiboperationen ignoriert.
+    /// </summary>
+    public DateTimeOffset? ModificationDate { get; set; }
 }
 
 /// <summary>
@@ -1947,12 +1970,21 @@ public class BetriebsmittelLohnDetails : BaseObject
     public int? WarengruppeUmlagekosten { get; set; }
 
     public string AlternativeNummer { get; set; }
+    
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelMaterialDetails : BaseObject
 {
     public decimal? Ladezeit { get; set; }
 
+    /// <summary>
+    /// Für ÖNorm-Betriebsmittelstämme der Kalkulationsversion B2061_1999 ist dies die einzige Kostenart.
+    /// Für B2061_2020 werden die anderen Kostenarten-Eigenschaften genutzt.
+    /// </summary>
     public string Kostenart { get; set; }
 
     public string KostenartPreisAbLieferer { get; set; }
@@ -1976,7 +2008,13 @@ public class BetriebsmittelMaterialDetails : BaseObject
     public int? WarengruppeNebenmaterial { get; set; }
 
     /// <summary>
-    /// Enthält zusätzliche Material-Eigenschaften.
+    /// Im Fall eines Abgleichs mit dem kaufmännischen System NEVARIS Finance
+    /// enthält diese Eigenschaft die Artikel-Nummer von Finance.
+    /// </summary>
+    public string FinanceArtikelNummer { get; set; }
+    
+    /// <summary>
+    /// Enthält zusätzliche Material-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
 }
@@ -1995,6 +2033,9 @@ public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
 
     public bool? Markierung { get; set; }
 
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
     public bool? ExternePreiswartung { get; set; }
 }
 
@@ -2060,7 +2101,12 @@ public class BetriebsmittelGerätDetails : BaseObject
     public string AlternativeNummer { get; set; }
 
     /// <summary>
-    /// Enthält zusätzliche Geräte-Eigenschaften.
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
+
+    /// <summary>
+    /// Enthält zusätzliche Geräte-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
     public BetriebsmittelGerätDetailsSonstiges Sonstiges { get; set; }
 }
@@ -2136,6 +2182,11 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public string AlternativeNummer { get; set; }
+    
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelNachunternehmerDetails : BaseObject
@@ -2177,6 +2228,11 @@ public class BetriebsmittelNachunternehmerDetails : BaseObject
     public int? WarengruppeGemeinkosten { get; set; }
 
     public string AlternativeNummer { get; set; }
+
+    /// <summary>
+    /// Das Feld "Externe Preiswartung".
+    /// </summary>
+    public bool? ExternePreiswartung { get; set; }
 }
 
 public class BetriebsmittelBausteinDetails : BaseObject
@@ -2398,6 +2454,8 @@ public class KalkulationsZeile : BaseObject
     public string Bezeichnung { get; set; }
 
     public string Kommentar { get; set; }
+    
+    public string Markierungskennzeichen { get; set; }
 
     public string Einheit { get; set; }
 
@@ -2834,6 +2892,26 @@ public class Gliederungsknoten : BaseObject
 /// </summary>
 public class NewLvInfo : BaseObject
 {
+    public NewLvInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung eines LVs auf Basis eines bestehenden LVs ermöglicht.
+    /// </summary>
+    public NewLvInfo(Leistungsverzeichnis sourceLV)
+    {
+        Nummer = sourceLV.Nummer;
+        Bezeichnung = sourceLV.Bezeichnung;
+        Art = sourceLV.Art;
+        NormExakt = sourceLV.NormExakt;
+        Status = sourceLV.Status;
+        LvDetails = sourceLV.LvDetails;
+        OenormLvDetails = sourceLV.OenormLvDetails;
+        GaebLvDetails = sourceLV.GaebLvDetails;
+        BildDetails = sourceLV.BildDetails;
+    }
+    
     /// <summary>
     /// LV-Nummer
     /// </summary>
@@ -2844,6 +2922,11 @@ public class NewLvInfo : BaseObject
     /// </summary>
     public string Bezeichnung { get; set; }
 
+    /// <summary>
+    /// Die LV-Art, z.B. Ausschreibung. Muss befüllt sein.
+    /// Für Success X-Projekte sollte hier <see cref="LvArt.VereinfachterModus"/>
+    /// übergeben werden. (Sobald ein LV mit dieser Art existiert, wird das Projekt als Success X-Projekt aufgefasst.)
+    /// </summary>
     public LvArt? Art { get; set; }
 
     /// <summary>
@@ -2851,6 +2934,10 @@ public class NewLvInfo : BaseObject
     /// </summary>
     public NormExakt NormExakt { get; set; }
 
+    /// <summary>
+    /// Der LV-Status. Welche Status erlaubt sind, hängt von der LV-Art ab. Der Standardwert ist
+    /// <see cref="LvStatus.Erstellt"/>.
+    /// </summary>
     public LvStatus? Status { get; set; }
 
     /// <summary>
@@ -2947,6 +3034,25 @@ public class Leistungsverzeichnis : BaseObject
 }
 
 /// <summary>
+/// Nur für ÖNORM-LVs ab Version A 2063:2021: Definition einer Garantierte-Angebotssumme-Gruppe.
+/// Positionen des LVs können eine Zuordnung zu einer solchen Gruppe haben
+/// (über <see cref="LvPosition.GarantierteAngebotssummeNummer"/>).
+/// Die Gruppen selbst werden über <see cref="LvDetails.GarantierteAngebotssummeGruppen"/> dem LV zugeordnet.
+/// </summary>
+public class GarantierteAngebotssummeGruppe
+{
+    /// <summary>
+    /// Die Nummer (einstelliger Code) der Gruppe. Muss für das LV eindeutig sein und identifiziert die Gruppe.
+    /// </summary>
+    public string Nummer { get; set; }
+    
+    /// <summary>
+    /// Beschreibende Bezeichnung der Gruppe.
+    /// </summary>
+    public string Bezeichnung { get; set; } 
+}
+
+/// <summary>
 /// Enthält Detailinformationen zu einem LV.
 /// </summary>
 public class LvDetails : BaseObject
@@ -2989,14 +3095,29 @@ public class LvDetails : BaseObject
 
     public DateTime? Bearbeitungsstand { get; set; }
 
+    /// <summary>
+    /// Die Zahl der Nachkommastellen für LV-Mengen. Für ÖNORM-LVs ist dies immer 2, für GAEB-LVs immer 3.
+    /// Dieser Wert kann nur ausgelesen, nicht verändert werden.
+    /// </summary>
     public int? NachkommastellenMengen { get; set; }
 
+    /// <summary>
+    /// Die Zahl der Nachkommastellen für Preisanteile. Für ÖNORM-LVs ist dieser Wert immer 2 und kann nicht geändert
+    /// werden. Für GAEB-LVs sind beim Erstellen eines neuen LVs die Werte 2 und 3 erlaubt. Ein nachträgliches
+    /// Ändern ist nicht möglich.
+    /// </summary>
     public int? NachkommastellenPreisanteile { get; set; }
 
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
+    /// <summary>
+    ///  Die Standardwährung des LVs.
+    /// </summary>
     public string Währung { get; set; }
 
+    /// <summary>
+    ///  Die Standard-USt des LVs.
+    /// </summary>
     public string Umsatzsteuer { get; set; }
 
     public string Ausschreibungsart { get; set; }
@@ -3046,6 +3167,11 @@ public class LvDetails : BaseObject
     /// Aufschläge/Nachlässe, die auf der LV-Ebene definiert sind.
     /// </summary>
     public NachlassInfo NachlassInfo { get; set; }
+
+    /// <summary>
+    /// Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
+    /// </summary>
+    public List<GarantierteAngebotssummeGruppe> GarantierteAngebotssummeGruppen { get; set; } 
 
     public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
 
@@ -3263,8 +3389,15 @@ public enum LvStatus
     NichtBeauftragt = 8
 }
 
+/// <summary>
+/// Enthält normspezifische Detailinformationen (für ÖNORM-LVs).
+/// </summary>
 public class OenormLvDetails : BaseObject
 {
+    /// <summary>
+    /// Die LV-Art. Diese Eigenschaft ist nur für Success X-Projekte relevant. Für Build-Projekt sollte dieser
+    /// Wert nicht geändert werden.
+    /// </summary>
     public OenormLvArt? Art { get; set; }
 
     public bool NachlässeAufEinheitspreis { get; set; }
@@ -3288,6 +3421,9 @@ public class OenormLvDetails : BaseObject
     public int? Abänderungsangebotsnummer { get; set; }
 }
 
+/// <summary>
+/// Enthält normspezifische Detailinformationen (für GAEB-LVs).
+/// </summary>
 public class GaebLvDetails : BaseObject
 {
     public List<GaebGliederungsebene> Gliederungsebenen { get; set; }
@@ -3370,8 +3506,6 @@ public enum GaebVergabeart
 
 public class GaebGliederungsebene : BaseObject
 {
-    // public int EbeneNummer { get; set; }
-
     public GaebGliederungsebeneTyp? Typ { get; set; }
 
     public string Bezeichnung { get; set; }
@@ -3465,6 +3599,28 @@ public class NewLvItemInfo : BaseObject
     {
     }
 
+    protected NewLvItemInfo(LvItemBase sourceItem)
+    {
+        ItemTyp = sourceItem.ItemTyp;
+        Nummer = sourceItem.Nummer;
+        Stichwort = sourceItem.Stichwort;
+        FormatierteTexte = sourceItem.FormatierteTexte;
+        Teilleistungsnummer = sourceItem.Teilleistungsnummer;
+        Markierungskennzeichen = sourceItem.Markierungskennzeichen;
+        Herkunftskennzeichen = sourceItem.Herkunftskennzeichen;
+        IstFixpreis = sourceItem.IstFixpreis;
+        IstIntern = sourceItem.IstIntern;
+        Schreibgeschützt = sourceItem.Schreibgeschützt;
+        LbInfo = sourceItem.LbInfo;
+        Variante = sourceItem.Variante;
+        Zuordnungskennzeichen = sourceItem.Zuordnungskennzeichen;
+        NachlassInfo = sourceItem.NachlassInfo;
+        Entfällt = sourceItem.Entfällt;
+    }
+
+    /// <summary>
+    /// Der Typ des neuen Knoten (z.B. Leistungsgruppe) oder Position (z.B. Leistungsposition). Muss befüllt sein.
+    /// </summary>
     public LvItemTyp ItemTyp { get; set; }
 
     public string Nummer { get; set; }
@@ -3504,13 +3660,75 @@ public class NewLvItemInfo : BaseObject
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
 }
 
+/// <summary>
+/// Enthält Informationen zu einem neu anzulegenden LV-Knoten.
+/// </summary>
 public class NewLvKnotenInfo : NewLvItemInfo
 {
+    public NewLvKnotenInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung eines neuen Knotens auf Basis eines bestehenden Knotens ermöglicht.
+    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automtisch befüllt, sondern muss vom Anwendungscode
+    /// befüllt werden.
+    /// </summary>
+    public NewLvKnotenInfo(LvKnoten sourceKnoten) : base(sourceKnoten)
+    {
+    }
+
+    /// <summary>
+    /// ID des Parent-Knoten, unter dem der neue Knoten eingehängt werden soll.
+    /// Falls null, wird der neue Knoten (z.B. Leistungsgruppe) auf oberster Ebene erzeugt.
+    /// </summary>
     public Guid? ParentKnotenId { get; set; }
 }
 
+/// <summary>
+/// Enthält Informationen zu einer neu zu erzeugenden LV-Position.
+/// </summary>
 public class NewLvPositionInfo : NewLvItemInfo
 {
+    public NewLvPositionInfo()
+    {
+    }
+
+    /// <summary>
+    /// Konstruktor, der die Erzeugung einer neuen Position auf Basis einer bestehenden Position ermöglicht.
+    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automtisch befüllt, sondern muss vom Anwendungscode
+    /// befüllt werden.
+    /// </summary>
+    public NewLvPositionInfo(LvPosition sourcePosition) : base(sourcePosition)
+    {
+        Einheit = sourcePosition.Einheit;
+        Umsatzsteuer = sourcePosition.Umsatzsteuer;
+        Positionsart = sourcePosition.Positionsart;
+        LvMenge = sourcePosition.LvMenge;
+        EinheitSchreibgeschützt = sourcePosition.EinheitSchreibgeschützt;
+        EinheitspreisSchreibgeschützt = sourcePosition.EinheitspreisSchreibgeschützt;
+        TexteSchreibgeschützt = sourcePosition.TexteSchreibgeschützt;
+        LvMengeSchreibgeschützt = sourcePosition.LvMengeSchreibgeschützt;
+        Mehrfachverwendung = sourcePosition.Mehrfachverwendung;
+        Stichwortluecke = sourcePosition.Stichwortluecke;
+        Preisanteile = sourcePosition.Preisanteile;
+        GliederungsKnotenList = sourcePosition.GliederungsKnotenList;
+        IstWesentlichePosition = sourcePosition.IstWesentlichePosition;
+        IstNichtAngeboten = sourcePosition.IstNichtAngeboten;
+        IstBeauftragt = sourcePosition.IstBeauftragt;
+        IstSchwerpunktposition = sourcePosition.IstSchwerpunktposition;
+        IstStundenlohnarbeiten = sourcePosition.IstStundenlohnarbeiten;
+        IstFreieBietermenge = sourcePosition.IstFreieBietermenge;
+        BedarfspositionArt = sourcePosition.BedarfspositionArt;
+        GarantierteAngebotssummeNummer = sourcePosition.GarantierteAngebotssummeNummer;
+        HatGarantierteAngebotssumme = sourcePosition.HatGarantierteAngebotssumme;
+        Zuschlagsprozentsatz = sourcePosition.Zuschlagsprozentsatz;
+        Zuschlagsart = sourcePosition.Zuschlagsart;
+        WirdBezuschlagt = sourcePosition.WirdBezuschlagt;
+        ZuBezuschlagendePositionen = sourcePosition.ZuBezuschlagendePositionen;
+        Unterpositionen = sourcePosition.Unterpositionen;
+    }
+    
     /// <summary>
     /// Die ID des Knoten, unter dem die Position erzeugt wird. Für GAEB-LVs ist auch null erlaubt, um
     /// Positonen (z.B. Zusatztexte) auf oberster Ebene zu erzeugen.
@@ -3518,6 +3736,8 @@ public class NewLvPositionInfo : NewLvItemInfo
     public Guid? ParentKnotenId { get; set; }
 
     public string Einheit { get; set; }
+
+    public string Umsatzsteuer { get; set; }
 
     public LvPositionsart? Positionsart { get; set; }
 
@@ -3535,8 +3755,14 @@ public class NewLvPositionInfo : NewLvItemInfo
 
     public string Stichwortluecke { get; set; }
 
+    /// <summary>
+    /// Die auf der Position festgelegten Preisanteilbeträge.
+    /// </summary>
     public Dictionary<string, Money> Preisanteile { get; set; }
 
+    /// <summary>
+    /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
+    /// </summary>
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
 
     /// <summary>
@@ -3573,6 +3799,17 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// Nur für GAEB
     /// </summary>
     public BedarfspositionArt BedarfspositionArt { get; set; }
+
+    /// <summary>
+    /// Nur für ÖNORM-LVs ab Version A 2063:2021: Nummer der <see cref="GarantierteAngebotssummeGruppe"/>,
+    /// der diese Position zugeordnet ist (optional).
+    /// </summary>
+    public string GarantierteAngebotssummeNummer { get; set; }
+
+    /// <summary>
+    /// Nur für ÖNORM-LVs bis Version A 2063:2015: Die Markierung "Garantierte Angebotssumme". 
+    /// </summary>
+    public bool HatGarantierteAngebotssumme { get; set; }
 
     /// <summary>
     /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen).
@@ -3829,6 +4066,8 @@ public class LvPosition : LvItemBase
 {
     public string Einheit { get; set; }
 
+    public string Umsatzsteuer { get; set; }
+
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
 
     public decimal? LvMenge { get; set; }
@@ -3845,8 +4084,14 @@ public class LvPosition : LvItemBase
 
     public string Stichwortluecke { get; set; }
 
+    /// <summary>
+    /// Die auf der Position festgelegten Preisanteilbeträge.
+    /// </summary>
     public Dictionary<string, Money> Preisanteile { get; set; }
 
+    /// <summary>
+    /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
+    /// </summary>
     public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
 
     /// <summary>
@@ -3884,6 +4129,17 @@ public class LvPosition : LvItemBase
     /// </summary>
     public BedarfspositionArt BedarfspositionArt { get; set; }
 
+    /// <summary>
+    /// Nur für ÖNORM-LVs ab Version A 2063:2021: Nummer der <see cref="GarantierteAngebotssummeGruppe"/>,
+    /// der diese Position zugeordnet ist (optional).
+    /// </summary>
+    public string GarantierteAngebotssummeNummer { get; set; }
+
+    /// <summary>
+    /// Nur für ÖNORM-LVs bis Version A 2063:2015: Die Markierung "Garantierte Angebotssumme". 
+    /// </summary>
+    public bool HatGarantierteAngebotssumme { get; set; }
+    
     /// <summary>
     /// Nur für GAEB: Zuschlagsprozentsatz (für Zuschlagspositionen).
     /// </summary>
@@ -3933,10 +4189,19 @@ public enum BedarfspositionArt
     MitGesamtbetrag
 }
 
+/// <summary>
+/// Identifiziert einen Gliederungsknoten eines Gliederungskatalogs.
+/// </summary>
 public class LvPositionGliederungsKnoten : BaseObject
 {
+    /// <summary>
+    /// Die ID des Gliederungskatalogs.
+    /// </summary>
     public Guid KatalogId { get; set; }
 
+    /// <summary>
+    /// Die ID des Gliederungsknotens.
+    /// </summary>
     public Guid KnotenId { get; set; }
 }
 
