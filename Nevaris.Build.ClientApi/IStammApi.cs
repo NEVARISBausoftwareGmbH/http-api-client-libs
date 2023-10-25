@@ -334,4 +334,7 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Delete("/build/global/kostenarten/{kostenartNummer}")]
     Task DeleteKostenart(string kostenartNummer, string? mandantId = null, string? niederlassungId = null);
+
+    [Get("/build/global/internal-test/lizenz-merkmale")]
+    Task<TestInfo> GetLizenzInfo();
 }

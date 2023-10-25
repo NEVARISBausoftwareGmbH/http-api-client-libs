@@ -5199,3 +5199,14 @@ public class BautagebuchGeraeteProjektdaten : BaseObject
 }
 
 #endregion Bautagebuch
+
+public class TestInfo
+{
+    public Guid? EmployeeId { get; set; }
+
+    public string? AccessToken { get; set; }
+
+    public string? LicenseProviderId { get; set; }
+
+    public Dictionary<int, List<int>>? OeNormDatenKennzeichen { get; set; }
+}
