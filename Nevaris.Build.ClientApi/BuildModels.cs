@@ -349,12 +349,24 @@ public enum ZugeordneteAdresseRolle
     Mitbewerber = 50
 }
 
+/// <summary>
+/// Beschreibt die Zuordnung einer Adresse zu einem LV.
+/// </summary>
 public class LvZugeordneteAdresse : BaseObject
 {
+    /// <summary>
+    /// Die Adressrolle (z.B. "Auftraggeber").
+    /// </summary>
     public ZugeordneteAdresseRolle Rolle { get; set; }
 
+    /// <summary>
+    /// Die ID der zugeordneten Adresse.
+    /// </summary>
     public Guid? AdressId { get; set; }
 
+    /// <summary>
+    /// Optionale ID des Ansprechpartners (wenn die Adresse eine Organisation ist).
+    /// </summary>
     public Guid? AnsprechpartnerId { get; set; }
 }
 
@@ -807,6 +819,11 @@ public class Projekt : BaseObject
     public List<Umsatzsteuer> Umsatzsteuern { get; set; }
 
     /// <summary>
+    /// (Detailinfo) Verweist auf die Adressen, die dem Projekt zugeordnet sind (inklusive Adressrollen).
+    /// </summary>
+    public List<ProjektZugeordneteAdresse> ZugeordneteAdressen { get; set; }
+
+    /// <summary>
     /// Die ID des Betriebsmittelstamms, der für dieses Projekt hinerlegt ist. Kann nicht direkt gesetzt werden,
     /// sondern wird beim erstmaligen Anlegen einer Kalkulation befüllt.
     /// Der Betriebsmittelstamm kann per GET /build/global/betriebsmittelstaemme/{betriebsmittelstammId}
@@ -984,6 +1001,27 @@ public class NewProjektInfo : BaseObject
     public string Bezeichnung { get; set; }
 
     public bool IstVorlageprojekt { get; set; }
+}
+
+/// <summary>
+/// Beschreibt die Zuordnung einer Adresse zu einem Projekt.
+/// </summary>
+public class ProjektZugeordneteAdresse : BaseObject
+{
+    /// <summary>
+    /// Die Adressrolle (z.B. "Auftraggeber").
+    /// </summary>
+    public ZugeordneteAdresseRolle Rolle { get; set; }
+
+    /// <summary>
+    /// Die ID der zugeordneten Adresse.
+    /// </summary>
+    public Guid? AdressId { get; set; }
+
+    /// <summary>
+    /// Optionale ID des Ansprechpartners (wenn die Adresse eine Organisation ist).
+    /// </summary>
+    public Guid? AnsprechpartnerId { get; set; }
 }
 
 #endregion Projekte
@@ -2268,6 +2306,43 @@ public class BetriebsmittelKostenDetails : BaseObject
     /// Der Gesamtpreis.
     /// </summary>
     public Money PreisGesamt { get; set; }
+
+    /// <summary>
+    /// Der Warenkorb dieses Betriebsmittel, d.h. eine Auflistung aller in den weiteren Kosten vorkommenen
+    /// Betriebsmittel (rekursiv aufgelöst) jeweils inklusive der kumulierten Menge und der kumulierten Kosten.
+    /// Diese Property wird beim Abrufen eines einzelnen Betriebsmittels per IStammApi/IProjektApi.GetBetriebsmittel
+    /// immer befüllt (und ist eine leere Liste im Fall eines Betriebsmittels ohne weitere Kosten).
+    /// Beim Abholen aller Betriebsmittel mittels IStammApi/IProjektApi.GetAllBetriebsmittel ist die Property
+    /// nur dann befüllt, wenn die Argumente mitKosten = true, mitWeiterenKosten = true übergeben werden.
+    /// </summary>
+    public List<BetriebsmittelWarenkorbItem> WarenkorbItems { get; set; }
+}
+
+/// <summary>
+/// Ein Eintrag im Warenkorb eines Betriebsmittels. Siehe <see cref="BetriebsmittelKostenDetails.WarenkorbItems"/>.
+/// </summary>
+public class BetriebsmittelWarenkorbItem : BaseObject
+{
+    /// <summary>
+    /// Die ID des verwendeten Betriebsmittels.
+    /// </summary>
+    public Guid BetriebsmittelId { get; set; }
+
+    /// <summary>
+    /// Die Art des Betriebsmittels, auf das <see cref="BetriebsmittelId"/> verweist.
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public BetriebsmittelArt BetriebsmittelArt { get; set; }
+    
+    /// <summary>
+    /// Die Menge, mit der das verwendete Betriebsmittel in den Warenkorb einfließt.
+    /// </summary>
+    public decimal? Menge { get; set; }
+
+    /// <summary>
+    /// Die Kosten, mit der das verwendete Betriebsmittel in den Warenkorb einfließt.
+    /// </summary>
+    public Money Kosten { get; set; }
 }
 
 /// <summary>
@@ -3169,10 +3244,13 @@ public class LvDetails : BaseObject
     public NachlassInfo NachlassInfo { get; set; }
 
     /// <summary>
-    /// Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
+    /// (Detailinfo) Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
     /// </summary>
     public List<GarantierteAngebotssummeGruppe> GarantierteAngebotssummeGruppen { get; set; } 
 
+    /// <summary>
+    /// (Detailinfo) Verweist auf die Adressen, die dem LV zugeordnet sind (inklusive Adressrollen).
+    /// </summary>
     public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
 
     /// <summary>
@@ -4679,6 +4757,10 @@ public class Money : Collection<SimpleMoney>
         Add(new SimpleMoney(currency, value));
     }
 
+    /// <summary>
+    /// Liefert den an erster Stelle eingefügten Geldbetrag. Normalerweise gibt es genau einen Geldbetrag, außer
+    /// im Mehrwährungsfall. Wenn es keinen Geldbetrag gibt, wird null zurückgegeben.
+    /// </summary>
     public decimal? FirstValue
     {
         get => this.FirstOrDefault()?.Value;

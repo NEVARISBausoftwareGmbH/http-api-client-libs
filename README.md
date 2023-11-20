@@ -8,6 +8,19 @@ von NEVARIS Build 2023.2 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.7.1 (für Build 2023.2 Patch 1 – 23.2.23321.643) – _20.11.2023_
+
+- _Projekt_: Neue Property _ZugeordneteAdressen_: Erlaubt den Zugriff auf die Adressen, die dem Projekt zugeordnet sind.
+- _BetriebsmittelKostenDetails_: Neue Property _WarenkorbItems_: Liefert den Warenkorb eines Betriebsmittel, d.h.
+eine Auflistung aller in den weiteren Kosten vorkommenen Betriebsmittel (rekursiv aufgelöst) jeweils inklusive der
+kumulierten Menge und der kumulierten Kosten. Diese Property wird beim Abrufen eines einzelnen Betriebsmittels per
+_IStammApi/IProjektApi.GetBetriebsmittel_ immer befüllt (und ist eine leere Liste im Fall eines Betriebsmittels 
+ohne weitere Kosten). Beim Abholen aller Betriebsmittel mittels _IStammApi/IProjektApi.GetAllBetriebsmittel_ ist die
+Property nur dann befüllt, wenn die Argumente _mitKosten = true, mitWeiterenKosten = true_ übergeben werden.
+- Fix: Beim Abrufen von Betriebsmitteln per _IStammApi/IProjektApi.GetAllBetriebsmittel_ hatte das Argument
+_mitKosten = true_ keine Auswirkung, sofern nicht auch _mitWeiterenKosten = true_ übergeben wurde.
+Dieser Fehler wurde nun Build-seitig behoben.
+
 ### 4.7.0 (für Build 2023.2 – 23.2.23283.383) – _16.10.2023_
 
 - _LvPosition_: Neue Properties _Umsatzsteuer_, _GarantierteAngebotssummeNummer_, _HatGarantierteAngebotssumme_.
