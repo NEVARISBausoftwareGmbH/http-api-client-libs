@@ -526,6 +526,22 @@ public interface IProjektApi
         Guid? zuschlagsebeneId = null);
 
     /// <summary>
+    /// Liefert ein bestimmtes Betriebsmittel des Projekts über seine Nummer.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="nummer">Vollständige Betriebsmittelnummer (z.B. "M24.211")</param>
+    /// <param name="kostenebeneId">Die ID der Kostenebene, z.B. der Kalkulation. Falls null (= Default),
+    /// wird für Build das Projekt und für Success X die Kalkulation verwendet.</param>
+    /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, z.B. der Kalkulation. Falls null (= Default),
+    /// wird das für Build das Projekt und für Success X die Kalkulation verwendet.</param>
+    [Get("/build/projekte/{projektId}/betriebsmittel_by_nummer/{nummer}")]
+    Task<Betriebsmittel> GetBetriebsmittelByNummer(
+        string projektId,
+        string nummer,
+        Guid? kostenebeneId = null,
+        Guid? zuschlagsebeneId = null);
+
+    /// <summary>
     /// Fügt einem Projekt ein neues Betriebsmittel hinzu.
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
