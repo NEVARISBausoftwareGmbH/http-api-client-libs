@@ -13,8 +13,8 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes></PackageReleaseNotes>
-    <PackageVersion>4.8.0-2024.1.3</PackageVersion>
+    <PackageReleaseNotes>ClientApi für Build 2023.2 (inkl. Patch 2): Verbesserungen und Erweiterungen bei Betriebsmitteln und Leistungsverzeichnissen</PackageReleaseNotes>
+    <PackageVersion>4.8.0</PackageVersion>
     <AssemblyVersion>4.8.0</AssemblyVersion>
     <FileVersion>4.8.0</FileVersion>
     <SignAssembly>true</SignAssembly>

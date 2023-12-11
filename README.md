@@ -1,12 +1,16 @@
 # http-api-client-libs für NEVARIS Build 2023.2
 
-## Nevaris.Build.ClientApi 4.7.1
+## Nevaris.Build.ClientApi 4.8.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2023.2 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 4.8.0 (für Build 2023.2 Patch 2)
+
+- Neue Funktion _IProjektApi/IStammApi.GetBetriebsmittelByNummer_ zum Abfragen eines Betriebsmittel über seine Nummer.
 
 ### 4.7.1 (für Build 2023.2 Patch 1 – 23.2.23321.643) – _20.11.2023_
 

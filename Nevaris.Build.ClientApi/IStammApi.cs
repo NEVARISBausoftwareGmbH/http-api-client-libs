@@ -179,6 +179,20 @@ public interface IStammApi
         Guid? zuschlagsebeneId = null);
 
     /// <summary>
+    /// Liefert ein bestimmtes Betriebsmittel eines Betriebsmittelstamms über seine Nummer.
+    /// </summary>
+    /// <param name="betriebsmittelStammId">Betriebsmittelstamm-ID</param>
+    /// <param name="nummer">Vollständige Betriebsmittelnummer (z.B. "M24.211")</param>
+    /// <param name="kostenebeneId">Die ID der Kostenebene, das heißt des Kostenkatalogs. Falls null (= Default), wird der Standardkostenkatalog verwendet.</param>
+    /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, das heißt des Zuschlagskatalogs. Falls null (= Default), wird der Standardzuschlagskatalog verwendet.</param>
+    [Get("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_by_nummer/{nummer}")]
+    public Task<Betriebsmittel> GetBetriebsmittelByNummer(
+        Guid betriebsmittelStammId,
+        string nummer,
+        Guid? kostenebeneId = null,
+        Guid? zuschlagsebeneId = null);
+
+    /// <summary>
     /// Fügt einem Betriebsmittelstamm ein neues Betriebsmittel hinzu.
     /// </summary>
     /// <param name="betriebsmittelStammId">Betriebsmittelstamm-ID</param>
