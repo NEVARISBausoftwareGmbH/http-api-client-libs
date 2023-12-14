@@ -8,7 +8,7 @@ von NEVARIS Build 2023.2 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.8.0 (für Build 2023.2 Patch 2)
+### 4.8.0 (für Build 2023.2 Patch 2 – 23.2.23346.830) – _12.12.2023_
 
 - Neue Funktion _IProjektApi/IStammApi.GetBetriebsmittelByNummer_ zum Abfragen eines Betriebsmittel über seine Nummer.
 
