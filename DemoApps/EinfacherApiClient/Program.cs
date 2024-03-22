@@ -25,5 +25,5 @@ try
 }
 catch (Refit.ApiException ex)
 {
-    Console.WriteLine(ex.Content);
+    Console.WriteLine(ex.Message);
 }
