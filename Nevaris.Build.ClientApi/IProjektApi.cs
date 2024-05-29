@@ -157,8 +157,14 @@ public interface IProjektApi
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="lvId">LV-ID</param>
     /// <param name="lv">Leistungsverzeichnis mit den neuen Werten</param>
-    [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
-    Task UpdateLeistungsverzeichnis(string projektId, Guid lvId, [Body] Leistungsverzeichnis lv);
+    /// <param name="mengenArt">Die gewünschte Mengenart (nur relevant als Filterkriterium für die Liste der
+    /// globalen Hilfsberechnungen, d.h. <see cref="LvDetails.GlobaleHilfsberechungen"/>)</param>
+    [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}?mengenArt={mengenArt}")]
+    Task UpdateLeistungsverzeichnis(
+        string projektId, 
+        Guid lvId, 
+        [Body] Leistungsverzeichnis lv, 
+        MengenArt mengenArt = MengenArt.Lv);
 
     /// <summary>
     /// Löscht das Leistungsverzeichnis mit der angegebenen ID.
@@ -275,9 +281,13 @@ public interface IProjektApi
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="lvId">LV-ID</param>
     /// <param name="mengenArt">Die gewünschte Mengenart</param>
-    [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}")]
-    Task<IEnumerable<Aufmaßblatt>> GetAufmaßblätter(string projektId, Guid lvId,
-        MengenArt mengenArt = MengenArt.Abrechnung);
+    /// <param name="mitDetails">Falls true (Default: false), werden Detailinformationen (hier: Hilfsberechnungen) mitgeladen</param>
+    [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}&mitDetails={mitDetails}")]
+    Task<List<Aufmaßblatt>> GetAufmaßblätter(
+        string projektId,
+        Guid lvId,
+        MengenArt mengenArt = MengenArt.Abrechnung,
+        bool mitDetails = false);
 
     /// <summary>
     /// Ändert die zu einem Leistungsverzeichnis (Auftrag) gehörenden Aufmaßblätter.
@@ -287,7 +297,10 @@ public interface IProjektApi
     /// <param name="aufmaßblätter">Die Aufmaßblätter mit den neuen Werten. Diese Liste sollte auf Basis der zuvor per GET ermittelten Liste erzeugt werden.</param>
     /// <param name="mengenArt">Die gewünschte Mengenart</param>
     [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/aufmassblaetter?mengenArt={mengenArt}")]
-    Task UpdateAufmaßblätter(string projektId, Guid lvId, [Body] IEnumerable<Aufmaßblatt> aufmaßblätter,
+    Task UpdateAufmaßblätter(
+        string projektId,
+        Guid lvId,
+        [Body] IEnumerable<Aufmaßblatt> aufmaßblätter,
         MengenArt mengenArt = MengenArt.Abrechnung);
 
     /// <summary>

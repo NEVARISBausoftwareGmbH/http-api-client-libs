@@ -155,7 +155,7 @@ public class Einheit : BaseObject
     public override string? ToString() => Code;
 }
 
-#nullable restore
+#nullable disable
 
 /// <summary>
 /// Ein Mandant. Im integrierten Betrieb kommt dieser aus Finance.
@@ -2986,7 +2986,7 @@ public class NewLvInfo : BaseObject
         GaebLvDetails = sourceLV.GaebLvDetails;
         BildDetails = sourceLV.BildDetails;
     }
-    
+
     /// <summary>
     /// LV-Nummer
     /// </summary>
@@ -3034,6 +3034,12 @@ public class NewLvInfo : BaseObject
     /// Optionales Objekt mit Binärdaten, die dem LV zugeordnet sind.
     /// </summary>
     public LvBildDetails BildDetails { get; set; }
+
+    /// <summary>
+    /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
+    /// <see cref="LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
+    /// </summary>
+    public MengenArt MengenArt { get; set; } = MengenArt.Lv;
 }
 
 /// <summary>
@@ -3252,6 +3258,12 @@ public class LvDetails : BaseObject
     /// (Detailinfo) Verweist auf die Adressen, die dem LV zugeordnet sind (inklusive Adressrollen).
     /// </summary>
     public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
+
+    /// <summary>
+    /// Globale Hilfsberechnungen für die Mengenermittlung. Diese Liste wird immer nur mit den zu der angeforderten
+    /// Mengenart passenden Hilfsberechnungen befüllt. 
+    /// </summary>
+    public List<Hilfsberechnung> GlobaleHilfsberechungen { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung für das LV.
@@ -4411,9 +4423,22 @@ public class ImportLvAusByteArrayInfo : BaseObject
 public class Aufmaßblatt : BaseObject
 {
     public Guid Id { get; set; }
+
+    /// <summary>
+    /// Die Mengenart, für die dieses Aufmaßblatt relevant ist. Wird nur Leseoperationen befüllt und enhält
+    /// immer die Mengenart, die bei der relevanten GET-Operation mitgegeben wird. Wird bei Schreiboperationen
+    /// ignoriert.
+    /// </summary>
     public MengenArt? MengenArt { get; set; }
+
     public string Nummer { get; set; }
+
     public string Bezeichnung { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Die in diesem Aufmaßblatt enthaltenen Hilfsberechnungen.
+    /// </summary>
+    public List<Hilfsberechnung> Hilfsberechnungen { get; set; }
 }
 
 public enum DBKostenart
@@ -4596,9 +4621,45 @@ public class Aufmaßzeile : BaseObject
     public Formel FormelKorrigiert { get; set; }
     public bool? ErzeugtInKorrektur { get; set; }
     public decimal? Menge { get; set; }
+
+    public bool Geprüft { get; set; }
+
+    public bool Schreibgeschützt { get; set; }
 }
 
 public enum AufmaßzeilenArt
+{
+    Ansatz = 0,
+    Formel,
+    Kommentar,
+    Anhang
+}
+
+/// <summary>
+/// Eine Hilfsberechung (aufmaßblattgebunden oder global) in der Mengenermittlung.
+/// </summary>
+public class Hilfsberechnung : BaseObject
+{
+    public Guid Id { get; set; }
+
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public HilfszeilenArt Art { get; set; }
+
+    public HilfszeilenArt? ArtKorrigiert { get; set; }
+
+    public string Inhalt { get; set; }
+    public string InhaltKorrigiert { get; set; }
+    public string Variable { get; set; }
+    public Formel Formel { get; set; }
+    public Formel FormelKorrigiert { get; set; }
+    public bool? ErzeugtInKorrektur { get; set; }
+
+    public bool Geprüft { get; set; }
+
+    public bool Schreibgeschützt { get; set; }
+}
+
+public enum HilfszeilenArt
 {
     Ansatz = 0,
     Formel,
