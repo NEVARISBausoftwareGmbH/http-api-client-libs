@@ -14,7 +14,7 @@
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
     <PackageReleaseNotes>ClientApi für Build 2024.1 (inkl. Patch 1): Erweiterungen im Bereich der Mengenermittlung (u.a. Zugriff auf Hilfsberechnungen)</PackageReleaseNotes>
-    <PackageVersion>4.9.0-2024.1.1</PackageVersion>
+    <PackageVersion>4.9.0</PackageVersion>
     <AssemblyVersion>4.9.0</AssemblyVersion>
     <FileVersion>4.9.0</FileVersion>
     <SignAssembly>true</SignAssembly>

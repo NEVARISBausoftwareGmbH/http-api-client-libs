@@ -1,12 +1,22 @@
-# http-api-client-libs für NEVARIS Build 2023.2
+# http-api-client-libs für NEVARIS Build 2024.1
 
-## Nevaris.Build.ClientApi 4.8.0
+## Nevaris.Build.ClientApi 4.9.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2023.2 Sie ist auch als
+von NEVARIS Build 2024.1 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 4.9.0 (für Build 2024.1 Patch 1 – 24.1.24155.423) – _04.06.2024_
+
+- Zugriff auf Hilfsberechnungen (lesend und schreibend) für die Mengenermittlung:
+  - Neue Properties _LvDetails.GlobaleHilfsberechungen_ und _Aufmaßblatt.Hilfsberechnungen_.
+  - _IProjektApi.GetAufmaßblätter_: Neuer Parameter _mitDetails_ zum Abrufen der Hilfsberechnungen.
+  - _IProjektApi.CreateLeistungsverzeichnis_: Neue Property _NewLvInfo.MengenArt_, um die per _LvDetails.GlobaleHilfsberechungen_
+    mitgegebenen Hilfsberechnungen einer Mengenart zuzuordnen.
+  - _IProjektApi.UpdateLeistungsverzeichnis_: Neuer Parameter _mengenArt_, der bestimmt, welche globalen Hilgsberechnungen vom Update betroffen sind.
+- _Aufmaßzeile_: Neue Properties _Geprüft_ und _Schreibgeschützt_.
 
 ### 4.8.0 (für Build 2023.2 Patch 2 – 23.2.23346.830) – _12.12.2023_
 
