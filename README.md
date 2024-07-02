@@ -1,12 +1,34 @@
 # http-api-client-libs für NEVARIS Build 2024.1
 
-## Nevaris.Build.ClientApi 4.9.0
+## Nevaris.Build.ClientApi 4.9.1
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2024.1 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 4.9.1 (für Build 2024.1 Patch 2 – 24.1.24179.845) – _02.07.2024_
+
+- Erweiterungen und Verbesserungen beim lesenden Zugriff auf Betriebsmittel
+  - Neu: Neue Funktionen _IStammApi.GetAllBetriebsmittelEx + IProjekt.GetAllBetriebsmittelEx_: Liefert neben
+den Betriebsmitteln auch Informationen zu den Kostenebenen.
+   - Neu: Hilfsmethoden _Betriebsmittel.FindKosten_, _Betriebsmittel.FindZuschlag_, _Zuschlagsgruppe.FindWert_
+zum Auslesen eines Kostenebenen-abhängigen Werts unter Berücksichtigung der Kostenebenen-Vererbung.
+   - Neue Properties _Betriebsmittel.KostenEffektiv + Betriebsmittel.ZuschlägeEffektiv_: Diese werden bei
+Lesezugriffen per _IStammApi/IProjektApi.GetAllBetriebsmittel(Ex)_ befüllt und enthalten die
+effektiven Kosten- und Zuschlagswerte, d.h. die Werte, die man auch im UI sieht unter Berücksichtigung der
+angeforderten Kostenebene und (im Falle von Zuschlägen) der Gruppenvererbung.
+   - Neu: Beim Zugriff per _IStammApi/IProjektApi.GetAllBetriebsmittel(Ex)_ enthält _BetriebsmittelZuschlag.Wert_
+nun auch für ÖNORM-Betriebsmitteln den Prozentwert, wodurch der Lookup über die Zuschlagsgruppe unnötig wird.
+   - Fix: Beim Zugriff per _IStammApi/IProjektApi.GetAllBetriebsmittel_ wurde
+_Betriebsmittel.Zuschläge_ nicht befüllt. Diese Property wurde außerdem bei Schreibeoperationen nicht berücksichtigt.
+   - Fix: _BetriebsmittelMaterialDetails.Ladezeit_ wurde grundsätzlich nicht befüllt.
+- Verschiedene Properties wurden ergänzt: _Kalkulation.IstAktiv, KalkulationsBlattDetails.Zuschlag/ZuschlagGesamt,
+AbrechnungsMerkmal.IsAuswertungsKennzeichen, Positionsblock.MengeKorrigiert, Aufmaßzeile.MengeKorrigiert_.
+- Fix: _IStammApi.UpdateBetriebsmittelstamm_ führte zu falscher Befüllung von _PreisKatalog.ParentPreisKatalog_.
+- Fix: _IStammApi.CreateBetriebsmittelCollection_: Beim Erzeugen von mehreren Materialien mit gleichem Lieferanten
+kam es zu einer Exception.
 
 ### 4.9.0 (für Build 2024.1 Patch 1 – 24.1.24155.423) – _04.06.2024_
 

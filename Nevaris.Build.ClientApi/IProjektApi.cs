@@ -496,7 +496,8 @@ public interface IProjektApi
     Task DeleteKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId);
 
     /// <summary>
-    /// Liefert die Betriebsmittel eines Projekts.
+    /// Liefert die Betriebsmittel eines Projekts. Falls zudem Informationen zu den Kostenbenene
+    /// benötigt werden, sollte <see cref="GetAllBetriebsmittelEx"/> genutzt werden.
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="art">Falls != null, werden nur Betriebsmittel dieses Typs ermittelt. Falls 'art' eine Gruppenart ist, werden nur die passenden Gruppen,
@@ -511,6 +512,32 @@ public interface IProjektApi
     [Get(
         "/build/projekte/{projektId}/betriebsmittel?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
     Task<List<Betriebsmittel>> GetAllBetriebsmittel(
+        string projektId,
+        BetriebsmittelArt? art,
+        bool mitGruppen = true,
+        bool mitKosten = false,
+        bool mitWeiterenKosten = false,
+        bool mitZuschlaegen = false,
+        bool mitDetails = true,
+        Guid? kostenebeneId = null,
+        Guid? zuschlagsebeneId = null);
+
+    /// <summary>
+    /// Liefert die Betriebsmittel eines Projekts sowie Informationen zu den Kostenebenen.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="art">Falls != null, werden nur Betriebsmittel dieses Typs ermittelt. Falls 'art' eine Gruppenart ist, werden nur die passenden Gruppen,
+    /// und zwar immer in hierarchischer Form und ohne Kosten, geliefert.</param>
+    /// <param name="mitGruppen">Falls true (= Default), werden auch Gruppenelemente ermittelt, und das Ergebnis wird in hierarchischer Form aufbereitet.</param>
+    /// <param name="mitKosten">Falls true (Default = false), werden auch die Kosten ermittelt (Property 'kosten').</param>
+    /// <param name="mitWeiterenKosten">Falls true (Default = false), werden auch die weiteren Kosten ermittelt (Property 'weitereKosten').</param>
+    /// <param name="mitZuschlaegen">Falls true (Default = false), werden auch die Zuschläge ermittelt (Property 'zuschläge').</param>
+    /// <param name="mitDetails">Falls true (= Default), werden auch die Detailinformationen ermittelt (Properties 'details', 'lohnDetails' usw.).</param>
+    /// <param name="kostenebeneId">Die ID der Kostenebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
+    /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, z.B. der Kalkulation. Falls null (= Default), wird das Projekt verwendet.</param>
+    [Get(
+        "/build/projekte/{projektId}/betriebsmittel_ex?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    Task<BetriebsmittelResult> GetAllBetriebsmittelEx(
         string projektId,
         BetriebsmittelArt? art,
         bool mitGruppen = true,

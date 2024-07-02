@@ -1494,6 +1494,17 @@ public class Zuschlagsgruppe : BaseObject
     /// da jeder Zuschlagssatz individuell pro Kostenebene festgelegt werden kann.
     /// </summary>
     public List<ZuschlagsgruppenWert> Werte { get; set; }
+
+    /// <summary>
+    /// Liefert den Zuschlagswert, der für eine Zuschlagsebene relevant ist. Übergeben wird eine Liste von
+    /// Zuschlagsebenen (üblicherweise <see cref="BetriebsmittelResult.Zuschlagsebenen"/>). Zurückgegeben wird der
+    /// Zuschlagswert der ersten darin enthaltenen Zuschagsebenen, auf der ein Zuschlagswert festgelegt ist. 
+    /// </summary>
+    public ZuschlagsgruppenWert FindWert(IEnumerable<Kostenebene> zuschlagsebenen)
+        => (from e in zuschlagsebenen
+            from w in Werte
+            where w.ZuschlagsebeneId == e.Id
+            select w).FirstOrDefault();
 }
 
 /// <summary>
@@ -1591,7 +1602,7 @@ public enum FinancePreisIndex
 }
 
 /// <summary>
-/// Ein Zuschlagskatalog eines <see cref="BetriebsmittelStamm"/>s. Ein Kostenkatalog dient als Zuschlagsebene, d.h.
+/// Ein Zuschlagskatalog eines <see cref="BetriebsmittelStamm"/>s. Ein Zuschlagskatalog dient als Zuschlagsebene, d.h.
 /// seine ID kann an alle Operationen übergeben werden, die einen "zuschlagsebeneId"-Paramater entgegennehmen.
 /// </summary>
 public class Zuschlagskatalog : BaseObject
@@ -1783,6 +1794,58 @@ public class BetriebsmittelKostenUpdateInfo : BaseObject
 }
 
 /// <summary>
+/// Identifiziert eine Kosten- oder Zuschlagsebene.
+/// </summary>
+public class Kostenebene
+{
+    /// <summary>
+    /// Die ID der Kostenebene (z.B. ein Kostenkatalog), auf der die Kosten für das Betriebsmittel definiert sind.
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Der Typ der Kostenebene. Wird nur bei Leseoperationen befüllt und bei Schreiboperationen ignoriert.
+    /// </summary>
+    public KostenebeneTyp? Typ { get; set; }
+}
+
+/// <summary>
+/// Das Ergebnisobjekt der Endpunkte /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_ex
+/// und /build/projekte/{projektId}/betriebsmittel_ex.
+/// </summary>
+public class BetriebsmittelResult
+{
+    /// <summary>
+    /// Liste der angeforderten Betriebsmittel (hierarchisch aufgebaut, falls mitGruppen == true).
+    /// </summary>
+    public List<Betriebsmittel> BetriebsmittelList { get; set; }
+
+    /// <summary>
+    /// Die Kostenebene, die für Berechnungen herangezogen wurde.
+    /// </summary>
+    public Guid KostenebeneId { get; set; }
+
+    /// <summary>
+    /// Alle relevanten Kostenebenen (von innen nach außen), beginnend mit <see cref="KostenebeneId"/>.
+    /// Ermöglicht das Auffinden von Kostenebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
+    /// z.B. per <see cref="Betriebsmittel.FindKosten"/>.
+    /// </summary>
+    public List<Kostenebene> Kostenebenen { get; set; }
+
+    /// <summary>
+    /// Die Zuschlagsebene, die für Berechnungen herangezogen wurde.
+    /// </summary>
+    public Guid ZuschlagsebeneId { get; set; }
+
+    /// <summary>
+    /// Alle relevanten Zuschlagsebenen (von innen nach außen), beginnend mit <see cref="ZuschlagsebeneId"/>.
+    /// Ermöglicht das Auffinden von Zuschlagsebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
+    /// z.B. per <see cref="Betriebsmittel.FindZuschlag"/>.
+    /// </summary>
+    public List<Kostenebene> Zuschlagsebenen { get; set; }
+}
+
+/// <summary>
 /// Ein Betriebsmittel (kann auch eine Betriebsmittelgruppe sein).
 /// </summary>
 public class Betriebsmittel : BaseObject
@@ -1821,16 +1884,35 @@ public class Betriebsmittel : BaseObject
     /// (Detailinfo) Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel festgelegt
     /// sind). Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
-    /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich Kosten.
+    /// über den "mitKosten"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich Kosten.
     /// </summary>
     public List<BetriebsmittelKosten> Kosten { get; set; }
+
+    /// <summary>
+    /// Ist befüllt, wenn <see cref="Kosten"/> befüllt ist. Enthält den Eintrag aus <see cref="Kosten"/>, der für
+    /// die angeforderte Kostenebene das passende Kostenobjekt enthält, wobei die Kostenebenen-Hierarchie
+    /// berücksichtigt wird (d.h. wenn für die angeforderte Kostenenbene kein Kostenwert hinterlegt ist, wird
+    /// die übergeordnete Kostenebene herangezogen usw.).
+    /// </summary>
+    public BetriebsmittelKosten KostenEffektiv { get; set; }
+
+    /// <summary>
+    /// Liefert die Kosten, die für eine Kostenebene relevant sind. Übergeben wird eine Liste von Kostenebenen
+    /// (üblicherweise <see cref="BetriebsmittelResult.Kostenebenen"/>). Zurückgegeben wird das Kostenobjekt der
+    /// ersten darin enthaltenen Kostenebene, auf der Kosten festgelegt sind. 
+    /// </summary>
+    public BetriebsmittelKosten FindKosten(IEnumerable<Kostenebene> kostenebenen)
+        => (from e in kostenebenen
+            from k in Kosten
+            where k.KostenebeneId == e.Id
+            select k).FirstOrDefault();
 
     /// <summary>
     /// (Detailinfo) Enthält berechnete Kosten und Preise. Diese sind abhängig von der gewählten Kosten- und
     /// Zuschlagsebene. Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen
     /// befüllt. Allerdings erlaubt der Aufruf
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
-    /// über den "mitKosten"-Parameter das Auslesen meherer Betriebsmittel einschließlich berechneter Kosten und Preise.
+    /// über den "mitKosten"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich berechneter Kosten und Preise.
     /// Wird bei Schreiboperationen ignoriert.
     /// </summary>
     public BetriebsmittelKostenDetails KostenDetails { get; set; }
@@ -1841,16 +1923,36 @@ public class Betriebsmittel : BaseObject
     public List<KalkulationsZeile> WeitereKosten { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Zuschlägen (einer pro Zuschlagsebene, auf der die Zuschlaäge für dieses Betriebsmittel
+    /// (Detailinfo) Liste von Zuschlägen (einer pro Zuschlagsebene, auf der die Zuschläge für dieses Betriebsmittel
     /// festgelegt sind).
     /// Ist normalerweise eine Detailinfo, das heißt, dieses Feld ist nur im Fall von Einzelabfragen befüllt.
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
-    /// über den "mitZuschlägen"-Parameter das Auslesen meherer Betriebsmittel einschließlich Kosten.
+    /// über den "mitZuschlägen"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich Kosten.
     /// </summary>
     public List<BetriebsmittelZuschlag> Zuschläge { get; set; }
+    
+    /// <summary>
+    /// Ist befüllt, wenn <see cref="Zuschläge"/> befüllt ist. Enthält die für die angeforderte Zuschlagsebene
+    /// passenden Zuschlagsobjekte, wobei gegebenenfalls übergeordnete Gruppen und Kostenebenen herangezogen
+    /// werden, um das passende Zuschlagsobjekt zu ermitteln.
+    /// </summary>
+    public List<BetriebsmittelZuschlag> ZuschlägeEffektiv { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Spezielle Eigenschaften, die nur bei Einzelabfragen geladen werden.
+    /// Liefert den Zuschlag, der für eine Zuschlagsebene relevant ist. Übergeben wird eine Liste von Zuschlagsebenen
+    /// (üblicherweise <see cref="BetriebsmittelResult.Zuschlagsebenen"/>). Zurückgegeben wird das Zuschlagsobjekt der
+    /// ersten darin enthaltenen Zuschagsebenen, auf der ein Zuschlag festgelegt sind. 
+    /// </summary>
+    public BetriebsmittelZuschlag FindZuschlag(int index, IEnumerable<Kostenebene> zuschlagsebenen)
+        => (from e in zuschlagsebenen
+            from z in Zuschläge
+            where z.ZuschlagsebeneId == e.Id && z.ArtIndex == index
+            select z).FirstOrDefault();
+
+    /// <summary>
+    /// (Detailinfo) Enthält spezielle Eigenschaften, die nur bei Einzelabfragen geladen werden sowie beim
+    /// Aufruf von /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel mit
+    /// mitDetails = true. 
     /// </summary>
     public BetriebsmittelDetails Details { get; set; }
 
@@ -1954,13 +2056,16 @@ public class BetriebsmittelZuschlag : BaseObject
     public string ZuschlagsgruppenNummer { get; set; }
 
     /// <summary>
-    /// Für GAEB: Der Zuschlag als Prozentwert.
+    /// Für GAEB: Der Zuschlag als Prozentwert.<br/>
+    /// Für ÖNORM: Wird beim Auslesen aller Betriebsmittel befüllt und enthält den in der referenzierten
+    /// Zuschlagsgruppe hinterlegten Prozentsatz. Wird bei Schreiboperationen ignoriert.
     /// </summary>
     public decimal? Wert { get; set; }
     
     /// <summary>
     /// Verweist auf eine Zuschlagsart (<see cref="Zuschlagsart.Index"/>).
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public int ArtIndex { get; set; }
 
     /// <summary>
@@ -1972,7 +2077,9 @@ public class BetriebsmittelZuschlag : BaseObject
 public class BetriebsmittelGruppeDetails : BaseObject
 {
     /// <summary>
-    /// Die in dieser Gruppe enthaltenen Child-Betriebsmittel.
+    /// Die in dieser Gruppe enthaltenen Child-Betriebsmittel. Diese Liste ist nur für Lesezugriffe nutzbar.
+    /// Für Schreibzugriffe sollten stattdessen die Endpunkte zum Erzeugen und Löschen eines Betriebsmittels
+    /// genutzt werden.
     /// </summary>
     public List<Betriebsmittel> BetriebsmittelList { get; set; }
 }
@@ -2298,7 +2405,7 @@ public class BetriebsmittelKostenDetails : BaseObject
     public Money WeitereKosten { get; set; }
 
     /// <summary>
-    /// Die Gesamtkosten.
+    /// Die Gesamtkosten (= Kosten + weitere Kosten).
     /// </summary>
     public Money KostenGesamt { get; set; }
 
@@ -2795,12 +2902,12 @@ public class KalkulationErgebnisse : BaseObject
     public decimal? Angebotssumme { get; set; }
 
     /// <summary>
-    /// Die Ergebnisse der verwendeten Betriebsmittel
+    /// Die Ergebnisse der verwendeten Betriebsmittel (über das gesamte LV)
     /// </summary>
     public List<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; }
 
     /// <summary>
-    /// Die Ergebnisse der Kalkulationsblätter
+    /// Die Ergebnisse der Kalkulationsblätter (pro Position)
     /// </summary>
     public List<KalkulationsBlattErgebnis> KalkulationsblattErgebnisse { get; set; }
 }
@@ -2811,9 +2918,19 @@ public class KalkulationErgebnisse : BaseObject
 public class Kalkulation : BaseObject
 {
     public Guid Id { get; set; }
+
     public Guid LvId { get; set; }
+
+    /// <summary>
+    /// Handelt es sich um die aktive Kalkulation?
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public bool IstAktiv { get; set; }
+
     public string Nummer { get; set; }
+
     public string Bezeichnung { get; set; }
+
     public KalkulationsArt? Art { get; set; }
 
     /// <summary>
@@ -2894,6 +3011,8 @@ public class KalkulationsBlattDetails : BaseObject
     public Money KostenGesamt { get; set; }
     public Money Preis { get; set; }
     public Money PreisGesamt { get; set; }
+    public Money Zuschlag { get; set; }
+    public Money ZuschlagGesamt { get; set; }
     public Money Einheitspreis { get; set; }
     public Money EinheitspreisGesamt { get; set; }
 
@@ -3037,7 +3156,7 @@ public class NewLvInfo : BaseObject
 
     /// <summary>
     /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
-    /// <see cref="LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
+    /// <see cref="Build.LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
     /// </summary>
     public MengenArt MengenArt { get; set; } = MengenArt.Lv;
 }
@@ -4531,6 +4650,7 @@ public class AbrechnungsMerkmal : BaseObject
     public string Nummer { get; set; }
     public string Bezeichnung { get; set; }
     public string BezeichnungKomplett { get; set; }
+    public bool IsAuswertungsKennzeichen { get; set; }
     public List<AbrechnungsMerkmal> Merkmale { get; set; }
 }
 
@@ -4572,6 +4692,7 @@ public class Positionsblock : BaseObject
     public Guid? RechnungId { get; set; }
 
     public decimal? Menge { get; set; }
+    public decimal? MengeKorrigiert { get; set; }
 
     public List<Aufmaßzeile> Aufmaßzeilen { get; set; }
 
@@ -4621,6 +4742,7 @@ public class Aufmaßzeile : BaseObject
     public Formel FormelKorrigiert { get; set; }
     public bool? ErzeugtInKorrektur { get; set; }
     public decimal? Menge { get; set; }
+    public decimal? MengeKorrigiert { get; set; }
 
     public bool Geprüft { get; set; }
 
