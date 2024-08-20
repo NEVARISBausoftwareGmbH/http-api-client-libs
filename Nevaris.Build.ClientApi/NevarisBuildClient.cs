@@ -126,17 +126,26 @@ public class NevarisBuildClient : IDisposable
         if (options.Username is not null && options.Password is not null)
         {
             httpMessageHandler = new NevarisIdentityHandler(
-                new HttpClientHandler(), options.Username, options.Password);
+                CreateHttpClientHandler(), options.Username, options.Password);
         }
         else
         {
-            httpMessageHandler = new HttpClientHandler();
+            httpMessageHandler = CreateHttpClientHandler();
         }
-
+        
         return new HttpClient(httpMessageHandler)
         {
             BaseAddress = new Uri(hostUrl),
             Timeout = options.Timeout
+        };
+    }
+
+    private static HttpClientHandler CreateHttpClientHandler()
+    {
+        return new HttpClientHandler
+        {
+            ClientCertificateOptions = ClientCertificateOption.Manual,
+            ServerCertificateCustomValidationCallback = (_, _, _, _) => true
         };
     }
 
