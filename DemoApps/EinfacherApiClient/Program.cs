@@ -5,7 +5,11 @@ try
     // Verbindung zur RESTful API herstellen. Dies setzt voraus, dass auf dem lokalen Rechner
     // der NEVARIS Build Businessdienst läuft und die API hostet. Der erste Zugriff erfolgt
     // erst beim ersten API-Aufruf (hier: client.StammApi.GetSpeicherorte()).
-    using var client = new NevarisBuildClient("http://localhost:8500");
+    using var client = new NevarisBuildClient("https://localhost:8500", new NevarisBuildClientOptions
+    {
+        Username = "<username>",
+        Password = "<password>"
+    });
 
     // API-Version abfragen und auf Kompatibilität mit Client überprüfen
     var versionCheckResult = await client.CheckVersion();
@@ -24,6 +28,11 @@ try
     }
 }
 catch (Refit.ApiException ex)
+{
+    Console.WriteLine(ex.Message);
+    Console.WriteLine(ex.Content);
+}
+catch (Exception ex)
 {
     Console.WriteLine(ex.Message);
 }
