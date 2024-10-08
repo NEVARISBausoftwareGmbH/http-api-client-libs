@@ -448,6 +448,18 @@ public interface IProjektApi
     Task DeleteKalkulation(string projektId, Guid kalkulationId);
 
     /// <summary>
+    /// FÜhrt die Funktion "Kalkulation generieren" aus.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="kalkulationId">Kalkulations-ID der Ziel-Kalkulation</param>
+    /// <param name="optionen">Optionenobjekt (enthält unter anderem einen Verweis auf die Quellkalkulation)</param>
+    [Post("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulation_generieren")]
+    Task<KalkulationGenerierenResult> GeneriereKalkulation(
+        string projektId,
+        Guid kalkulationId,
+        [Body] KalkulationGenerierenOptionen optionen);
+
+    /// <summary>
     /// Liefert alle Kalkulationblätter einer Kalkulation. Die Detailinfos (KalkulationsBlatt.Details)
     /// werden grundsätzlich mitgeliefert, die Kalkulationszeilen (KalkulationsBlatt.Details.Zeilen) jedoch nur
     /// falls mitZeilen = true.

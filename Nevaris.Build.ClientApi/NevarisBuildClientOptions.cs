@@ -16,7 +16,8 @@ public class NevarisBuildClientOptions
     public TimeSpan Timeout { get; set; } = TimeSpan.FromSeconds(100);
 
     /// <summary>
-    /// Benutzername (notwendig, wenn der Server Authentifizierung verlangt).
+    /// Benutzername: Ist notwendig, wenn der Server Authentifizierung verlangt (derzeit ist das der Fall,
+    /// wenn Businessdienst-seitig das Setting BuildApiAuthenticationRequired = True gesetzt ist).
     /// </summary>
     public string? Username { get; set; }
 

@@ -7,8 +7,10 @@ try
     // erst beim ersten API-Aufruf (hier: client.StammApi.GetSpeicherorte()).
     using var client = new NevarisBuildClient("https://localhost:8500", new NevarisBuildClientOptions
     {
-        Username = "<username>",
-        Password = "<password>"
+        // Falls Businessdienst-seitig das Setting BuildApiAuthenticationRequired = True gesetzt ist,
+        // müssen hier die Authentifizierungsinformationen übergeben werden.
+        // Username = "<Username>",
+        // Password = "<Password>"
     });
 
     // API-Version abfragen und auf Kompatibilität mit Client überprüfen

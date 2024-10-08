@@ -15,12 +15,12 @@ namespace Nevaris.Build.ClientApi;
 /// <summary>
 /// HttpMessageHandler, der bei jedem ausgehenden HTTP-Request aufgerufen wird. Sorgt dafür, dass ein zu den
 /// Benutzerdaten passendes JWT (Json Web Token) im Header mitgegeben wird. Beim ersten Aufruf wird
-/// das Token vom NEVARS Identity Service angefordert.
+/// das Token vom NEVARIS Identity Service angefordert.
 /// </summary>
 /// <remarks>
 /// Diese Klasse wird intern von <see cref="NevarisBuildClient"/> verwendet, wenn per
 /// <see cref="NevarisBuildClientOptions"/> Authentifizierungsdaten an den Konstruktor übergeben wurden.
-/// Sie kann auch von Anwendungscode genutzet werden, z.B. wenn es darum geht, mehrerer HttpMessageHandlers
+/// Sie kann auch von Anwendungscode genutzt werden, z.B. wenn es darum geht, mehrerer HttpMessageHandlers
 /// miteinander zu kombinieren.
 /// </remarks>
 public class NevarisIdentityHandler : DelegatingHandler

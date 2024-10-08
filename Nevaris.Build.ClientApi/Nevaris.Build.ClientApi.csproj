@@ -13,10 +13,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi für Build 2024.1 Patch 2: Erweiterungen und Verbesserungen im Bereich der Mengenermittlung und beim Zugriff auf Betriebsmittel</PackageReleaseNotes>
-    <PackageVersion>4.9.1</PackageVersion>
-    <AssemblyVersion>4.9.1</AssemblyVersion>
-    <FileVersion>4.9.1</FileVersion>
+    <PackageReleaseNotes>ClientApi für Build 2024.2: Unterstützung für authentifizierten Zugriff; neue Funktion IProjektApi.GeneriereKalkulation</PackageReleaseNotes>
+    <PackageVersion>4.10.0</PackageVersion>
+    <AssemblyVersion>4.10.0</AssemblyVersion>
+    <FileVersion>4.10.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
