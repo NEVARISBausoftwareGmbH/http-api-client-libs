@@ -8,6 +8,19 @@ von NEVARIS Build 2024.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
+### 4.10.0 (für Build 2024.2 – 24.2.X.X) – _XX.10.2024_
+
+- Unterstützung für authentifizierten Zugriff: Der Businessdienst ermöglicht ab Version 2024.2 über das Setting
+_BuildApiAuthenticationRequired = True_, nur noch authentifizierte API-Zugriffe zuzulassen. Die Übergabe der
+Authentifizierungsdaten erfolgt an den _NevarisBuildClient_-Konstruktor über die neu hinzugekommenen Properties
+_NevarisBuildClientOptions.Username_ und _NevarisBuildClientOptions.Password_.
+- Neu: Beim lesenden Zugriff auf ein Projekte per _IProjektApi.GetProjekt_ werden jetzt das Änderungsdatum und der
+Änderungsbenutzer mitgeliefert: _Projekt.ModificationDate_, _Projekt.ModificationUser_.
+- Neu: Funktion _IProjektApi.GeneriereKalkulation_ (entspricht der Funktion _Kalkulation generieren_ im Modul
+_Angeboskalkulation_).
+
+Businessdienst der authentifizierte Zugriff auf die API 
+
 ### 4.9.1 (für Build 2024.1 Patch 2 – 24.1.24179.845) – _02.07.2024_
 
 - Erweiterungen und Verbesserungen beim lesenden Zugriff auf Betriebsmittel
