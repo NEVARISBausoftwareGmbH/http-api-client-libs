@@ -333,6 +333,16 @@ public interface IProjektApi
     /// <param name="rechnungId">Rechnungs-ID</param>
     /// <param name="rechnung">Rechnung mit den neuen Werten</param>
     [Put("/build/projekte/{projektId}/rechnungen/{rechnungId}")]
+    Task UpdateRechnung(string projektId, Guid rechnungId, [Body] Rechnung rechnung);
+
+    /// <summary>
+    /// Aktualisiert eine Rechnung.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="rechnungId">Rechnungs-ID</param>
+    /// <param name="rechnung">Rechnung mit den neuen Werten</param>
+    [Put("/build/projekte/{projektId}/rechnungen/{rechnungId}")]
+    [Obsolete("Diese Funktion hat einen irreführenden Namen. Stattdessen sollte UpdateRechnung verwendet werden.")]
     Task GetRechnung(string projektId, Guid rechnungId, [Body] Rechnung rechnung);
 
     /// <summary>

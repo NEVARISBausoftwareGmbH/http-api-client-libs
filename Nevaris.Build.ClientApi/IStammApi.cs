@@ -319,7 +319,7 @@ public interface IStammApi
     /// </summary>
     /// <param name="kostenartNummer">Nummer der Kostenart</param>
     /// <param name="kostenart">Kostenart mit den neuen Werten</param>
-    [Obsolete("Diese Funktion hatte irrtümlich den falschen Namen. Stattdessen sollte UpdateKostenart verwendet werden.")]
+    [Obsolete("Diese Funktion hat einen irreführenden Namen. Stattdessen sollte UpdateKostenart verwendet werden.")]
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task CreateKostenart(string kostenartNummer, [Body] Kostenart kostenart);
 
