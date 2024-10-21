@@ -8,7 +8,7 @@ von NEVARIS Build 2024.1 Sie ist auch als
 
 ## Neuerungen und Breaking Changes ##
 
-### 4.10.0 (für Build 2024.2 – 24.2.X.X) – _XX.10.2024_
+### 4.10.0 (für Build 2024.2 – 24.2.24275.452) – _21.10.2024_
 
 - Unterstützung für authentifizierten Zugriff: Der Businessdienst ermöglicht ab Version 2024.2 über das Setting
 _BuildApiAuthenticationRequired = True_, nur noch authentifizierte API-Zugriffe zuzulassen. Die Übergabe der
