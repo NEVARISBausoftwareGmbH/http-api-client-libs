@@ -3320,7 +3320,7 @@ public class NewLvInfo : BaseObject
 
     /// <summary>
     /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
-    /// <see cref="Build.LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
+    /// <see cref="LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
     /// </summary>
     public MengenArt MengenArt { get; set; } = MengenArt.Lv;
 }
