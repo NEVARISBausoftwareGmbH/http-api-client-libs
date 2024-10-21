@@ -1,9 +1,9 @@
-# http-api-client-libs für NEVARIS Build 2024.1
+# http-api-client-libs für NEVARIS Build 2024.2
 
-## Nevaris.Build.ClientApi 4.9.1
+## Nevaris.Build.ClientApi 4.10.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2024.1 Sie ist auch als
+von NEVARIS Build 2024.2 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
