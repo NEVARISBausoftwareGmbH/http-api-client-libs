@@ -799,6 +799,12 @@ public class Projekt : BaseObject
     public string Typ { get; set; }
 
     /// <summary>
+    /// Die Nummer der Kostenstelle, die dem Projekt zugeordnet ist. Im Falle aktiver Finance-Integration ist das
+    /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
+    /// </summary>
+    public string KostenstelleNummer { get; set; }
+
+    /// <summary>
     /// Liste von Leistungsverzeichnissen, die in diesem Projekt enthalten sind.
     /// Auf dieses Liste kann nur lesend zugegriffen werden. Für Schreiboperationen gibt es die
     /// passenden Endpunkte unter /build/projekte/{projektId}/leistungsverzeichnisse.
@@ -1548,7 +1554,7 @@ public class ZuschlagsgruppenWert : BaseObject
 
 /// <summary>
 /// Eine Zuschlagsart. Beschreibt eine Zuschlagsspalte in den Kosten- und Zuschlagskatalogen.
-/// Ein konketer Zuschlag auf einem Betriebsmittel für eine Zuschlagsart wird per <see cref="BetriebsmittelZuschlag"/>
+/// Ein konkreter Zuschlag auf einem Betriebsmittel für eine Zuschlagsart wird per <see cref="BetriebsmittelZuschlag"/>
 /// spezifiziert.
 /// </summary>
 public class Zuschlagsart : BaseObject
@@ -1886,7 +1892,7 @@ public class Betriebsmittel : BaseObject
     public string Nummer { get; set; }
 
     /// <summary>
-    /// Vollständige Nummer des Betriebsmittls (einschließlich Präfix), z.B. "M24.211".
+    /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
     /// </summary>
     public string NummerKomplett { get; set; }
 
@@ -2085,7 +2091,8 @@ public class BetriebsmittelZuschlag : BaseObject
     public int ArtIndex { get; set; }
 
     /// <summary>
-    /// Die ID der Kostenebene, auf der der Zuschlag festgelegt ist.
+    /// Die ID der Kostenebene, auf der der Zuschlag festgelegt ist. Für Stammdaten kann das ein Zuschlagskatalog
+    /// sein, für Projektdaten eine Kalkulation oder das Projekt selbst.
     /// </summary>
     public Guid ZuschlagsebeneId { get; set; }
 }
@@ -2662,11 +2669,6 @@ public class KalkulationsZeile : BaseObject
     public bool IstInaktiv { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Enthält weitere Eigenschaften der Kalkulationszeile, insbesondere berechnete Werte.
-    /// </summary>
-    public KalkulationsZeileDetails Details { get; set; }
-
-    /// <summary>
     /// Befüllt, wenn die Zeile einen Verweis auf ein Betriebsmittel enthält.
     /// </summary>
     public KalkulationsZeileBetriebsmittelDetails BetriebsmittelDetails { get; set; }
@@ -2695,16 +2697,43 @@ public class KalkulationsZeile : BaseObject
     /// Befüllt, wenn es sich um eine Summenzeile handelt.
     /// </summary>
     public SummenKalkulationsZeileDetails SummenDetails { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Enthält weitere Eigenschaften der Kalkulationszeile, insbesondere berechnete Werte.
+    /// </summary>
+    public KalkulationsZeileDetails Details { get; set; }
 }
 
+/// <summary>
+/// Wenn eine Zeile eines Kalkulationsblatts auf ein Betriebsmittel verweist, enthält dieses Objekt die passenden
+/// Informationen (z.B. Betriebsmittel-ID).
+/// </summary>
 public class KalkulationsZeileBetriebsmittelDetails : BaseObject
 {
+    /// <summary>
+    /// Ist true im Fall eines dynamischen Betriebsmittel-Verweises, d.h. wenn das Betriebsmittel nicht fest
+    /// verdrahtet ist, sondern über einen Parameter, der in der Nummer der Zeile enthalten ist
+    /// (z.B. "M25_10_00_00{X@PL}500"), aufgelöst wird. Dieses Flag muss auch bei Schreibzugriffen mitgegeben werden:
+    /// Ist es true, wird die <see cref="BetriebsmittelId"/> ignoriert.
+    /// </summary>
+    public bool IstDynamisch { get; set; }
+
+    /// <summary>
+    /// Die ID des referenzierten Betriebsmittels. Im Fall eines dynamischen Verweises ist dies die ID des
+    /// dynamisch aufgelösten Betriebsmittels (und wird dann bei Schreibzugriffen ignoriert) oder eine leere GUID,
+    /// wenn das Betriebsmittel nicht aufgelöst werden konnte.
+    /// </summary>
     public Guid BetriebsmittelId { get; set; }
 
     /// <summary>
     /// Die Betriebsmittelart. Wird bei Schreibzugriffen ignoriert.
     /// </summary>
     public BetriebsmittelArt? BetriebsmittelArt { get; set; }
+
+    /// <summary>
+    /// Die vollständige Betriebsmittelnummer. Wird bei Schreibzugriffen ignoriert.
+    /// </summary>
+    public string BetriebsmittelNummerKomplett { get; set; }
 
     public string Ansatz { get; set; }
 
@@ -3027,7 +3056,7 @@ public class BetriebsmittelErgebnis : BaseObject
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Vollständige Nummer des Betriebsmittls (einschließlich Präfix), z.B. "M24.211".
+    /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
     /// </summary>
     public string NummerKomplett { get; set; }
 
@@ -3043,7 +3072,9 @@ public class BetriebsmittelErgebnis : BaseObject
 public class KalkulationsBlattErgebnis : BaseObject
 {
     /// <summary>
-    /// Id des Kalkulationsblattes.
+    /// Id der Position. Kann zusammen mit der Kalkulations-ID verwendet werden, um das Kalkulationsblatt
+    /// abzurufen (über den Endpunkt
+    /// /build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}). 
     /// </summary>
     public Guid Id { get; set; }
 
@@ -3151,7 +3182,9 @@ public class KalkulationsBlatt : BaseObject
     public string Notiz { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Objekt mit weiteren Eigenschaften, insbesondere berechnete Werte (z.B. Einheitspreis).
+    /// Objekt mit weiteren Eigenschaften, insbesondere berechnete Werte (z.B. Einheitspreis). Diese Property
+    /// wird auch beim Abrufen sämtlicher Kalkulationsblätter per
+    /// /build/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter befüllt.
     /// </summary>
     public KalkulationsBlattDetails Details { get; set; }
 
@@ -3574,6 +3607,12 @@ public class LvDetails : BaseObject
     /// Notiz (als formatierter Text), die dem LV zugeordnet ist.
     /// </summary>
     public string LvNotiz { get; set; }
+
+    /// <summary>
+    /// Die Nummer der Kostenstelle, die dem LV zugeordnet ist. Im Falle aktiver Finance-Integration ist das
+    /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
+    /// </summary>
+    public string KostenstelleNummer { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
@@ -4089,7 +4128,7 @@ public class NewLvPositionInfo : NewLvItemInfo
 
     /// <summary>
     /// Konstruktor, der die Erzeugung einer neuen Position auf Basis einer bestehenden Position ermöglicht.
-    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automtisch befüllt, sondern muss vom Anwendungscode
+    /// Wichtig: Die <see cref="ParentKnotenId"/> wird nicht automatisch befüllt, sondern muss vom Anwendungscode
     /// befüllt werden.
     /// </summary>
     public NewLvPositionInfo(LvPosition sourcePosition) : base(sourcePosition)
@@ -4098,6 +4137,17 @@ public class NewLvPositionInfo : NewLvItemInfo
         Umsatzsteuer = sourcePosition.Umsatzsteuer;
         Positionsart = sourcePosition.Positionsart;
         LvMenge = sourcePosition.LvMenge;
+        Prognosemenge1 = sourcePosition.Prognosemenge1;
+        Prognosemenge2 = sourcePosition.Prognosemenge2;
+        Prognosemenge3 = sourcePosition.Prognosemenge3;
+        Prognosemenge4 = sourcePosition.Prognosemenge4;
+        Prognosemenge5 = sourcePosition.Prognosemenge5;
+        Prognosemenge6 = sourcePosition.Prognosemenge6;
+        Prognosemenge7 = sourcePosition.Prognosemenge7;
+        Prognosemenge8 = sourcePosition.Prognosemenge8;
+        Prognosemenge9 = sourcePosition.Prognosemenge9;
+        Prognosemenge10 = sourcePosition.Prognosemenge10;
+        Umlagemenge = sourcePosition.Umlagemenge;
         EinheitSchreibgeschützt = sourcePosition.EinheitSchreibgeschützt;
         EinheitspreisSchreibgeschützt = sourcePosition.EinheitspreisSchreibgeschützt;
         TexteSchreibgeschützt = sourcePosition.TexteSchreibgeschützt;
@@ -4136,6 +4186,67 @@ public class NewLvPositionInfo : NewLvItemInfo
 
     public decimal? LvMenge { get; set; }
 
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "VA_Menge".
+    /// </summary>
+    /// <remarks>
+    /// Das Ändern dieser Property per API entspricht einer manuellen Änderung über die Funktion
+    /// "Prognosemengen bearbeiten". Das UI-seitige Hinzufügen von Aufmaßzeilen zu einem Positionsblock
+    /// führt ebenfalls zu einer Änderung dieses Werts, aber ein derartiger Automatismus greift nicht
+    /// bei einem programmatischen Hinzufügen von Aufmaßzeilen per 
+    /// PUT /build/projekte/{projektId}/positionsbloecke/{positionsblockId}. Stattdessen muss die gewünschte
+    /// Menge immer durch explizites Befüllen dieser Property gesetzt werden. Dasselbe gilt für alle
+    /// anderen Prognosemenge-Properties. 
+    /// </remarks>
+    public decimal? Prognosemenge1 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_1".
+    /// </summary>
+    public decimal? Prognosemenge2 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_2".
+    /// </summary>
+    public decimal? Prognosemenge3 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_3".
+    /// </summary>
+    public decimal? Prognosemenge4 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_4".
+    /// </summary>
+    public decimal? Prognosemenge5 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_5".
+    /// </summary>
+    public decimal? Prognosemenge6 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_6".
+    /// </summary>
+    public decimal? Prognosemenge7 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_7".
+    /// </summary>
+    public decimal? Prognosemenge8 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_8".
+    /// </summary>
+    public decimal? Prognosemenge9 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9".
+    /// </summary>
+    public decimal? Prognosemenge10 { get; set; }
+    
+    public decimal? Umlagemenge { get; set; }
+    
     public bool EinheitSchreibgeschützt { get; set; }
 
     public bool EinheitspreisSchreibgeschützt { get; set; }
@@ -4464,6 +4575,58 @@ public class LvPosition : LvItemBase
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
 
     public decimal? LvMenge { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "VA_Menge".
+    /// </summary>
+    public decimal? Prognosemenge1 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_1".
+    /// </summary>
+    public decimal? Prognosemenge2 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_2".
+    /// </summary>
+    public decimal? Prognosemenge3 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_3".
+    /// </summary>
+    public decimal? Prognosemenge4 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_4".
+    /// </summary>
+    public decimal? Prognosemenge5 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_5".
+    /// </summary>
+    public decimal? Prognosemenge6 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_6".
+    /// </summary>
+    public decimal? Prognosemenge7 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_7".
+    /// </summary>
+    public decimal? Prognosemenge8 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_8".
+    /// </summary>
+    public decimal? Prognosemenge9 { get; set; }
+
+    /// <summary>
+    /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9".
+    /// </summary>
+    public decimal? Prognosemenge10 { get; set; }
+    
+    public decimal? Umlagemenge { get; set; }
 
     public bool EinheitSchreibgeschützt { get; set; }
 
@@ -4814,9 +4977,101 @@ public class Rechnung : BaseObject
     public Zahlungsbedingung Zahlungsbedingung { get; set; }
 
     /// <summary>
+    /// Enthält berechnete Werte dieser Rechnung (ist auch beim Abrufen aller Rechnungen befüllt).
+    /// </summary>
+    public RechnungErgebnisse Ergebnisse { get; set; }
+    
+    /// <summary>
+    /// (Detailinfo) Ist nur befüllt, wenn die kaufmännische Integration (Finance-Anbindung) aktiv ist, nicht aber
+    /// das Rechnungsausgangsbuch. Entspricht dem Inhalt des Registers "Kontierung" in der Rechnungsverwaltung.
+    /// </summary>
+    public RechnungKontierung Kontierung { get; set; }
+
+    /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+}
+
+/// <summary>
+/// Rechnungsinformationen, die die kaufmännische Integration betreffen. Wird nur verwendet, wenn die kaufmännische
+/// Integration (Finance-Anbindung) aktiv ist, nicht aber das Rechnungsausgangsbuch.
+/// Entspricht dem Inhalt des Registers "Kontierung" in der Rechnungsverwaltung.
+/// </summary>
+public class RechnungKontierung
+{
+    /// <summary>
+    /// Projekt-/Auftrags-Kostenstelle (in Finance)
+    /// </summary>
+    public string ProjektAuftragsKostenstelleNummer { get; set; }
+
+    /// <summary>
+    /// Rechnungskostenstelle (in Finance)
+    /// </summary>
+    public string RechnungsKostenstelleNummer { get; set; }
+
+    /// <summary>
+    /// Debitor (in Finance)
+    /// </summary>
+    public string DebitorNummer { get; set; }
+
+    /// <summary>
+    /// Anzahlungsvorgang (in Finance)
+    /// </summary>
+    public string AnzahlungsvorgangNummer { get; set; }
+
+    /// <summary>
+    /// Erlöskonto (in Finance)
+    /// </summary>
+    public string ErlöskontoNummer { get; set; }
+
+    public DateTime? Buchungsdatum { get; set; }
+}
+
+/// <summary>
+/// Enthält berechnete Werte einer Rechnung.
+/// </summary>
+public class RechnungErgebnisse
+{
+    public decimal? RechnungsbetragNetto { get; set; }
+
+    public decimal? NettobetragInklAN { get; set; }
+    
+    public decimal? RechnungsbetragKumuliertNetto { get; set; }
+    
+    public decimal? NettobetragInklANKumuliert { get; set; }
+    
+    public decimal? RechnungsbetragBrutto { get; set; }
+    
+    public decimal? RechnungsbetragKumuliertBrutto { get; set; }
+    
+    public decimal? FreigabeNetto { get; set; }
+    
+    public decimal? NettobetragInklANKorrigiert { get; set; }
+    
+    public decimal? FreigabeKumuliertNetto { get; set; }
+    
+    public decimal? NettobetragInklANKumuliertKorrigiert { get; set; }
+    
+    public decimal? FreigabeBrutto { get; set; }
+    
+    public decimal? FreigabeKumuliertBrutto { get; set; }
+    
+    public decimal? Zahlungen { get; set; }
+    
+    public decimal? Skonto { get; set; }
+    
+    public decimal? Ausbuchung { get; set; }
+
+    public decimal? Offen { get; set; }
+
+    public decimal? ZahlungenKumuliert { get; set; }
+    
+    public decimal? SkontoKumuliert { get; set; }
+    
+    public decimal? AusbuchungKumuliert { get; set; }
+
+    public decimal? OffenKumuliert { get; set; }
 }
 
 public class Zahlung : BaseObject
@@ -4895,15 +5150,55 @@ public enum MengenArt
     AbrechnungKorrigiert = 4,
     Rechnung = 5,
     Rechnungkorrigiert = 6,
+    
+    /// <summary>
+    /// Prognose1: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "VA_Menge"
+    /// </summary>
     Prognose1 = 10,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_1"
+    /// </summary>
     Prognose2 = 11,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_2"
+    /// </summary>
     Prognose3 = 12,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_3"
+    /// </summary>
     Prognose4 = 13,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_4"
+    /// </summary>
     Prognose5 = 14,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_5"
+    /// </summary>
     Prognose6 = 15,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_6"
+    /// </summary>
     Prognose7 = 16,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_7"
+    /// </summary>
     Prognose8 = 17,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_8"
+    /// </summary>
     Prognose9 = 18,
+
+    /// <summary>
+    /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9"
+    /// </summary>
     Prognose10 = 19
 }
 
@@ -4927,7 +5222,15 @@ public class Aufmaßzeile : BaseObject
     public Formel Formel { get; set; }
     public Formel FormelKorrigiert { get; set; }
     public bool? ErzeugtInKorrektur { get; set; }
+    
+    /// <summary>
+    /// Die berechnete Menge (wird bei Schreibzugriffen ignoriert)
+    /// </summary>
     public decimal? Menge { get; set; }
+
+    /// <summary>
+    /// Die berechnete Korrekturmenge (wird bei Schreibzugriffen ignoriert)
+    /// </summary>
     public decimal? MengeKorrigiert { get; set; }
 
     public bool Geprüft { get; set; }

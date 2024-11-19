@@ -1,12 +1,21 @@
 # http-api-client-libs für NEVARIS Build 2024.2
 
-## Nevaris.Build.ClientApi 4.10.0
+## Nevaris.Build.ClientApi 4.11.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2024.2 Sie ist auch als
 [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 4.11.0 (für Build 2024.2 Patch 1 – 24.2.24320.859) – _19.11.2024_
+
+- Unterstützung für dynamische Betriebsmittel: _KalkulationsZeileBetriebsmittelDetails.IstDynamisch_.
+- Zusätzliche Komfort-Property _KalkulationsZeileBetriebsmittelDetails.BetriebsmittelNummerKomplett_ (nur Lesezugriff).
+- Zugriff auf Kostenstellennummern: _Projekt.KostenstelleNummer_, _LvDetails.KostenstelleNummer_. 
+- Zugriff auf LV-Prognosemengen: _NewLvPositionInfo.Prognosemenge1_ usw.
+- Lesezugriff auf berechnete Werte von Rechnungen: _Rechnung.Ergebnisse_.
+- Zugriff auf Kontierungsdaten einer Rechnung: _Rechnung.Kontierung_ (nur im Fall von aktivierter Finance-Anbindung).
 
 ### 4.10.0 (für Build 2024.2 – 24.2.24275.452) – _21.10.2024_
 

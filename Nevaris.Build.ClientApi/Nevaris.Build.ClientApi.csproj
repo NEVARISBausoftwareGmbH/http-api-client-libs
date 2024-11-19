@@ -13,10 +13,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi für Build 2024.2: Unterstützung für authentifizierten Zugriff; neue Funktion IProjektApi.GeneriereKalkulation</PackageReleaseNotes>
-    <PackageVersion>4.10.0</PackageVersion>
-    <AssemblyVersion>4.10.0</AssemblyVersion>
-    <FileVersion>4.10.0</FileVersion>
+    <PackageReleaseNotes>ClientApi-Library für Build 2024.2 Patch 1: Unterstützung für dynamische Betriebsmittel, zusätzliche Rechnungsinformationen, LV-Prognosemengen</PackageReleaseNotes>
+    <PackageVersion>4.11.0</PackageVersion>
+    <AssemblyVersion>4.11.0</AssemblyVersion>
+    <FileVersion>4.11.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
@@ -38,11 +38,11 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Refit" Version="7.2.1" />
-    <PackageReference Include="Refit.Newtonsoft.Json" Version="7.2.1" />
+    <PackageReference Include="Refit" Version="8.0.0" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="7.2.22" />
     <PackageReference Include="IdentityModel" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.2.1" />
   </ItemGroup>
 
   <ItemGroup>
