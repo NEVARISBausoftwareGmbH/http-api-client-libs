@@ -13,9 +13,10 @@ von NEVARIS Build 2024.2 Sie ist auch als
 - Unterstützung für dynamische Betriebsmittel: _KalkulationsZeileBetriebsmittelDetails.IstDynamisch_.
 - Zusätzliche Komfort-Property _KalkulationsZeileBetriebsmittelDetails.BetriebsmittelNummerKomplett_ (nur Lesezugriff).
 - Zugriff auf Kostenstellennummern: _Projekt.KostenstelleNummer_, _LvDetails.KostenstelleNummer_. 
-- Zugriff auf LV-Prognosemengen: _NewLvPositionInfo.Prognosemenge1_ usw.
 - Lesezugriff auf berechnete Werte von Rechnungen: _Rechnung.Ergebnisse_.
 - Zugriff auf Kontierungsdaten einer Rechnung: _Rechnung.Kontierung_ (nur im Fall von aktivierter Finance-Anbindung).
+- Zugriff auf LV-Prognosemengen: _NewLvPositionInfo.Prognosemenge1_ usw.
+- _IProjektApi.GetKalkulationsBlätter_, _IProjektApi.GetKalkulationsBlatt_: Neuer optionaler Parameter _mengenArt_.
 
 ### 4.10.0 (für Build 2024.2 – 24.2.24275.452) – _21.10.2024_
 

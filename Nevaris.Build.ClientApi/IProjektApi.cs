@@ -477,11 +477,16 @@ public interface IProjektApi
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="kalkulationId">Die Kalkulations-ID</param>
     /// <param name="mitZeilen">Falls true (Default: false), werden auch die Kalkulationszeilen mitgeliefert</param>
-    [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter?mitZeilen={mitZeilen}")]
-    Task<List<KalkulationsBlatt>> GetKalkulationsBlätter(string projektId, Guid kalkulationId, bool mitZeilen = false);
+    /// <param name="mengenArt">Die gewünschte Mengenart (Default: LV-Menge)</param>
+    [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter?mitZeilen={mitZeilen}&mengenArt={mengenArt}")]
+    Task<List<KalkulationsBlatt>> GetKalkulationsBlätter(
+        string projektId,
+        Guid kalkulationId,
+        bool mitZeilen = false,
+        MengenArt mengenArt = MengenArt.Lv);
 
     /// <summary>
-    /// Liefert das Kalkulationblatt für die angegebene Position (einschließlich Kalkulationszeilen).
+    /// Liefert das Kalkulationsblatt für die angegebene Position (einschließlich Kalkulationszeilen).
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
     /// <param name="kalkulationId">Die Kalkulations-ID</param>
@@ -490,10 +495,15 @@ public interface IProjektApi
     /// falls es für die angegebene Position noch keines gibt</param>
     /// <param name="includeParentKalkulationen">Falls true (Default: false), werden bei der Suche auch
     /// Parent-Kalkulationen berücksichtigt</param>
-    [Get(
-        "/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}?createNewIfNecessary={createNewIfNecessary}&includeParentKalkulationen={includeParentKalkulationen}")]
-    Task<KalkulationsBlatt> GetKalkulationsBlatt(string projektId, Guid kalkulationId, Guid positionId,
-        bool createNewIfNecessary = false, bool includeParentKalkulationen = false);
+    /// <param name="mengenArt">Die gewünschte Mengenart (Default: LV-Menge)</param>
+    [Get("/build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}?createNewIfNecessary={createNewIfNecessary}&includeParentKalkulationen={includeParentKalkulationen}&mengenArt={mengenArt}")]
+    Task<KalkulationsBlatt> GetKalkulationsBlatt(
+        string projektId,
+        Guid kalkulationId,
+        Guid positionId,
+        bool createNewIfNecessary = false,
+        bool includeParentKalkulationen = false,
+        MengenArt mengenArt = MengenArt.Lv);
 
     /// <summary>
     /// Aktualisiert das Kalkulationsblatt der angegebenen Position (einschließlich Kalkulationszeilen).
