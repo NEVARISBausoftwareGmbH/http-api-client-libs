@@ -7,7 +7,6 @@ using System.Net.Http.Headers;
 using System.Security.Authentication;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityModel.Client;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace Nevaris.Build.ClientApi;
@@ -15,7 +14,7 @@ namespace Nevaris.Build.ClientApi;
 /// <summary>
 /// HttpMessageHandler, der bei jedem ausgehenden HTTP-Request aufgerufen wird. Sorgt dafür, dass ein zu den
 /// Benutzerdaten passendes JWT (Json Web Token) im Header mitgegeben wird. Beim ersten Aufruf wird
-/// das Token vom NEVARIS Identity Service angefordert.
+/// das Token vom API-Endpunkt /authentication/login angefordert.
 /// </summary>
 /// <remarks>
 /// Diese Klasse wird intern von <see cref="NevarisBuildClient"/> verwendet, wenn per
@@ -25,7 +24,7 @@ namespace Nevaris.Build.ClientApi;
 /// </remarks>
 public class NevarisIdentityHandler : DelegatingHandler
 {
-    private readonly string _username, _password;
+    private readonly string _hostUrl, _username, _password;
 
     private readonly IMemoryCache _memoryCache = new MemoryCache(new MemoryCacheOptions());
 
@@ -36,11 +35,13 @@ public class NevarisIdentityHandler : DelegatingHandler
     /// </summary>
     /// <param name="innerHandler">Innenliegender HttpHandler. Kann eine mit new erzeugte
     /// <see cref="HttpClientHandler"/>-Instanz sein.</param>
+    /// <param name="hostUrl">API-Basis-URL</param>
     /// <param name="username">Benutzername zur Anmeldung am NEVARIS Identity Service</param>
     /// <param name="password">Passwort</param>
-    public NevarisIdentityHandler(HttpMessageHandler innerHandler, string username, string password)
+    public NevarisIdentityHandler(HttpMessageHandler innerHandler, string hostUrl, string username, string password)
         : base(innerHandler)
     {
+        _hostUrl = hostUrl;
         _username = username;
         _password = password;
     }
@@ -50,37 +51,39 @@ public class NevarisIdentityHandler : DelegatingHandler
         HttpRequestMessage request,
         CancellationToken cancellationToken)
     {
-        var token = await GetToken(cancellationToken).ConfigureAwait(false);
-            
+        var token = await GetToken().ConfigureAwait(false);
+
         // Token in Header aufnehmen 
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
         return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
     }
 
-    private async ValueTask<string> GetToken(CancellationToken cancellationToken)
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _memoryCache.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private async ValueTask<string> GetToken()
     {
         if (_memoryCache.Get<string>(TokenCacheKey) is { } cachedToken)
         {
             return cachedToken;
         }
 
-        using var client = new HttpClient();
+        using var client = new HttpClient(NevarisBuildClientUtils.CreateHttpClientHandler());
+        client.BaseAddress = new Uri(_hostUrl);
 
-        var discoveryDocument = await client.GetDiscoveryDocumentAsync(
-            "https://nevarisidentityservice.azurewebsites.net", cancellationToken).ConfigureAwait(false);
-
-        // Token vom NEVARIS Identity Server anfordern
-        var response = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
-        {
-            Address = discoveryDocument.TokenEndpoint,
-            ClientId = "password.client",
-            UserName = _username,
-            Password = _password,
-            Scope = "openid profile backend"
-        }, cancellationToken).ConfigureAwait(false);
-
-        var token = response.AccessToken ?? throw new AuthenticationException("Missing JWT");
+        // Token von API-Endpunkt /authentication/login anfordern 
+        var token = await client.GetStringAsync(
+                $"authentication/login?userName={Uri.EscapeDataString(_username)}&password={Uri.EscapeDataString(_password)}")
+            .ConfigureAwait(false) ?? throw new AuthenticationException("Missing JWT");
 
         // Token in Cache speichern, damit nicht bei jedem Request ein neues angefordert werden muss.
         // Wir sorgen dafür, dass kurz vor Ablauf der "expiration time" des Tokens der Cache-Eintrag

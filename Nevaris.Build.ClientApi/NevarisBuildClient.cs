@@ -103,8 +103,8 @@ public class NevarisBuildClient : IDisposable
             build: apiVersionSegments.Length > 2 ? int.Parse(apiVersionSegments[2], CultureInfo.InvariantCulture) : 0,
             revision: 0);
 
-        var clientVersion = Assembly.GetExecutingAssembly().GetName().Version 
-                            ?? throw new InvalidOperationException("assembly version is null");
+        var clientVersion = Assembly.GetExecutingAssembly().GetName().Version
+            ?? throw new InvalidOperationException("assembly version is null");
 
         return new VersionCheckResult(clientVersion: clientVersion, apiVersion: apiVersion);
     }
@@ -126,26 +126,20 @@ public class NevarisBuildClient : IDisposable
         if (options.Username is not null && options.Password is not null)
         {
             httpMessageHandler = new NevarisIdentityHandler(
-                CreateHttpClientHandler(), options.Username, options.Password);
+                NevarisBuildClientUtils.CreateHttpClientHandler(),
+                hostUrl,
+                options.Username,
+                options.Password);
         }
         else
         {
-            httpMessageHandler = CreateHttpClientHandler();
+            httpMessageHandler = NevarisBuildClientUtils.CreateHttpClientHandler();
         }
-        
+
         return new HttpClient(httpMessageHandler)
         {
             BaseAddress = new Uri(hostUrl),
             Timeout = options.Timeout
-        };
-    }
-
-    private static HttpClientHandler CreateHttpClientHandler()
-    {
-        return new HttpClientHandler
-        {
-            ClientCertificateOptions = ClientCertificateOption.Manual,
-            ServerCertificateCustomValidationCallback = (_, _, _, _) => true
         };
     }
 
