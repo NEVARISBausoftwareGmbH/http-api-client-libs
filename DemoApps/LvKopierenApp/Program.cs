@@ -44,18 +44,18 @@ static class Program
                 ?? throw new InvalidOperationException($"{settings.SpeicherortBezeichnung}: Speicherort nicht gefunden");
 
             speicherort = await client.StammApi.GetSpeicherort(speicherort.Id);
-            var projektInfo = speicherort.ProjektInfos.FirstOrDefault(s => s.Bezeichnung == settings.ProjektBezeichnung)
+            var projektInfo = speicherort.ProjektInfos!.FirstOrDefault(s => s.Bezeichnung == settings.ProjektBezeichnung)
                 ?? throw new InvalidOperationException($"{settings.ProjektBezeichnung}: Projekt nicht gefunden");
 
             var projekt = await client.ProjektApi.GetProjekt(projektInfo.Id);
      
-            var quellLv = projekt.Leistungsverzeichnisse.FirstOrDefault(l => l.Bezeichnung == settings.LvBezeichnungQuelle)
+            var quellLv = projekt.Leistungsverzeichnisse!.FirstOrDefault(l => l.Bezeichnung == settings.LvBezeichnungQuelle)
                 ?? throw new InvalidOperationException($"{settings.LvBezeichnungQuelle}: LV nicht gefunden");
 
             // Quell-LV vollständig (d.h. mit allen Knoten und Positionen laden)
             quellLv = await client.ProjektApi.GetLeistungsverzeichnis(projekt.Id, quellLv.Id, mitKalkulationen: false);
 
-            var zielLv = projekt.Leistungsverzeichnisse.FirstOrDefault(l => l.Bezeichnung == settings.LvBezeichnungZiel);
+            var zielLv = projekt.Leistungsverzeichnisse!.FirstOrDefault(l => l.Bezeichnung == settings.LvBezeichnungZiel);
             if (zielLv != null)
             {
                 await client.ProjektApi.DeleteLeistungsverzeichnis(projekt.Id, zielLv.Id);
@@ -70,7 +70,7 @@ static class Program
                     Bezeichnung = settings.LvBezeichnungZiel 
                 });
 
-            foreach (var quellPosition in quellLv.RootPositionen)
+            foreach (var quellPosition in quellLv.RootPositionen!)
             {
                 await KopierePosition(
                     client.ProjektApi, 
@@ -80,7 +80,7 @@ static class Program
                     zielParentKnoten: null);
             }
 
-            foreach (var quellKnoten in quellLv.RootKnotenListe)
+            foreach (var quellKnoten in quellLv.RootKnotenListe!)
             {
                 await KopiereKnoten(
                     client.ProjektApi,
@@ -115,12 +115,12 @@ static class Program
                 ParentKnotenId = zielParentKnoten?.Id,
             });
 
-        foreach (var quellPosition in quellKnoten.Positionen)
+        foreach (var quellPosition in quellKnoten.Positionen!)
         {
             await KopierePosition(api, projektId, quellPosition, zielLvId, zielKnoten);
         }
 
-        foreach (var childQuellKnoten in quellKnoten.Knoten)
+        foreach (var childQuellKnoten in quellKnoten.Knoten!)
         {
             await KopiereKnoten(
                 api,

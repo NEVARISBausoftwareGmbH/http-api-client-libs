@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Refit;
@@ -93,7 +92,7 @@ public interface IStammApi
     Task UpdateSpeicherort(Guid speicherortId, [Body] Speicherort speicherort);
 
     /// <summary>
-    /// Erstellt ein neues Projekte an dem angegebenen Speicherort.
+    /// Erstellt ein neues Projekt an dem angegebenen Speicherort.
     /// </summary>
     /// <param name="speicherortId">Speicherort-ID</param>
     /// <param name="newProjekt">Projektinformationen</param>
@@ -149,8 +148,7 @@ public interface IStammApi
     /// <param name="mitDetails">Falls true (= Default), werden auch die Detailinformationen ermittelt (Properties 'details', 'lohnDetails' usw.).</param>
     /// <param name="kostenebeneId">Die ID der Kostenebene, das heißt des Kostenkatalogs. Falls null (= Default), wird der Standardkostenkatalog verwendet.</param>
     /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, das heißt des Zuschlagskatalogs. Falls null (= Default), wird der Standardzuschlagskatalog verwendet.</param>
-    [Get(
-        "/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    [Get("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel")]
     Task<List<Betriebsmittel>> GetAllBetriebsmittel(
         Guid betriebsmittelStammId,
         BetriebsmittelArt? art,
@@ -175,8 +173,7 @@ public interface IStammApi
     /// <param name="mitDetails">Falls true (= Default), werden auch die Detailinformationen ermittelt (Properties 'details', 'lohnDetails' usw.).</param>
     /// <param name="kostenebeneId">Die ID der Kostenebene, das heißt des Kostenkatalogs. Falls null (= Default), wird der Standardkostenkatalog verwendet.</param>
     /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, das heißt des Zuschlagskatalogs. Falls null (= Default), wird der Standardzuschlagskatalog verwendet.</param>
-    [Get(
-        "/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_ex?art={art}&mitGruppen={mitGruppen}&mitKosten={mitKosten}&mitWeiterenKosten={mitWeiterenKosten}&mitZuschlaegen={mitZuschlaegen}&mitDetails={mitDetails}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    [Get("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_ex")]
     Task<BetriebsmittelResult> GetAllBetriebsmittelEx(
         Guid betriebsmittelStammId,
         BetriebsmittelArt? art,
@@ -195,8 +192,7 @@ public interface IStammApi
     /// <param name="art">Betriebsmittelart (optional: Angabe wird für performanteres Laden genutzt)</param>
     /// <param name="kostenebeneId">Die ID der Kostenebene, das heißt des Kostenkatalogs. Falls null (= Default), wird der Standardkostenkatalog verwendet.</param>
     /// <param name="zuschlagsebeneId">Die ID der Zuschlagsebene, das heißt des Zuschlagskatalogs. Falls null (= Default), wird der Standardzuschlagskatalog verwendet.</param>
-    [Get(
-        "/build/global/betriebsmittel/{betriebsmittelId}?art={art}&kostenebeneId={kostenebeneId}&zuschlagsebeneId={zuschlagsebeneId}")]
+    [Get("/build/global/betriebsmittel/{betriebsmittelId}")]
     Task<Betriebsmittel> GetBetriebsmittel(
         Guid betriebsmittelId,
         BetriebsmittelArt? art = null,
@@ -223,7 +219,9 @@ public interface IStammApi
     /// <param name="betriebsmittelStammId">Betriebsmittelstamm-ID</param>
     /// <param name="newBetriebsmittelInfo">Informationen zum neuen Betriebsmittel</param>
     [Post("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel")]
-    Task<Betriebsmittel> CreateBetriebsmittel(Guid betriebsmittelStammId, [Body] NewBetriebsmittelInfo newBetriebsmittelInfo);
+    Task<Betriebsmittel> CreateBetriebsmittel(
+        Guid betriebsmittelStammId,
+        [Body] NewBetriebsmittelInfo newBetriebsmittelInfo);
 
     /// <summary>
     /// Erzeugt mehrere vollständig initialisierte Betriebsmittel (einschließlich Gruppen).
@@ -233,7 +231,9 @@ public interface IStammApi
     /// handeln, die selbst wiederum Betriebsmittel enthalten.</param>
     /// <returns>Objekt, das die IDs der erzeugten Betriebsmittel enthält (ohne untergeordnete Betriebsmittel)</returns>
     [Post("/build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_collection")]
-    Task<BetriebsmittelCollectionResult> CreateBetriebsmittelCollection(Guid betriebsmittelStammId, [Body] IReadOnlyCollection<Betriebsmittel> betriebsmittelListe);
+    Task<BetriebsmittelCollectionResult> CreateBetriebsmittelCollection(
+        Guid betriebsmittelStammId,
+        [Body] IReadOnlyCollection<Betriebsmittel> betriebsmittelListe);
 
     /// <summary>
     /// Aktualisiert ein Betriebsmittel.
@@ -300,7 +300,9 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Post("/build/global/kostenarten")]
     Task<Kostenart> CreateKostenart(
-        [Body] NewKostenartInfo newKostenartInfo, string? mandantId = null, string? niederlassungId = null);
+        [Body] NewKostenartInfo newKostenartInfo,
+        string? mandantId = null,
+        string? niederlassungId = null);
 
     /// <summary>
     /// Aktualisiert eine Kostenart.
@@ -312,7 +314,10 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task UpdateKostenart(
-        string kostenartNummer, [Body] Kostenart kostenart, string? mandantId = null, string? niederlassungId = null);
+        string kostenartNummer, 
+        [Body] Kostenart kostenart,
+        string? mandantId = null,
+        string? niederlassungId = null);
 
     /// <summary>
     /// Aktualisiert eine Kostenart.

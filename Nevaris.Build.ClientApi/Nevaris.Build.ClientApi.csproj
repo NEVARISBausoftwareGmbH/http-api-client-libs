@@ -20,6 +20,7 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <!-- PDB-Dateien inkludieren -->

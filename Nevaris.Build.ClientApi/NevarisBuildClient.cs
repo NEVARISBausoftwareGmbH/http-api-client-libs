@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Globalization;
 using System.Net.Http;
 using System.Reflection;
@@ -95,7 +94,7 @@ public class NevarisBuildClient : IDisposable
     public async Task<VersionCheckResult> CheckVersion()
     {
         var apiVersionInfo = await StammApi.GetVersion();
-        string[] apiVersionSegments = apiVersionInfo.ApiVersion.Split('.');
+        var apiVersionSegments = apiVersionInfo.ApiVersion.Split('.');
 
         var apiVersion = new Version(
             major: apiVersionSegments.Length > 0 ? int.Parse(apiVersionSegments[0], CultureInfo.InvariantCulture) : 0,

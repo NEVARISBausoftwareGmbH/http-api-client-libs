@@ -16,12 +16,12 @@ public class VersionInfo : BaseObject
     /// <summary>
     /// Die NEVARIS Build-Programmversion.
     /// </summary>
-    public string ProgramVersion { get; set; }
+    public string ProgramVersion { get; set; } = "";
 
     /// <summary>
     /// Die Versionsnummer der HTTP API. Diese folgt den Regeln der semantischen Versionierung.
     /// </summary>
-    public string ApiVersion { get; set; }
+    public string ApiVersion { get; set; } = "";
 }
 
 #region Adressen
@@ -39,8 +39,6 @@ public enum GesperrtArt
     Bereich,
     Hinweis
 }
-
-#nullable enable
 
 /// <summary>
 /// Eine globale oder projektbezogene Währung.
@@ -155,8 +153,6 @@ public class Einheit : BaseObject
     public override string? ToString() => Code;
 }
 
-#nullable disable
-
 /// <summary>
 /// Ein Mandant. Im integrierten Betrieb kommt dieser aus Finance.
 /// </summary>
@@ -166,24 +162,24 @@ public class Mandant : BaseObject
     /// Die Mandanten-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
     /// eine generierte Zufalls-ID.
     /// </summary>
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     /// <summary>
     /// Mandantenbezeichnung, wie sie in der Benutzeroberfläche angezeigt wird.
     /// </summary>
-    public string AnzeigeText { get; set; }
+    public string? AnzeigeText { get; set; }
 
     /// <summary>
     /// Die Mandatenadresse, falls definiert.
     /// </summary>
-    public AdresseKurzInfo Adresse { get; set; }
+    public AdresseKurzInfo? Adresse { get; set; }
 
     /// <summary>
     /// Liste von zugeordneten Niederlassungen.
     /// </summary>
-    public List<Niederlassung> Niederlassungen;
+    public List<Niederlassung>? Niederlassungen;
 
-    public override string ToString() => AnzeigeText;
+    public override string? ToString() => AnzeigeText;
 }
 
 /// <summary>
@@ -195,23 +191,23 @@ public class Niederlassung : BaseObject
     /// Die Niederlassungs-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
     /// eine generierte Zufalls-ID.
     /// </summary>
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Suchbegriff { get; set; }
+    public string? Suchbegriff { get; set; }
 
     /// <summary>
     /// Niederlassungsbezeichnung, wie sie in der Benutzeroberfläche angezeigt wird.
     /// </summary>
-    public string AnzeigeText { get; set; }
+    public string? AnzeigeText { get; set; }
 
     /// <summary>
     /// Die Niederlassungsadresse, falls definiert.
     /// </summary>
-    public AdresseKurzInfo Adresse { get; set; }
+    public AdresseKurzInfo? Adresse { get; set; }
 
-    public override string ToString() => AnzeigeText;
+    public override string? ToString() => AnzeigeText;
 }
 
 /// <summary>
@@ -220,28 +216,28 @@ public class Niederlassung : BaseObject
 /// </summary>
 public class AdresseKurzInfo : BaseObject
 {
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public string Vorname { get; set; }
+    public string? Vorname { get; set; }
 
-    public string Zusatz1 { get; set; }
+    public string? Zusatz1 { get; set; }
 
-    public string Zusatz2 { get; set; }
+    public string? Zusatz2 { get; set; }
 
-    public string Zusatz3 { get; set; }
+    public string? Zusatz3 { get; set; }
 
-    public string LandCode { get; set; }
+    public string? LandCode { get; set; }
 
-    public string Plz { get; set; }
+    public string? Plz { get; set; }
 
-    public string Ort { get; set; }
+    public string? Ort { get; set; }
 
-    public string Straße { get; set; }
+    public string? Straße { get; set; }
 
     public GesperrtArt GesperrtArt { get; set; }
 
@@ -264,7 +260,7 @@ public class NewAdresseInfo : BaseObject
     /// Der Adresscode. Das ist der Wert, der anschließend in <see cref="Adresse.Code"/> und
     /// <see cref="Adresse.Nummer"/> verfügbar ist. Falls null, wird ein Code automatisch generiert.
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Die Adressart: Organisation oder Person.
@@ -275,17 +271,17 @@ public class NewAdresseInfo : BaseObject
     /// Der Name. Ist für Organisationen der Name der Organisation, für Personen der Nachname, sofern kein solcher
     /// über das Feld <see cref="Nachname"/> spezifiziert wird.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Für Personenadressen: Der Vorname.
     /// </summary>
-    public string Vorname { get; set; }
+    public string? Vorname { get; set; }
 
     /// <summary>
     /// Für Personenadressen: Der Nachname.
     /// </summary>
-    public string Nachname { get; set; }
+    public string? Nachname { get; set; }
 }
 
 /// <summary>
@@ -297,7 +293,7 @@ public class NewProjektAdresseInfo : BaseObject
     /// Falls befüllt, wird die Projektadresse durch Übernahme der globalen Adresse mit diesem Code. In diesem
     /// Fall werden die restlichen Felder in diesem Objekt ignoriert.
     /// </summary>
-    public string GlobaleAdresseCode { get; set; }
+    public string? GlobaleAdresseCode { get; set; }
 
     /// <summary>
     /// Die Adressart: Organisation oder Person.
@@ -308,22 +304,22 @@ public class NewProjektAdresseInfo : BaseObject
     /// Der Name. Ist für Organisationen der Name der Organisation, für Personen der Nachname, sofern kein solcher
     /// über das Feld <see cref="Nachname"/> spezifiziert wird.
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Für Personenadressen: Der Vorname.
     /// </summary>
-    public string Vorname { get; set; }
+    public string? Vorname { get; set; }
 
     /// <summary>
     /// Für Personenadressen: Der Nachname.
     /// </summary>
-    public string Nachname { get; set; }
+    public string? Nachname { get; set; }
 
     /// <summary>
     /// Die optionale Nummer der Adresse (<see cref="Adresse.Code"/>).
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 }
 
 public enum ZugeordneteAdresseRolle
@@ -382,7 +378,7 @@ public class Adresse : BaseObject
     /// Für Projektadressen: Der Code der globalen Adresse (sofern es eine gibt), aus der diese Projektadresse
     /// erzeugt wurde (nicht änderbar).
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Für Projektadressen: Die GUID, die die Adresse identifiziert. Ist für globale Adressen null.
@@ -394,80 +390,80 @@ public class Adresse : BaseObject
     /// Code und kann nicht nachträglich geändert werden.
     /// Für Projektadressen ist dieser Wert optional und änderbar. 
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
 
-    public string Name { get; set; }
-    public string Vorname { get; set; }
-    public string Nachname { get; set; }
-    public string Kürzel { get; set; }
+    public string? Name { get; set; }
+    public string? Vorname { get; set; }
+    public string? Nachname { get; set; }
+    public string? Kürzel { get; set; }
 
-    public string LandCode { get; set; }
+    public string? LandCode { get; set; }
     public bool IstPostfachInVerwendung { get; set; }
-    public string Titel { get; set; }
-    public string UstId { get; set; }
-    public string Telefon { get; set; }
-    public string Fax { get; set; }
-    public string EMail { get; set; }
-    public string Name2 { get; set; }
-    public string Name3 { get; set; }
-    public string Name4 { get; set; }
-    public string Ort { get; set; }
-    public string Straße { get; set; }
-    public string Plz { get; set; }
-    public string Postfach { get; set; }
-    public string PostfachPlz { get; set; }
-    public string PostfachOrt { get; set; }
-    public string MobilFirma { get; set; }
-    public string MobilPrivat { get; set; }
-    public string Internet { get; set; }
+    public string? Titel { get; set; }
+    public string? UstId { get; set; }
+    public string? Telefon { get; set; }
+    public string? Fax { get; set; }
+    public string? EMail { get; set; }
+    public string? Name2 { get; set; }
+    public string? Name3 { get; set; }
+    public string? Name4 { get; set; }
+    public string? Ort { get; set; }
+    public string? Straße { get; set; }
+    public string? Plz { get; set; }
+    public string? Postfach { get; set; }
+    public string? PostfachPlz { get; set; }
+    public string? PostfachOrt { get; set; }
+    public string? MobilFirma { get; set; }
+    public string? MobilPrivat { get; set; }
+    public string? Internet { get; set; }
     public bool IstBauleistender { get; set; }
-    public string Skype { get; set; }
-    public string LoginName { get; set; }
-    public string Suchbegriff { get; set; }
-    public string Briefanschrift { get; set; }
-    public string SozialesNetzwerk1 { get; set; }
-    public string SozialesNetzwerk1Name { get; set; }
-    public string SozialesNetzwerk2 { get; set; }
-    public string SozialesNetzwerk2Name { get; set; }
-    public string Adresszusatz { get; set; }
+    public string? Skype { get; set; }
+    public string? LoginName { get; set; }
+    public string? Suchbegriff { get; set; }
+    public string? Briefanschrift { get; set; }
+    public string? SozialesNetzwerk1 { get; set; }
+    public string? SozialesNetzwerk1Name { get; set; }
+    public string? SozialesNetzwerk2 { get; set; }
+    public string? SozialesNetzwerk2Name { get; set; }
+    public string? Adresszusatz { get; set; }
 
     /// <summary>
     /// Bundesland-Code. Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string BundeslandCode { get; set; }
+    public string? BundeslandCode { get; set; }
 
     /// <summary>
     /// Landkreis/Bezirks-Code. Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string LandkreisCode { get; set; }
+    public string? LandkreisCode { get; set; }
 
     /// <summary>
     /// Anrede-Code ("FR", "HR"). Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string AnredeCode { get; set; }
+    public string? AnredeCode { get; set; }
 
     /// <summary>
     /// Sperrhinweis-Code. Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string SperrhinweisCode { get; set; }
+    public string? SperrhinweisCode { get; set; }
 
     /// <summary>
     /// Sprach-Code ("DE", "EN" usw.). Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string SpracheCode { get; set; }
+    public string? SpracheCode { get; set; }
 
     /// <summary>
     /// Code für die Adressquelle. Wird nur für globale Adressen genutzt.
     /// </summary>
-    public string AdressQuelleCode { get; set; }
+    public string? AdressQuelleCode { get; set; }
 
     /// <summary>
     /// Falls ein Verweis auf eine andere Adresse gesetzt ist, ist das der Code. Nur für globale Adressen relevant.
     /// </summary>
-    public string VerweisAufAdresseCode { get; set; }
+    public string? VerweisAufAdresseCode { get; set; }
 
     /// <summary>
     /// Nur für globale Adressen relevant.
@@ -477,12 +473,12 @@ public class Adresse : BaseObject
     /// <summary>
     /// Nur für globale Adressen: Der Adresscode des zugeordneten Konzerns.
     /// </summary>
-    public string KonzernCode { get; set; }
+    public string? KonzernCode { get; set; }
 
     /// <summary>
     /// Nur für globale Adressen: Der Adresscode der zugeordneten Zentrale.
     /// </summary>
-    public string ZentraleCode { get; set; }
+    public string? ZentraleCode { get; set; }
 
     /// <summary>
     /// Nur für Projektadressen: Die Adress-ID des zugeordneten Konzerns.
@@ -496,60 +492,60 @@ public class Adresse : BaseObject
 
     public bool IstDebitorVorhanden { get; set; }
     public bool IstKreditorVorhanden { get; set; }
-    public string Handelsregister { get; set; }
-    public string UnsereKundenNummerDort { get; set; }
-    public string SteuernummerGesellschaft { get; set; }
-    public string UrsprungsCode { get; set; }
-    public string TitelImAnschreiben { get; set; }
+    public string? Handelsregister { get; set; }
+    public string? UnsereKundenNummerDort { get; set; }
+    public string? SteuernummerGesellschaft { get; set; }
+    public string? UrsprungsCode { get; set; }
+    public string? TitelImAnschreiben { get; set; }
     public DateTime? Geburtsdatum { get; set; }
     public GesperrtArt GesperrtArt { get; set; }
     public DateTime? GültigAb { get; set; }
     public DateTime? GültigBis { get; set; }
     public int? VollständigkeitInProzent { get; set; }
     public decimal? Saldo { get; set; }
-    public string ExternerCode { get; set; }
-    public string Auslandsvorwahl { get; set; }
-    public string DurchwahlFax { get; set; }
-    public string DurchwahlZentrale { get; set; }
+    public string? ExternerCode { get; set; }
+    public string? Auslandsvorwahl { get; set; }
+    public string? DurchwahlFax { get; set; }
+    public string? DurchwahlZentrale { get; set; }
 
     /// <summary>
     /// Nur für globale Adressen: Eine ID in GUID-Format, die derzeit nur für interne Zwecke genutzt wird.
     /// </summary>
     public Guid? Guid { get; set; }
 
-    public string Hauptanschlussnummer { get; set; }
+    public string? Hauptanschlussnummer { get; set; }
     public bool? IsReadOnlyNumber { get; set; }
-    public string Ortskennzahl { get; set; }
-    public string OutlookEntryId { get; set; }
+    public string? Ortskennzahl { get; set; }
+    public string? OutlookEntryId { get; set; }
     public int? Ähnlichkeit { get; set; }
-    public GeoCoordinate GeoPosition { get; set; }
+    public GeoCoordinate? GeoPosition { get; set; }
 
     /// <summary>
     /// Notiz. Für globale Adressen ist dies ein unformatierter Text, für Projektadressen ist dies
     /// ein formatierter Text (XHTML).
     /// </summary>
-    public string Notiz { get; set; }
+    public string? Notiz { get; set; }
 
     /// <summary>
     /// Detailinfo (nur für globale Adressen): Optionales Objekt, das das Adress-Bild enthält.
     /// Diese Property wird nur gesetzt, wenn beim Abrufen der Adresse mitBildDetails = true übergeben wurde. 
     /// </summary>
-    public AdressBildDetails BildDetails { get; set; }
+    public AdressBildDetails? BildDetails { get; set; }
 
     /// <summary>
     /// Feld "Beschreibung". Nur für globale Adressen relevant.
     /// </summary>
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
-    public List<Adressat> Adressaten { get; set; }
-    public List<Bankverbindung> Bankverbindungen { get; set; }
-    public List<AdressBranche> Branchen { get; set; }
-    public List<AdressGewerk> Gewerke { get; set; }
+    public List<Adressat>? Adressaten { get; set; }
+    public List<Bankverbindung>? Bankverbindungen { get; set; }
+    public List<AdressBranche>? Branchen { get; set; }
+    public List<AdressGewerk>? Gewerke { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Adresse zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -560,7 +556,7 @@ public class AdressBildDetails : BaseObject
     /// <summary>
     /// Die Bild-Daten des Adress-Bildes, falls vorhanden (sonst null).
     /// </summary>
-    public Bild Bild { get; set; }
+    public Bild? Bild { get; set; }
 }
 
 public class Adressat : BaseObject
@@ -568,71 +564,71 @@ public class Adressat : BaseObject
     /// <summary>
     /// Für globale Adressen: Der Code, der den Adressaten identifiziert.
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Für Projektadressen: Die GUID, die den Adressaten identifiziert.
     /// </summary>
     public Guid? Id { get; set; }
 
-    public string AnredeCode { get; set; }
+    public string? AnredeCode { get; set; }
 
-    public string PrivatadresseCode { get; set; }
+    public string? PrivatadresseCode { get; set; }
 
     public Guid? PrivatadresseId { get; set; }
 
-    public string Titel { get; set; }
+    public string? Titel { get; set; }
 
-    public string TitelImAnschreiben { get; set; }
+    public string? TitelImAnschreiben { get; set; }
 
-    public string Vorname { get; set; }
-    public string Nachname { get; set; }
-    public string Telefon { get; set; }
-    public string Fax { get; set; }
-    public string Mobil { get; set; }
-    public string EMail { get; set; }
-    public string EMailAbteilung { get; set; }
-    public string Url { get; set; }
-    public string Skype { get; set; }
-    public string AbteilungCode { get; set; }
-    public string FunktionCode { get; set; }
+    public string? Vorname { get; set; }
+    public string? Nachname { get; set; }
+    public string? Telefon { get; set; }
+    public string? Fax { get; set; }
+    public string? Mobil { get; set; }
+    public string? EMail { get; set; }
+    public string? EMailAbteilung { get; set; }
+    public string? Url { get; set; }
+    public string? Skype { get; set; }
+    public string? AbteilungCode { get; set; }
+    public string? FunktionCode { get; set; }
     public bool IstInaktiv { get; set; }
     public DateTime? Austrittsdatum { get; set; }
-    public string Raum { get; set; }
-    public string Info { get; set; }
-    public string Beschreibung { get; set; }
-    public string Notiz { get; set; }
-    public string SpracheCode { get; set; }
-    public string Briefanschrift { get; set; }
-    public string Durchwahl { get; set; }
-    public string DurchwahlFax { get; set; }
+    public string? Raum { get; set; }
+    public string? Info { get; set; }
+    public string? Beschreibung { get; set; }
+    public string? Notiz { get; set; }
+    public string? SpracheCode { get; set; }
+    public string? Briefanschrift { get; set; }
+    public string? Durchwahl { get; set; }
+    public string? DurchwahlFax { get; set; }
     public Guid? Guid { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Adressaten zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public class Bankverbindung : BaseObject
 {
-    public string Iban { get; set; }
-    public string Bic { get; set; }
-    public string Bankname { get; set; }
+    public string? Iban { get; set; }
+    public string? Bic { get; set; }
+    public string? Bankname { get; set; }
 }
 
 public class AdressBranche : BaseObject
 {
-    public string BrancheCode { get; set; }
-    public string Bezeichnung { get; set; }
-    public string Beschreibung { get; set; }
+    public string? BrancheCode { get; set; }
+    public string? Bezeichnung { get; set; }
+    public string? Beschreibung { get; set; }
 }
 
 public class AdressGewerk : BaseObject
 {
-    public string GewerkCode { get; set; }
-    public string Bezeichnung { get; set; }
-    public string Beschreibung { get; set; }
+    public string? GewerkCode { get; set; }
+    public string? Bezeichnung { get; set; }
+    public string? Beschreibung { get; set; }
 }
 
 #endregion Adressen
@@ -646,38 +642,38 @@ public class Speicherort : BaseObject
 {
     public Guid Id { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Falls der Speicherort ein Dateiordner ist, enthält dieses Objekt die passenden Informationen.
     /// Der Begriff 'Ordner' sollte nicht mit Ordnern in Speicherorten (<see cref="RootOrdnerList"/>).
     /// </summary>
-    public OrdnerInfo OrdnerInfo { get; set; }
+    public OrdnerInfo? OrdnerInfo { get; set; }
 
     /// <summary>
     /// Falls der Speicherort eine Datenbank ist, enthält dieses Objekt die passenden Informationen.
     /// </summary>
-    public DatenbankInfo DatenbankInfo { get; set; }
+    public DatenbankInfo? DatenbankInfo { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste aller Projekten an diesem Speicherort (unabhängig davon, ob sich diese in einem
     /// Server-Ordner oder auf der Wurzelebene befinden).
     /// </summary>
-    public List<ProjektInfo> ProjektInfos { get; set; }
+    public List<ProjektInfo>? ProjektInfos { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Projekten an diesem Speicherort auf der Wurzelebene.
     /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitOrdnern = true
     /// übergeben wurde.
     /// </summary>
-    public List<ProjektInfo> RootProjektInfos { get; set; }
+    public List<ProjektInfo>? RootProjektInfos { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Ordnern innerhalb dieses Speicherorts (auf Wurzelebene).
     /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitOrdnern = true
     /// übergeben wurde.
     /// </summary>
-    public List<SpeicherortOrdner> RootOrdnerList { get; set; }
+    public List<SpeicherortOrdner>? RootOrdnerList { get; set; }
 }
 
 /// <summary>
@@ -693,30 +689,30 @@ public class SpeicherortOrdner : BaseObject
     /// <summary>
     /// Der Ordnername, wie er in der Navigationsleiste in der Projektverwaltung zu sehen ist.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Projekten in diesem Ordner.
     /// </summary>
-    public List<ProjektInfo> ProjektInfos { get; set; }
+    public List<ProjektInfo>? ProjektInfos { get; set; }
 
     /// <summary>
     /// Liste mit untergeordneten Ordnern.
     /// </summary>
-    public List<SpeicherortOrdner> OrdnerList { get; set; }
+    public List<SpeicherortOrdner>? OrdnerList { get; set; }
 }
 
 public class OrdnerInfo : BaseObject
 {
-    public string Pfad { get; set; }
+    public string? Pfad { get; set; }
 }
 
 public class DatenbankInfo : BaseObject
 {
-    public string Server { get; set; }
-    public string Datenbank { get; set; }
-    public string Benutzername { get; set; }
-    public string Passwort { get; set; }
+    public string? Server { get; set; }
+    public string? Datenbank { get; set; }
+    public string? Benutzername { get; set; }
+    public string? Passwort { get; set; }
     public bool IntegratedSecurity { get; set; }
 }
 
@@ -726,11 +722,11 @@ public class DatenbankInfo : BaseObject
 /// </summary>
 public class ProjektInfo : BaseObject
 {
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -742,7 +738,7 @@ public class Projekt : BaseObject
     /// Die Projekt-ID im Format "[Speicherort-Guid].[Projekt-Guid]", wie sie in den URLs für Projekt-Endpunkte
     /// (/build/projekte/{projektId}/...) vorkommt. Identifiziert ein Projekt Speicherort-übergreifend.
     /// </summary>
-    public string Id { get; set; }
+    public required string Id { get; init; }
 
     /// <summary>
     /// Die ID des Projekts als Guid (ohne Speicherort-Information). Diese ID kommt zum Einsatz, wenn ein Projekt
@@ -759,7 +755,7 @@ public class Projekt : BaseObject
     /// <summary>
     /// Der Benutzer, der die letzte Änderung am Projekt gemacht hat.
     /// </summary>
-    public string ModificationUser { get; set; }
+    public string? ModificationUser { get; set; }
 
     /// <summary>
     /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Ordners, in dem das Projekt abgelegt ist
@@ -770,76 +766,76 @@ public class Projekt : BaseObject
     /// <summary>
     /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
     /// </summary>
-    public string MandantId { get; set; }
+    public string? MandantId { get; set; }
 
     /// <summary>
     /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
     /// </summary>
-    public string NiederlassungId { get; set; }
+    public string? NiederlassungId { get; set; }
 
     public bool IstVorlageprojekt { get; set; }
 
     /// <summary>
     /// Die Nummer des Projekts (optional).
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Die Bezeichnung des Projekts (optional).
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public DateTime? Baubeginn { get; set; }
     public DateTime? Bauende { get; set; }
-    public string Ampel { get; set; }
-    public string Art { get; set; }
-    public string Ausschreibungsart { get; set; }
-    public string Status { get; set; }
-    public string Sparte { get; set; }
-    public string Typ { get; set; }
+    public string? Ampel { get; set; }
+    public string? Art { get; set; }
+    public string? Ausschreibungsart { get; set; }
+    public string? Status { get; set; }
+    public string? Sparte { get; set; }
+    public string? Typ { get; set; }
 
     /// <summary>
     /// Die Nummer der Kostenstelle, die dem Projekt zugeordnet ist. Im Falle aktiver Finance-Integration ist das
     /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
     /// </summary>
-    public string KostenstelleNummer { get; set; }
+    public string? KostenstelleNummer { get; set; }
 
     /// <summary>
     /// Liste von Leistungsverzeichnissen, die in diesem Projekt enthalten sind.
     /// Auf dieses Liste kann nur lesend zugegriffen werden. Für Schreiboperationen gibt es die
     /// passenden Endpunkte unter /build/projekte/{projektId}/leistungsverzeichnisse.
     /// </summary>
-    public List<Leistungsverzeichnis> Leistungsverzeichnisse { get; set; }
+    public List<Leistungsverzeichnis>? Leistungsverzeichnisse { get; set; }
 
     /// <summary>
     /// Liste von Gliederungskatalogen, die in diesem Projekt enthalten sind. Nur Lesezugriffe werden unterstützt.
     /// </summary>
-    public List<Gliederungskatalog> Gliederungskataloge { get; set; }
+    public List<Gliederungskatalog>? Gliederungskataloge { get; set; }
 
     /// <summary>
     /// Liste von Leistungszeiträumen, die in diesem Projekt enthalten sind.
     /// </summary>
-    public List<Leistungszeitraum> Leistungszeiträume { get; set; }
+    public List<Leistungszeitraum>? Leistungszeiträume { get; set; }
 
     /// <summary>
     /// Liste von Einheiten, die in diesem Projekt enthalten sind.
     /// </summary>
-    public List<Einheit> Einheiten { get; set; }
+    public List<Einheit>? Einheiten { get; set; }
 
     /// <summary>
     /// Liste von Währungen, die in diesem Projekt enthalten sind.
     /// </summary>
-    public List<Währung> Währungen { get; set; }
+    public List<Währung>? Währungen { get; set; }
 
     /// <summary>
     /// Liste von Umsatzsteuern, die in diesem Projekt enthalten sind.
     /// </summary>
-    public List<Umsatzsteuer> Umsatzsteuern { get; set; }
+    public List<Umsatzsteuer>? Umsatzsteuern { get; set; }
 
     /// <summary>
     /// (Detailinfo) Verweist auf die Adressen, die dem Projekt zugeordnet sind (inklusive Adressrollen).
     /// </summary>
-    public List<ProjektZugeordneteAdresse> ZugeordneteAdressen { get; set; }
+    public List<ProjektZugeordneteAdresse>? ZugeordneteAdressen { get; set; }
 
     /// <summary>
     /// Die ID des Betriebsmittelstamms, der für dieses Projekt hinerlegt ist. Kann nicht direkt gesetzt werden,
@@ -855,13 +851,13 @@ public class Projekt : BaseObject
     /// Die Nummer des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
     /// befüllt ist und wenn die Betriebsmittelstamm-ID auf einen existierenden Betriebsmittelstamm verweist.
     /// </summary>
-    public string BetriebsmittelStammNummer { get; set; }
+    public string? BetriebsmittelStammNummer { get; set; }
 
     /// <summary>
     /// Die Bezeichnung des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
     /// befüllt ist und wenn die Betriebsmittelstamm-ID auf einen existierenden Betriebsmittelstamm verweist.
     /// </summary>
-    public string BetriebsmittelStammBezeichnung { get; set; }
+    public string? BetriebsmittelStammBezeichnung { get; set; }
 
     /// <summary>
     /// Die Art des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
@@ -938,7 +934,7 @@ public class Projekt : BaseObject
     /// <summary>
     /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
     /// </summary>
-    public BetriebsmittelStammBezeichnungen Bezeichnungen { get; set; }
+    public BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
@@ -947,44 +943,44 @@ public class Projekt : BaseObject
     /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
     /// Zuschlagsart enthalten (es darf nicht mehr geben).
     /// </summary>
-    public List<Zuschlagsart> Zuschlagsarten { get; set; }
+    public List<Zuschlagsart>? Zuschlagsarten { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen
     /// (nur für ÖNORM relevant).
     /// </summary>
-    public List<Zuschlagsgruppe> Zuschlagsgruppen { get; set; }
+    public List<Zuschlagsgruppe>? Zuschlagsgruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Für GAEB: Die Einträge im Reiter "Zuschlagsberechnung". Legt die Berechnungsmethode
     /// für die einzelnen Zuschlagstypen (z.B. AGK) fest.
     /// </summary>
-    public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
+    public List<ZuschlagsartGruppe>? ZuschlagsartGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Gerätefaktoren.
     /// </summary>
-    public List<Gerätefaktor> Gerätefaktoren { get; set; }
+    public List<Gerätefaktor>? Gerätefaktoren { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von globalen Variablen.
     /// </summary>
-    public List<GlobaleVariable> GlobaleVariablen { get; set; }
+    public List<GlobaleVariable>? GlobaleVariablen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Warengruppen.
     /// </summary>
-    public List<Warengruppe> Warengruppen { get; set; }
+    public List<Warengruppe>? Warengruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von DbBetriebsmittelGruppen.
     /// </summary>
-    public List<DbBetriebsmittelGruppe> DbBetriebsmittelGruppen { get; set; }
+    public List<DbBetriebsmittelGruppe>? DbBetriebsmittelGruppen { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -995,7 +991,7 @@ public class NewProjektInfo : BaseObject
     /// <summary>
     /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
     /// </summary>
-    public string MandantId { get; set; }
+    public string? MandantId { get; set; }
 
     /// <summary>
     /// Für Server-Speicherorte: Die ID des Ordners, in dem das Projekt abgelegt wird. Falls null,
@@ -1006,17 +1002,17 @@ public class NewProjektInfo : BaseObject
     /// <summary>
     /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
     /// </summary>
-    public string NiederlassungId { get; set; }
+    public string? NiederlassungId { get; set; }
 
     /// <summary>
     /// Die Nummer des Projekts (optional).
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Die Bezeichnung des Projekts (optional).
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public bool IstVorlageprojekt { get; set; }
 }
@@ -1056,18 +1052,18 @@ public class BetriebsmittelStamm : BaseObject
     /// <summary>
     /// Die ID des Mandanten, dem dieser Betriebsmittelstamm zugeordnet ist (optional).
     /// </summary>
-    public string MandantId { get; set; }
+    public string? MandantId { get; set; }
 
     /// <summary>
     /// Identifiziert in Kombination mit MandantId die Niederlassung, dem dieser Betriebsmittelstamm zugeordnet ist (optional).
     /// </summary>
-    public string NiederlassungId { get; set; }
+    public string? NiederlassungId { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
     public BetriebsmittelStammArt? Art { get; set; }
 
@@ -1091,17 +1087,17 @@ public class BetriebsmittelStamm : BaseObject
     /// <summary>
     /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
     /// </summary>
-    public BetriebsmittelStammBezeichnungen Bezeichnungen { get; set; }
+    public BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Kostenkatalogen.
     /// </summary>
-    public List<Kostenkatalog> Kostenkataloge { get; set; }
+    public List<Kostenkatalog>? Kostenkataloge { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Zuschlagskatalogen.
     /// </summary>
-    public List<Zuschlagskatalog> Zuschlagskataloge { get; set; }
+    public List<Zuschlagskatalog>? Zuschlagskataloge { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
@@ -1110,42 +1106,42 @@ public class BetriebsmittelStamm : BaseObject
     /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
     /// Zuschlagsart enthalten (es darf nicht mehr geben).
     /// </summary>
-    public List<Zuschlagsart> Zuschlagsarten { get; set; }
+    public List<Zuschlagsart>? Zuschlagsarten { get; set; }
 
     /// <summary>
     /// (Detailinfo) ÖNORM: Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen.
     /// </summary>
-    public List<Zuschlagsgruppe> Zuschlagsgruppen { get; set; }
+    public List<Zuschlagsgruppe>? Zuschlagsgruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Einträge im Grid "Zuschlagsberechnung" (nur für GAEB relevant).
     /// </summary>
-    public List<ZuschlagsartGruppe> ZuschlagsartGruppen { get; set; }
+    public List<ZuschlagsartGruppe>? ZuschlagsartGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Gerätefaktoren.
     /// </summary>
-    public List<Gerätefaktor> Gerätefaktoren { get; set; }
+    public List<Gerätefaktor>? Gerätefaktoren { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von globalen Variablen.
     /// </summary>
-    public List<GlobaleVariable> GlobaleVariablen { get; set; }
+    public List<GlobaleVariable>? GlobaleVariablen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Warengruppen.
     /// </summary>
-    public List<Warengruppe> Warengruppen { get; set; }
+    public List<Warengruppe>? Warengruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von DbBetriebsmittelGruppen.
     /// </summary>
-    public List<DbBetriebsmittelGruppe> DbBetriebsmittelGruppen { get; set; }
+    public List<DbBetriebsmittelGruppe>? DbBetriebsmittelGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public enum BetriebsmittelStammArt
@@ -1166,25 +1162,25 @@ public enum BetriebsmittelStammKalkulationsVersion
 /// </summary>
 public class BetriebsmittelStammBezeichnungen : BaseObject
 {
-    public string LohnKostenanteil1 { get; set; }
-    public string LohnKostenanteil2 { get; set; }
+    public string? LohnKostenanteil1 { get; set; }
+    public string? LohnKostenanteil2 { get; set; }
 
-    public string ListenpreisGeraetKostenanteil1 { get; set; }
-    public string ListenpreisGeraetKostenanteil2 { get; set; }
+    public string? ListenpreisGeraetKostenanteil1 { get; set; }
+    public string? ListenpreisGeraetKostenanteil2 { get; set; }
 
-    public string SonstigeKostenKostenanteil1 { get; set; }
-    public string SonstigeKostenKostenanteil2 { get; set; }
-    public string SonstigeKostenKostenanteil3 { get; set; }
-    public string SonstigeKostenKostenanteil4 { get; set; }
-    public string SonstigeKostenKostenanteil5 { get; set; }
-    public string SonstigeKostenKostenanteil6 { get; set; }
+    public string? SonstigeKostenKostenanteil1 { get; set; }
+    public string? SonstigeKostenKostenanteil2 { get; set; }
+    public string? SonstigeKostenKostenanteil3 { get; set; }
+    public string? SonstigeKostenKostenanteil4 { get; set; }
+    public string? SonstigeKostenKostenanteil5 { get; set; }
+    public string? SonstigeKostenKostenanteil6 { get; set; }
 
-    public string NachunternehmerKostenanteil1 { get; set; }
-    public string NachunternehmerKostenanteil2 { get; set; }
-    public string NachunternehmerKostenanteil3 { get; set; }
-    public string NachunternehmerKostenanteil4 { get; set; }
-    public string NachunternehmerKostenanteil5 { get; set; }
-    public string NachunternehmerKostenanteil6 { get; set; }
+    public string? NachunternehmerKostenanteil1 { get; set; }
+    public string? NachunternehmerKostenanteil2 { get; set; }
+    public string? NachunternehmerKostenanteil3 { get; set; }
+    public string? NachunternehmerKostenanteil4 { get; set; }
+    public string? NachunternehmerKostenanteil5 { get; set; }
+    public string? NachunternehmerKostenanteil6 { get; set; }
 }
 
 /// <summary>
@@ -1192,9 +1188,9 @@ public class BetriebsmittelStammBezeichnungen : BaseObject
 /// </summary>
 public class NewBetriebsmittelStammInfo : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public BetriebsmittelStammArt? Art { get; set; }
 
@@ -1215,24 +1211,24 @@ public class KostenartStruktur : BaseObject
     /// <summary>
     /// Die Bezeichung der Kostenartstruktur.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die Nummer der Kostenartstruktur.
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Bei aktivem Mandantenbezug: Die Mandanten-ID.
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
-    public string MandantenId { get; set; }
+    public string? MandantenId { get; set; }
 
     /// <summary>
     /// Bei aktivem Mandantenbezug: Die Niederlassung-ID (kann null sein).
     /// </summary>
     [JsonProperty(NullValueHandling = NullValueHandling.Include, DefaultValueHandling = DefaultValueHandling.Include)]
-    public string NiederlassungId { get; set; }
+    public string? NiederlassungId { get; set; }
 }
 
 /// <summary>
@@ -1243,17 +1239,22 @@ public class Kostenart : BaseObject
     /// <summary>
     /// Die Bezeichung der Kostenart.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die Nummer der Kostenart innerhalb der enthaltenden Gruppe (z.B. "2").
     /// </summary>
-    public string NummerLokal { get; set; }
+    public string? NummerLokal { get; set; }
 
     /// <summary>
     /// Die vollständige Nummer (z.B. "3.1.2").
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
+
+    /// <summary>
+    /// Die Nummer des Sachkontos.
+    /// </summary>
+    public string? SachkontoNummer { get; set; }
 
     /// <summary>
     /// Falls true, ist dies eine Kostenartenguppe.
@@ -1263,7 +1264,7 @@ public class Kostenart : BaseObject
     /// <summary>
     /// Befüllt im Fall IstGruppe == true. Enthält die Child-Kostenarten.
     /// </summary>
-    public List<Kostenart> Kostenarten { get; set; }
+    public List<Kostenart>? Kostenarten { get; set; }
 }
 
 /// <summary>
@@ -1274,13 +1275,18 @@ public class NewKostenartInfo : BaseObject
     /// <summary>
     /// Die Bezeichnung der neuen Kostenart.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die vollständige Nummer der neuen Kostenart (oder Kostenartengruppe), z.B. "7.2.". Ein Punkt (".") wird
     /// immer als Trennzeichen zwischen zwei Ebenen interpretiert.
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
+
+    /// <summary>
+    /// Die Nummer des Sachkontos, welches referenziert werden soll.
+    /// </summary>
+    public string? SachkontoNummer { get; set; }
 
     /// <summary>
     /// Falls true, wird einen Kostenartengruppe erzeugt, ansonsten eine Kostenart.
@@ -1296,12 +1302,12 @@ public class Bauarbeitsschluessel : BaseObject
     /// <summary>
     /// Die eindeutige Nummer des Bauarbeitsschluessels (BAS).
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Die Bezeichnung des Bauarbeitsschluessels (BAS).
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Falls true, ist der Bauarbeitsschlüssel (BAS) als Standard gekennzeichnet.
@@ -1322,11 +1328,11 @@ public enum GeräteArt
 /// </summary>
 public class Gerätefaktor : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     public GeräteArt? Art { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// ist nur für Betriebsmittelstämme befüllt. Im Projektfall ist dieser Wert kostenebenenabhängig und
@@ -1355,7 +1361,7 @@ public class Gerätefaktor : BaseObject
     /// <summary>
     /// Nur für Projekte: Die (kostenebenenabhängigen) Werte
     /// </summary>
-    public List<GerätefaktorWert> Werte { get; set; }
+    public List<GerätefaktorWert>? Werte { get; set; }
 }
 
 public class GerätefaktorWert : BaseObject
@@ -1382,7 +1388,7 @@ public class GlobaleVariable : BaseObject
     /// <summary>
     /// Variablenname
     /// </summary>
-    public string Variable { get; set; }
+    public string? Variable { get; set; }
 
     [Obsolete("Dieses Flag war nur von interner Bedeutung und wird nicht mehr unterstützt.")]
     public bool? IstKalkulationsVariable { get; set; }
@@ -1391,7 +1397,7 @@ public class GlobaleVariable : BaseObject
     /// Nur für Betriebsmittelstämme: Enthält den Ansatz (= Berechnungsformel). Im Projektfall steht der
     /// Ansatz kostenebenenabhängig in <see cref="Ansätze"/>.
     /// </summary>
-    public string Ansatz { get; set; }
+    public string? Ansatz { get; set; }
 
     /// <summary>
     /// Nur für Betriebsmittelstämme: Der berechnete Wert (d.h. das Ergebnis des Ansatzes).
@@ -1404,12 +1410,12 @@ public class GlobaleVariable : BaseObject
     /// Nur für Betriebsmittelstämme: Enthält einen optionalen Kommentar. Im Projektfall steht der
     /// Kommentar kostenebenenabhängig in <see cref="Ansätze"/>.
     /// </summary>
-    public string Kommentar { get; set; }
+    public string? Kommentar { get; set; }
 
     /// <summary>
     /// Nur für Projekte: Die (kostenebenenabhängigen) Ansätze
     /// </summary>
-    public List<GlobaleVariableAnsatz> Ansätze { get; set; }
+    public List<GlobaleVariableAnsatz>? Ansätze { get; set; }
 }
 
 /// <summary>
@@ -1426,7 +1432,7 @@ public class GlobaleVariableAnsatz : BaseObject
     /// <summary>
     /// Der Ansatz (= Berechnungsformel)
     /// </summary>
-    public string Ansatz { get; set; }
+    public string? Ansatz { get; set; }
 
     /// <summary>
     /// Der berechnete Wert (d.h. das Ergebnis des Ansatzes). Wird für Schreibzugriffe
@@ -1437,37 +1443,37 @@ public class GlobaleVariableAnsatz : BaseObject
     /// <summary>
     /// Optionaler Kommentar
     /// </summary>
-    public string Kommentar { get; set; }
+    public string? Kommentar { get; set; }
 }
 
 public class Warengruppe : BaseObject
 {
     public int Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 public class NewKostenkatalogInfo : BaseObject
 {
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 public class NewZuschlagskatalogInfo : BaseObject
 {
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 public class NewZuschlagsartInfo : BaseObject
 {
     public int Index { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
     public ZuschlagsTyp? Zuschlagstyp { get; set; }
 }
 
 public class DbBetriebsmittelGruppe : BaseObject
 {
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public BetriebsmittelArt? Art { get; set; }
 }
@@ -1498,9 +1504,9 @@ public enum ZuschlagsBasis
 /// </summary>
 public class Zuschlagsgruppe : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Wird derzeit nicht genutzt.
@@ -1511,16 +1517,16 @@ public class Zuschlagsgruppe : BaseObject
     /// Die eigentlichen Zuschlagssätze für diese Zuschlagsgruppe. Ist eine Liste und nicht einzelner Wert,
     /// da jeder Zuschlagssatz individuell pro Kostenebene festgelegt werden kann.
     /// </summary>
-    public List<ZuschlagsgruppenWert> Werte { get; set; }
+    public List<ZuschlagsgruppenWert>? Werte { get; set; }
 
     /// <summary>
     /// Liefert den Zuschlagswert, der für eine Zuschlagsebene relevant ist. Übergeben wird eine Liste von
     /// Zuschlagsebenen (üblicherweise <see cref="BetriebsmittelResult.Zuschlagsebenen"/>). Zurückgegeben wird der
     /// Zuschlagswert der ersten darin enthaltenen Zuschagsebenen, auf der ein Zuschlagswert festgelegt ist. 
     /// </summary>
-    public ZuschlagsgruppenWert FindWert(IEnumerable<Kostenebene> zuschlagsebenen)
+    public ZuschlagsgruppenWert? FindWert(IEnumerable<Kostenebene> zuschlagsebenen)
         => (from e in zuschlagsebenen
-            from w in Werte
+            from w in Werte ?? []
             where w.ZuschlagsebeneId == e.Id
             select w).FirstOrDefault();
 }
@@ -1542,7 +1548,7 @@ public class ZuschlagsgruppenWert : BaseObject
     /// abgekündigt ist. 
     /// </summary>
     [Obsolete("Wurde nur für Zuschlagskatalog.ZuschlagsgruppenWerte benötigt, das aber abgekündigt ist.")]
-    public string ZuschlagsgruppenNummer { get; set; }
+    public string? ZuschlagsgruppenNummer { get; set; }
 
     /// <summary>
     /// Der Zuschlagssatz (= Zuschlag in Prozent).
@@ -1566,7 +1572,7 @@ public class Zuschlagsart : BaseObject
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public int Index { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Für GAEB: Der Zuschlagstyp (z.B. AGK).
@@ -1594,11 +1600,11 @@ public class Kostenkatalog : BaseObject
     /// </summary>
     public Guid Id { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
     public bool IstStandard { get; set; }
 
@@ -1635,11 +1641,11 @@ public class Zuschlagskatalog : BaseObject
     /// </summary>
     public Guid Id { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
     public bool IstStandard { get; set; }
 
@@ -1651,7 +1657,7 @@ public class Zuschlagskatalog : BaseObject
     /// </summary>
     [Obsolete("Sollte nicht mehr verwendet werden. Stattdessen sind für ÖNORM-Stämme die "
               + "Zuschlägssätze über Zuschlagsgruppe.Werte ansprechbar.")]
-    public List<ZuschlagsgruppenWert> ZuschlagsgruppenWerte { get; set; }
+    public List<ZuschlagsgruppenWert>? ZuschlagsgruppenWerte { get; set; }
 }
 
 public enum BetriebsmittelArt
@@ -1691,9 +1697,9 @@ public class NewBetriebsmittelInfo : BaseObject
     /// <summary>
     /// Die lokale Nummer (ohne Präfix und ohne Nummer der enthaltenden Gruppe) des Betriebsmittels.
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -1704,7 +1710,7 @@ public class BetriebsmittelCollectionResult : BaseObject
     /// <summary>
     /// Die IDs der erzeugten Betriebsmittel (einschließlich Grupper), ohne untergeordnete Betriebsmittel.
     /// </summary>
-    public List<Guid> NewRootBetriebsmittelIds { get; set; }
+    public IReadOnlyList<Guid> NewRootBetriebsmittelIds { get; set; } = [];
 }
 
 /// <summary>
@@ -1718,7 +1724,7 @@ public class BetriebsmittelCollectionTransferFromStammInfo : BaseObject
     /// Liste mit den IDs der zu übernehmenen Betriebsmittel. Die Betriebsmittel müssen alle zum selben
     /// Betriebsmittelstamm gehören.
     /// </summary>
-    public IReadOnlyCollection<Guid> QuellBetriebsmittelIds { get; set; }
+    public IReadOnlyCollection<Guid>? QuellBetriebsmittelIds { get; set; }
 
     /// <summary>
     /// Optionale ID des Quell-Kostenkatalogs. Falls null, wird der Standardkostenkatalog herangezogen.
@@ -1803,7 +1809,7 @@ public class BetriebsmittelKostenUpdateInfo : BaseObject
     /// vorhanden sind, aber keine Entsprechung in dieser Liste haben, werden gelöscht.
     /// Eine leere Liste führt zur Löschung aller Kostenobjekte. Falls null, passiert dagegen nichts.
     /// </summary>
-    public List<BetriebsmittelKosten> Kosten { get; set; }
+    public List<BetriebsmittelKosten>? Kosten { get; set; }
 
     /// <summary>
     /// Liste mit weiteren Kosten (Ansatzzeilen) für das Betriebsmittel. Falls ungleich null, werden die
@@ -1812,7 +1818,7 @@ public class BetriebsmittelKostenUpdateInfo : BaseObject
     /// werden neu erzeugt. Eine leere Liste führt zur Löschung aller Ansatzzeilen.
     /// Falls null, passiert dagegen nichts.
     /// </summary>
-    public List<KalkulationsZeile> WeitereKosten { get; set; }
+    public List<KalkulationsZeile>? WeitereKosten { get; set; }
 }
 
 /// <summary>
@@ -1840,7 +1846,7 @@ public class BetriebsmittelResult
     /// <summary>
     /// Liste der angeforderten Betriebsmittel (hierarchisch aufgebaut, falls mitGruppen == true).
     /// </summary>
-    public List<Betriebsmittel> BetriebsmittelList { get; set; }
+    public IReadOnlyList<Betriebsmittel> BetriebsmittelList { get; set; } = [];
 
     /// <summary>
     /// Die Kostenebene, die für Berechnungen herangezogen wurde.
@@ -1852,7 +1858,7 @@ public class BetriebsmittelResult
     /// Ermöglicht das Auffinden von Kostenebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
     /// z.B. per <see cref="Betriebsmittel.FindKosten"/>.
     /// </summary>
-    public List<Kostenebene> Kostenebenen { get; set; }
+    public IReadOnlyList<Kostenebene> Kostenebenen { get; set; } = [];
 
     /// <summary>
     /// Die Zuschlagsebene, die für Berechnungen herangezogen wurde.
@@ -1864,7 +1870,7 @@ public class BetriebsmittelResult
     /// Ermöglicht das Auffinden von Zuschlagsebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
     /// z.B. per <see cref="Betriebsmittel.FindZuschlag"/>.
     /// </summary>
-    public List<Kostenebene> Zuschlagsebenen { get; set; }
+    public IReadOnlyList<Kostenebene> Zuschlagsebenen { get; set; } = [];
 }
 
 /// <summary>
@@ -1889,18 +1895,18 @@ public class Betriebsmittel : BaseObject
     /// <summary>
     /// Die lokale Nummer (ohne Präfix und Gruppennummer), z.B. "211" (für das Material "M24.211").
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
     /// </summary>
-    public string NummerKomplett { get; set; }
+    public string? NummerKomplett { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public bool? Leistungsfähig { get; set; }
 
-    public string Einheit { get; set; }
+    public string? Einheit { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Kosten (eine pro Kostenebene, auf der die Kosten für dieses Betriebsmittel festgelegt
@@ -1908,7 +1914,7 @@ public class Betriebsmittel : BaseObject
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
     /// über den "mitKosten"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich Kosten.
     /// </summary>
-    public List<BetriebsmittelKosten> Kosten { get; set; }
+    public List<BetriebsmittelKosten>? Kosten { get; set; }
 
     /// <summary>
     /// Ist befüllt, wenn <see cref="Kosten"/> befüllt ist. Enthält den Eintrag aus <see cref="Kosten"/>, der für
@@ -1916,16 +1922,16 @@ public class Betriebsmittel : BaseObject
     /// berücksichtigt wird (d.h. wenn für die angeforderte Kostenenbene kein Kostenwert hinterlegt ist, wird
     /// die übergeordnete Kostenebene herangezogen usw.).
     /// </summary>
-    public BetriebsmittelKosten KostenEffektiv { get; set; }
+    public BetriebsmittelKosten? KostenEffektiv { get; set; }
 
     /// <summary>
     /// Liefert die Kosten, die für eine Kostenebene relevant sind. Übergeben wird eine Liste von Kostenebenen
     /// (üblicherweise <see cref="BetriebsmittelResult.Kostenebenen"/>). Zurückgegeben wird das Kostenobjekt der
     /// ersten darin enthaltenen Kostenebene, auf der Kosten festgelegt sind. 
     /// </summary>
-    public BetriebsmittelKosten FindKosten(IEnumerable<Kostenebene> kostenebenen)
+    public BetriebsmittelKosten? FindKosten(IEnumerable<Kostenebene> kostenebenen)
         => (from e in kostenebenen
-            from k in Kosten
+            from k in Kosten ?? []
             where k.KostenebeneId == e.Id
             select k).FirstOrDefault();
 
@@ -1937,12 +1943,12 @@ public class Betriebsmittel : BaseObject
     /// über den "mitKosten"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich berechneter Kosten und Preise.
     /// Wird bei Schreiboperationen ignoriert.
     /// </summary>
-    public BetriebsmittelKostenDetails KostenDetails { get; set; }
+    public BetriebsmittelKostenDetails? KostenDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste mit weiteren Kosten.
     /// </summary>
-    public List<KalkulationsZeile> WeitereKosten { get; set; }
+    public List<KalkulationsZeile>? WeitereKosten { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Zuschlägen (einer pro Zuschlagsebene, auf der die Zuschläge für dieses Betriebsmittel
@@ -1951,23 +1957,23 @@ public class Betriebsmittel : BaseObject
     /// Allerdings erlaubt der Aufruf /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel
     /// über den "mitZuschlägen"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich Kosten.
     /// </summary>
-    public List<BetriebsmittelZuschlag> Zuschläge { get; set; }
+    public List<BetriebsmittelZuschlag>? Zuschläge { get; set; }
     
     /// <summary>
     /// Ist befüllt, wenn <see cref="Zuschläge"/> befüllt ist. Enthält die für die angeforderte Zuschlagsebene
     /// passenden Zuschlagsobjekte, wobei gegebenenfalls übergeordnete Gruppen und Kostenebenen herangezogen
     /// werden, um das passende Zuschlagsobjekt zu ermitteln.
     /// </summary>
-    public List<BetriebsmittelZuschlag> ZuschlägeEffektiv { get; set; }
+    public List<BetriebsmittelZuschlag>? ZuschlägeEffektiv { get; set; }
 
     /// <summary>
     /// Liefert den Zuschlag, der für eine Zuschlagsebene relevant ist. Übergeben wird eine Liste von Zuschlagsebenen
     /// (üblicherweise <see cref="BetriebsmittelResult.Zuschlagsebenen"/>). Zurückgegeben wird das Zuschlagsobjekt der
     /// ersten darin enthaltenen Zuschagsebenen, auf der ein Zuschlag festgelegt sind. 
     /// </summary>
-    public BetriebsmittelZuschlag FindZuschlag(int index, IEnumerable<Kostenebene> zuschlagsebenen)
+    public BetriebsmittelZuschlag? FindZuschlag(int index, IEnumerable<Kostenebene> zuschlagsebenen)
         => (from e in zuschlagsebenen
-            from z in Zuschläge
+            from z in Zuschläge ?? []
             where z.ZuschlagsebeneId == e.Id && z.ArtIndex == index
             select z).FirstOrDefault();
 
@@ -1976,7 +1982,7 @@ public class Betriebsmittel : BaseObject
     /// Aufruf von /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel mit
     /// mitDetails = true. 
     /// </summary>
-    public BetriebsmittelDetails Details { get; set; }
+    public BetriebsmittelDetails? Details { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel eine Gruppe ist, enthält dieses Objekt die passenden Eigenschaften.
@@ -1984,7 +1990,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true oder mitGruppen = true befüllt.
     /// </summary>
-    public BetriebsmittelGruppeDetails GruppeDetails { get; set; }
+    public BetriebsmittelGruppeDetails? GruppeDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel ein Lohn ist, enthält dieses Objekt die passenden Eigenschaften.
@@ -1992,7 +1998,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelLohnDetails LohnDetails { get; set; }
+    public BetriebsmittelLohnDetails? LohnDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel ein Material ist, enthält dieses Objekt die passenden Eigenschaften.
@@ -2000,7 +2006,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelMaterialDetails MaterialDetails { get; set; }
+    public BetriebsmittelMaterialDetails? MaterialDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel eine Gerät ist, enthält dieses Objekt die passenden Eigenschaften.
@@ -2008,7 +2014,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelGerätDetails GerätDetails { get; set; }
+    public BetriebsmittelGerätDetails? GerätDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel ein Sonstige-Kosten-Objekt ist, enthält dieses Objekt die passenden
@@ -2016,7 +2022,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelSonstigeKostenDetails SonstigeKostenDetails { get; set; }
+    public BetriebsmittelSonstigeKostenDetails? SonstigeKostenDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel ein Nachunternehmer ist, enthält dieses Objekt die passenden
@@ -2024,7 +2030,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelNachunternehmerDetails NachunternehmerDetails { get; set; }
+    public BetriebsmittelNachunternehmerDetails? NachunternehmerDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Falls das Betriebsmittel ein Baustein ist, enthält dieses Objekt die passenden Eigenschaften.
@@ -2032,7 +2038,7 @@ public class Betriebsmittel : BaseObject
     /// /build/global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel ist dieses Feld nur
     /// im Fall von mitDetails = true befüllt.
     /// </summary>
-    public BetriebsmittelBausteinDetails BausteinDetails { get; set; }
+    public BetriebsmittelBausteinDetails? BausteinDetails { get; set; }
 
     /// <summary>
     /// Zeigt an ob es sich um ein Freies Betriebmsittel handelt.
@@ -2042,7 +2048,7 @@ public class Betriebsmittel : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittel zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public class BetriebsmittelDetails : BaseObject
@@ -2050,15 +2056,15 @@ public class BetriebsmittelDetails : BaseObject
     /// <summary>
     /// Die Beschreibung als Text (ohne Formatierungen).
     /// </summary>
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
-    public string Stichwörter { get; set; }
+    public string? Stichwörter { get; set; }
 
-    public string Markierungskennzeichen { get; set; }
+    public string? Markierungskennzeichen { get; set; }
 
-    public string StandardAnsatz { get; set; }
+    public string? StandardAnsatz { get; set; }
 
-    public string DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
+    public string? DbBetriebsmittelGruppeBezeichnung; // = DBBetriebsmittelgruppe
 
     /// <summary>
     /// Der Zeitpunkt der letzten Änderung. Wird bei Schreiboperationen ignoriert.
@@ -2075,7 +2081,7 @@ public class BetriebsmittelZuschlag : BaseObject
     /// Für ÖNORM: Verweist auf eine <see cref="Zuschlagsgruppe"/>.
     /// Die Liste der verfügbaren Zuschlagsgruppen erhält man über <see cref="BetriebsmittelStamm.Zuschlagsgruppen"/>.
     /// </summary>
-    public string ZuschlagsgruppenNummer { get; set; }
+    public string? ZuschlagsgruppenNummer { get; set; }
 
     /// <summary>
     /// Für GAEB: Der Zuschlag als Prozentwert.<br/>
@@ -2100,11 +2106,11 @@ public class BetriebsmittelZuschlag : BaseObject
 public class BetriebsmittelGruppeDetails : BaseObject
 {
     /// <summary>
-    /// Die in dieser Gruppe enthaltenen Child-Betriebsmittel. Diese Liste ist nur für Lesezugriffe nutzbar.
-    /// Für Schreibzugriffe sollten stattdessen die Endpunkte zum Erzeugen und Löschen eines Betriebsmittels
-    /// genutzt werden.
+    /// Die in dieser Gruppe enthaltenen Child-Betriebsmittel. Diese Liste ist nur für Lesezugriffe
+    /// sowie für Massenupdates per POST /global/betriebsmittelstaemme/{betriebsmittelStammId}/betriebsmittel_collection
+    /// nutzbar.
     /// </summary>
-    public List<Betriebsmittel> BetriebsmittelList { get; set; }
+    public List<Betriebsmittel>? BetriebsmittelList { get; set; }
 }
 
 public class BetriebsmittelLohnDetails : BaseObject
@@ -2119,15 +2125,15 @@ public class BetriebsmittelLohnDetails : BaseObject
     /// <summary>
     /// Nummer des Bauarbeitsschlüssels
     /// </summary>
-    public string BasNummer { get; set; }
+    public string? BasNummer { get; set; }
 
-    public string KostenartKostenanteil1 { get; set; }
+    public string? KostenartKostenanteil1 { get; set; }
 
-    public string KostenartKostenanteil2 { get; set; }
+    public string? KostenartKostenanteil2 { get; set; }
 
-    public string KostenartGemeinkosten { get; set; }
+    public string? KostenartGemeinkosten { get; set; }
 
-    public string KostenartUmlagekosten { get; set; }
+    public string? KostenartUmlagekosten { get; set; }
 
     public int? WarengruppeKostenanteil1 { get; set; }
 
@@ -2137,7 +2143,7 @@ public class BetriebsmittelLohnDetails : BaseObject
 
     public int? WarengruppeUmlagekosten { get; set; }
 
-    public string AlternativeNummer { get; set; }
+    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -2153,17 +2159,17 @@ public class BetriebsmittelMaterialDetails : BaseObject
     /// Für ÖNorm-Betriebsmittelstämme der Kalkulationsversion B2061_1999 ist dies die einzige Kostenart.
     /// Für B2061_2020 werden die anderen Kostenarten-Eigenschaften genutzt.
     /// </summary>
-    public string Kostenart { get; set; }
+    public string? Kostenart { get; set; }
 
-    public string KostenartPreisAbLieferer { get; set; }
+    public string? KostenartPreisAbLieferer { get; set; }
 
-    public string KostenartTransport { get; set; }
+    public string? KostenartTransport { get; set; }
 
-    public string KostenartGemeinkosten { get; set; }
+    public string? KostenartGemeinkosten { get; set; }
 
-    public string KostenartManipulation { get; set; }
+    public string? KostenartManipulation { get; set; }
 
-    public string KostenartNebenmaterial { get; set; }
+    public string? KostenartNebenmaterial { get; set; }
 
     public int? WarengruppePreisAbLieferer { get; set; }
 
@@ -2179,12 +2185,12 @@ public class BetriebsmittelMaterialDetails : BaseObject
     /// Im Fall eines Abgleichs mit dem kaufmännischen System NEVARIS Finance
     /// enthält diese Eigenschaft die Artikel-Nummer von Finance.
     /// </summary>
-    public string FinanceArtikelNummer { get; set; }
+    public string? FinanceArtikelNummer { get; set; }
 
     /// <summary>
     /// Enthält zusätzliche Material-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
-    public BetriebsmittelMaterialDetailsSonstiges Sonstiges { get; set; }
+    public BetriebsmittelMaterialDetailsSonstiges? Sonstiges { get; set; }
 }
 
 public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
@@ -2193,11 +2199,11 @@ public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
 
     public decimal? TransportvolumenJeEinheitInM3 { get; set; }
 
-    public string Rabattgruppe { get; set; }
+    public string? Rabattgruppe { get; set; }
 
-    public string Lieferant { get; set; }
+    public string? Lieferant { get; set; }
 
-    public string AlternativeNummer { get; set; }
+    public string? AlternativeNummer { get; set; }
 
     public bool? Markierung { get; set; }
 
@@ -2211,34 +2217,34 @@ public class BetriebsmittelGerätDetails : BaseObject
 {
     public BglArt? BasisBgl { get; set; } // = BGLArt
 
-    public string GerätefaktorNummer { get; set; }
+    public string? GerätefaktorNummer { get; set; }
 
-    public string KostenartAV { get; set; }
+    public string? KostenartAV { get; set; }
 
-    public string KostenartRepLohn { get; set; }
+    public string? KostenartRepLohn { get; set; }
 
-    public string KostenartRepMaterial { get; set; }
+    public string? KostenartRepMaterial { get; set; }
 
 
-    public string KostenartGemeinkostenAV { get; set; }
+    public string? KostenartGemeinkostenAV { get; set; }
 
-    public string KostenartGemeinkostenLohn { get; set; }
+    public string? KostenartGemeinkostenLohn { get; set; }
 
-    public string KostenartGemeinkostenSonstiges { get; set; }
+    public string? KostenartGemeinkostenSonstiges { get; set; }
 
-    public string KostenartAndereKostenLohn { get; set; }
+    public string? KostenartAndereKostenLohn { get; set; }
 
-    public string KostenartAndereKostenSonstiges { get; set; }
+    public string? KostenartAndereKostenSonstiges { get; set; }
 
-    public string KostenartListenpreisgerätLohn { get; set; }
+    public string? KostenartListenpreisgerätLohn { get; set; }
 
-    public string KostenartListenpreisgerätSonstiges { get; set; }
+    public string? KostenartListenpreisgerätSonstiges { get; set; }
 
-    public string KostenartListenpreisgerätGemeinkosten { get; set; }
+    public string? KostenartListenpreisgerätGemeinkosten { get; set; }
 
-    public string KostenartListenpreisGeraetKostenanteil1 { get; set; }
+    public string? KostenartListenpreisGeraetKostenanteil1 { get; set; }
 
-    public string KostenartListenpreisGeraetKostenanteil2 { get; set; }
+    public string? KostenartListenpreisGeraetKostenanteil2 { get; set; }
 
     public int? WarengruppeAbschreibungVerzinsung { get; set; }
 
@@ -2266,7 +2272,7 @@ public class BetriebsmittelGerätDetails : BaseObject
 
     public int? WarengruppeListenpreisgerätGemeinkosten { get; set; }
 
-    public string AlternativeNummer { get; set; }
+    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -2276,7 +2282,7 @@ public class BetriebsmittelGerätDetails : BaseObject
     /// <summary>
     /// Enthält zusätzliche Geräte-Eigenschaften (jene, die im Formular unter "Sonstiges" zusammengefasst sind).
     /// </summary>
-    public BetriebsmittelGerätDetailsSonstiges Sonstiges { get; set; }
+    public BetriebsmittelGerätDetailsSonstiges? Sonstiges { get; set; }
 }
 
 public enum Antriebsart
@@ -2289,8 +2295,8 @@ public enum Antriebsart
 
 public class BetriebsmittelGerätDetailsSonstiges : BaseObject
 {
-    public string BglNummer { get; set; } // = BGLNummer
-    public string EdvKurztext { get; set; } // = BGLBezeichnung
+    public string? BglNummer { get; set; } // = BGLNummer
+    public string? EdvKurztext { get; set; } // = BGLBezeichnung
 
     // Sonstiges
     public decimal? Vorhaltemenge { get; set; }
@@ -2303,33 +2309,33 @@ public class BetriebsmittelGerätDetailsSonstiges : BaseObject
     public decimal? Leistung2 { get; set; } // = GeraeteLeistung2
 
     // Bahnspezifische Angaben
-    public string Fabrikat { get; set; }
+    public string? Fabrikat { get; set; }
     public int? Mindestradius { get; set; }
     public int? BeherrschbareSteigung { get; set; }
-    public string Schallemissionspegel { get; set; }
+    public string? Schallemissionspegel { get; set; }
     public int? Arbeitsgeschwindigkeit { get; set; }
     public int? GegenseitigeUeberhoehung { get; set; }
 }
 
 public class BetriebsmittelSonstigeKostenDetails : BaseObject
 {
-    public string Kostenart1 { get; set; }
+    public string? Kostenart1 { get; set; }
 
-    public string Kostenart2 { get; set; }
+    public string? Kostenart2 { get; set; }
 
-    public string Kostenart3 { get; set; }
+    public string? Kostenart3 { get; set; }
 
-    public string Kostenart4 { get; set; }
+    public string? Kostenart4 { get; set; }
 
-    public string Kostenart5 { get; set; }
+    public string? Kostenart5 { get; set; }
 
-    public string Kostenart6 { get; set; }
+    public string? Kostenart6 { get; set; }
 
-    public string Kostenart7 { get; set; }
+    public string? Kostenart7 { get; set; }
 
-    public string Kostenart8 { get; set; }
+    public string? Kostenart8 { get; set; }
 
-    public string KostenartGemeinkosten { get; set; }
+    public string? KostenartGemeinkosten { get; set; }
 
     public int? WarengruppeKostenanteil1 { get; set; }
 
@@ -2349,7 +2355,7 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
 
     public int? WarengruppeGemeinkosten { get; set; }
 
-    public string AlternativeNummer { get; set; }
+    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -2359,23 +2365,23 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
 
 public class BetriebsmittelNachunternehmerDetails : BaseObject
 {
-    public string Kostenart1 { get; set; }
+    public string? Kostenart1 { get; set; }
 
-    public string Kostenart2 { get; set; }
+    public string? Kostenart2 { get; set; }
 
-    public string Kostenart3 { get; set; }
+    public string? Kostenart3 { get; set; }
 
-    public string Kostenart4 { get; set; }
+    public string? Kostenart4 { get; set; }
 
-    public string Kostenart5 { get; set; }
+    public string? Kostenart5 { get; set; }
 
-    public string Kostenart6 { get; set; }
+    public string? Kostenart6 { get; set; }
 
-    public string Kostenart7 { get; set; }
+    public string? Kostenart7 { get; set; }
 
-    public string Kostenart8 { get; set; }
+    public string? Kostenart8 { get; set; }
 
-    public string KostenartGemeinkosten { get; set; }
+    public string? KostenartGemeinkosten { get; set; }
 
     public int? WarengruppeKostenanteil1 { get; set; }
 
@@ -2395,7 +2401,7 @@ public class BetriebsmittelNachunternehmerDetails : BaseObject
 
     public int? WarengruppeGemeinkosten { get; set; }
 
-    public string AlternativeNummer { get; set; }
+    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -2415,27 +2421,27 @@ public class BetriebsmittelKostenDetails : BaseObject
     /// <summary>
     /// Die Betriebsmittelkosten (ohne Berücksichtigung der weiteren Kosten).
     /// </summary>
-    public Money Kosten { get; set; }
+    public Money? Kosten { get; set; }
 
     /// <summary>
     /// Der Betriebsmittelpreis (ohne Berücksichtigung der weiteren Kosten).
     /// </summary>
-    public Money Preis { get; set; }
+    public Money? Preis { get; set; }
 
     /// <summary>
     /// Die Gesamtbetrag der weiteren Kosten.
     /// </summary>
-    public Money WeitereKosten { get; set; }
+    public Money? WeitereKosten { get; set; }
 
     /// <summary>
     /// Die Gesamtkosten (= Kosten + weitere Kosten).
     /// </summary>
-    public Money KostenGesamt { get; set; }
+    public Money? KostenGesamt { get; set; }
 
     /// <summary>
     /// Der Gesamtpreis.
     /// </summary>
-    public Money PreisGesamt { get; set; }
+    public Money? PreisGesamt { get; set; }
 
     /// <summary>
     /// Der Warenkorb dieses Betriebsmittel, d.h. eine Auflistung aller in den weiteren Kosten vorkommenen
@@ -2445,7 +2451,7 @@ public class BetriebsmittelKostenDetails : BaseObject
     /// Beim Abholen aller Betriebsmittel mittels IStammApi/IProjektApi.GetAllBetriebsmittel ist die Property
     /// nur dann befüllt, wenn die Argumente mitKosten = true, mitWeiterenKosten = true übergeben werden.
     /// </summary>
-    public List<BetriebsmittelWarenkorbItem> WarenkorbItems { get; set; }
+    public List<BetriebsmittelWarenkorbItem>? WarenkorbItems { get; set; }
 }
 
 /// <summary>
@@ -2472,7 +2478,7 @@ public class BetriebsmittelWarenkorbItem : BaseObject
     /// <summary>
     /// Die Kosten, mit der das verwendete Betriebsmittel in den Warenkorb einfließt.
     /// </summary>
-    public Money Kosten { get; set; }
+    public Money? Kosten { get; set; }
 }
 
 /// <summary>
@@ -2495,27 +2501,27 @@ public class BetriebsmittelKosten : BaseObject
     /// <summary>
     /// Befüllt, wenn das Betriebsmittel ein Lohn ist.
     /// </summary>
-    public BetriebsmittelKostenLohnDetails LohnDetails { get; set; }
+    public BetriebsmittelKostenLohnDetails? LohnDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn das Betriebsmittel ein Material ist.
     /// </summary>
-    public BetriebsmittelKostenMaterialDetails MaterialDetails { get; set; }
+    public BetriebsmittelKostenMaterialDetails? MaterialDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn das Betriebsmittel ein Gerät ist.
     /// </summary>
-    public BetriebsmittelKostenGerätDetails GerätDetails { get; set; }
+    public BetriebsmittelKostenGerätDetails? GerätDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn das Betriebsmittel ein Sonstige-Kosten-Objekt ist.
     /// </summary>
-    public BetriebsmittelKostenSonstigeKostenDetails SonstigeKostenDetails { get; set; }
+    public BetriebsmittelKostenSonstigeKostenDetails? SonstigeKostenDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn das Betriebsmittel ein Nachunternehmer ist.
     /// </summary>
-    public BetriebsmittelKostenNachunternehmerDetails NachunternehmerDetails { get; set; }
+    public BetriebsmittelKostenNachunternehmerDetails? NachunternehmerDetails { get; set; }
 }
 
 public enum KostenebeneTyp
@@ -2532,29 +2538,29 @@ public enum KostenebeneTyp
 
 public class BetriebsmittelKostenLohnDetails : BaseObject
 {
-    public Money Kostenanteil1 { get; set; }
+    public Money? Kostenanteil1 { get; set; }
 
     /// <summary>
     /// Kostenanteil 2: Nur für B2061_1999 verfügbar.
     /// </summary>
-    public Money Kostenanteil2 { get; set; }
+    public Money? Kostenanteil2 { get; set; }
 
-    public Money Umlagekosten { get; set; }
+    public Money? Umlagekosten { get; set; }
 
     public decimal? Gemeinkosten { get; set; }
 }
 
 public class BetriebsmittelKostenMaterialDetails : BaseObject
 {
-    public Money Listenpreis { get; set; }
+    public Money? Listenpreis { get; set; }
 
     public decimal? Rabatt { get; set; }
 
     public decimal? Verlust { get; set; }
 
-    public Money Manipulation { get; set; }
+    public Money? Manipulation { get; set; }
 
-    public Money Transportkosten { get; set; }
+    public Money? Transportkosten { get; set; }
 
     public decimal? Gemeinkosten { get; set; }
 
@@ -2563,11 +2569,11 @@ public class BetriebsmittelKostenMaterialDetails : BaseObject
 
 public class BetriebsmittelKostenGerätDetails : BaseObject
 {
-    public Money Neuwert { get; set; } // = Mittlerer Neuwert
+    public Money? Neuwert { get; set; } // = Mittlerer Neuwert
 
-    public Money Kostenanteil1 { get; set; }
+    public Money? Kostenanteil1 { get; set; }
 
-    public Money Kostenanteil2 { get; set; }
+    public Money? Kostenanteil2 { get; set; }
 
     public decimal? AbschreibungVerzinsung { get; set; } // = A + V
 
@@ -2581,41 +2587,41 @@ public class BetriebsmittelKostenGerätDetails : BaseObject
 
     public decimal? GemeinkostenRepSonstiges { get; set; }
 
-    public Money AndereKostenLohn { get; set; }
+    public Money? AndereKostenLohn { get; set; }
 
-    public Money AndereKostenSonstiges { get; set; }
+    public Money? AndereKostenSonstiges { get; set; }
 }
 
 public class BetriebsmittelKostenSonstigeKostenDetails : BaseObject
 {
-    public Money Kostenanteil1 { get; set; }
+    public Money? Kostenanteil1 { get; set; }
 
-    public Money Kostenanteil2 { get; set; }
+    public Money? Kostenanteil2 { get; set; }
 
-    public Money Kostenanteil3 { get; set; }
+    public Money? Kostenanteil3 { get; set; }
 
-    public Money Kostenanteil4 { get; set; }
+    public Money? Kostenanteil4 { get; set; }
 
-    public Money Kostenanteil5 { get; set; }
+    public Money? Kostenanteil5 { get; set; }
 
-    public Money Kostenanteil6 { get; set; }
+    public Money? Kostenanteil6 { get; set; }
 
     public decimal? Gemeinkosten { get; set; }
 }
 
 public class BetriebsmittelKostenNachunternehmerDetails : BaseObject
 {
-    public Money Kostenanteil1 { get; set; }
+    public Money? Kostenanteil1 { get; set; }
 
-    public Money Kostenanteil2 { get; set; }
+    public Money? Kostenanteil2 { get; set; }
 
-    public Money Kostenanteil3 { get; set; }
+    public Money? Kostenanteil3 { get; set; }
 
-    public Money Kostenanteil4 { get; set; }
+    public Money? Kostenanteil4 { get; set; }
 
-    public Money Kostenanteil5 { get; set; }
+    public Money? Kostenanteil5 { get; set; }
 
-    public Money Kostenanteil6 { get; set; }
+    public Money? Kostenanteil6 { get; set; }
 
     public decimal? Gemeinkosten { get; set; }
 }
@@ -2632,15 +2638,15 @@ public class KalkulationsZeileDetails : BaseObject
 
     public decimal? LeistungsMenge { get; set; }
 
-    public Money KostenProEinheit { get; set; }
+    public Money? KostenProEinheit { get; set; }
 
-    public Money Kosten { get; set; }
+    public Money? Kosten { get; set; }
 
-    public Money Preis { get; set; }
+    public Money? Preis { get; set; }
 
     public decimal? StundenProduktiv { get; set; }
 
-    public Money ZuschlagGesamt { get; set; }
+    public Money? ZuschlagGesamt { get; set; }
 }
 
 /// <summary>
@@ -2656,52 +2662,52 @@ public class KalkulationsZeile : BaseObject
     /// </summary>
     public Guid? Id { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Kommentar { get; set; }
+    public string? Kommentar { get; set; }
 
-    public string Markierungskennzeichen { get; set; }
+    public string? Markierungskennzeichen { get; set; }
 
-    public string Einheit { get; set; }
+    public string? Einheit { get; set; }
 
     public bool IstInaktiv { get; set; }
 
     /// <summary>
     /// Befüllt, wenn die Zeile einen Verweis auf ein Betriebsmittel enthält.
     /// </summary>
-    public KalkulationsZeileBetriebsmittelDetails BetriebsmittelDetails { get; set; }
+    public KalkulationsZeileBetriebsmittelDetails? BetriebsmittelDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn die Zeile einen Variablenansatz enthält.
     /// </summary>
-    public KalkulationsZeileVariablenDetails VariablenDetails { get; set; }
+    public KalkulationsZeileVariablenDetails? VariablenDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn es sich um eine Kommentarzeile handelt.
     /// </summary>
-    public KalkulationsZeileKommentarDetails KommentarDetails { get; set; }
+    public KalkulationsZeileKommentarDetails? KommentarDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn es sich um eine Unterposition handelt. Diese kann mehrere Unterzeilen enthalten.
     /// </summary>
-    public KalkulationsZeileUnterpositionDetails UnterpositionDetails { get; set; }
+    public KalkulationsZeileUnterpositionDetails? UnterpositionDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn es sich um einen Rückgriff handelt.
     /// </summary>
-    public RückgriffZeileDetails RückgriffDetails { get; set; }
+    public RückgriffZeileDetails? RückgriffDetails { get; set; }
 
     /// <summary>
     /// Befüllt, wenn es sich um eine Summenzeile handelt.
     /// </summary>
-    public SummenKalkulationsZeileDetails SummenDetails { get; set; }
+    public SummenKalkulationsZeileDetails? SummenDetails { get; set; }
     
     /// <summary>
     /// (Detailinfo) Enthält weitere Eigenschaften der Kalkulationszeile, insbesondere berechnete Werte.
     /// </summary>
-    public KalkulationsZeileDetails Details { get; set; }
+    public KalkulationsZeileDetails? Details { get; set; }
 }
 
 /// <summary>
@@ -2733,19 +2739,19 @@ public class KalkulationsZeileBetriebsmittelDetails : BaseObject
     /// <summary>
     /// Die vollständige Betriebsmittelnummer. Wird bei Schreibzugriffen ignoriert.
     /// </summary>
-    public string BetriebsmittelNummerKomplett { get; set; }
+    public string? BetriebsmittelNummerKomplett { get; set; }
 
-    public string Ansatz { get; set; }
+    public string? Ansatz { get; set; }
 
-    public string Variable { get; set; }
+    public string? Variable { get; set; }
 
-    public string BasNummer { get; set; }
+    public string? BasNummer { get; set; }
 }
 
 public class KalkulationsZeileVariablenDetails : BaseObject
 {
-    public string Variable { get; set; }
-    public string Ansatz { get; set; }
+    public string? Variable { get; set; }
+    public string? Ansatz { get; set; }
 }
 
 public class KalkulationsZeileKommentarDetails : BaseObject
@@ -2758,8 +2764,8 @@ public class RückgriffZeileDetails : BaseObject
 
     public Guid? UnterpositionsZeileId { get; set; }
 
-    public string Ansatz { get; set; }
-    public string Variable { get; set; }
+    public string? Ansatz { get; set; }
+    public string? Variable { get; set; }
 }
 
 public enum SummenKalkulationsZeileArt
@@ -2771,25 +2777,23 @@ public enum SummenKalkulationsZeileArt
 public class SummenKalkulationsZeileDetails : BaseObject
 {
     public SummenKalkulationsZeileArt? Art { get; set; }
-    public string Modifikator { get; set; }
-    public Money Kosten { get; set; }
-    public Money Preis { get; set; }
+    public string? Modifikator { get; set; }
+    public Money? Kosten { get; set; }
+    public Money? Preis { get; set; }
     public decimal? StundenProduktiv { get; set; }
 }
 
 public class KalkulationsZeileUnterpositionDetails : BaseObject
 {
-    public string Ansatz { get; set; }
-    public string Variable { get; set; }
-    public string BasNummer { get; set; }
+    public string? Ansatz { get; set; }
+    public string? Variable { get; set; }
+    public string? BasNummer { get; set; }
 
     /// <summary>
     /// Zeilen, die in dieser Zeile enthalten sind.
     /// </summary>
-    public List<KalkulationsZeile> Zeilen { get; set; }
+    public List<KalkulationsZeile>? Zeilen { get; set; }
 }
-
-#nullable enable
 
 /// <summary>
 /// Optionen-Objekt für die Funktion "Kalkulation generieren".
@@ -2934,8 +2938,6 @@ public enum TextvergleichAlgorithmus
     CharacterOffset99
 }
 
-#nullable disable
-
 public enum BglArt
 {
     Keine,
@@ -3037,8 +3039,8 @@ public enum KalkulationsArt
 
 public class NewKalkulationInfo : BaseObject
 {
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
     public KalkulationsArt? KalkulationsArt { get; set; }
     public Guid BetriebsmittelStammId { get; set; }
     public Guid? KostenkatalogId { get; set; }
@@ -3058,7 +3060,7 @@ public class BetriebsmittelErgebnis : BaseObject
     /// <summary>
     /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
     /// </summary>
-    public string NummerKomplett { get; set; }
+    public string? NummerKomplett { get; set; }
 
     /// <summary>
     /// Die berechnete Warenkorbmenge. Dies ist aktuell der einzige gelieferte Rechenwert.
@@ -3081,12 +3083,12 @@ public class KalkulationsBlattErgebnis : BaseObject
     /// <summary>
     /// Vollständige Nummer der dazugehörigen Position
     /// </summary>
-    public string Positionsnummer { get; set; }
+    public string? Positionsnummer { get; set; }
 
     /// <summary>
     /// Die Ergebnisse der im Kalkulationsblatt verwendeten Betriebsmittel
     /// </summary>
-    public List<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; }
+    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; } = [];
 }
 
 public class KalkulationErgebnisse : BaseObject
@@ -3099,12 +3101,12 @@ public class KalkulationErgebnisse : BaseObject
     /// <summary>
     /// Die Ergebnisse der verwendeten Betriebsmittel (über das gesamte LV)
     /// </summary>
-    public List<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; }
+    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; } = [];
 
     /// <summary>
     /// Die Ergebnisse der Kalkulationsblätter (pro Position)
     /// </summary>
-    public List<KalkulationsBlattErgebnis> KalkulationsblattErgebnisse { get; set; }
+    public IReadOnlyList<KalkulationsBlattErgebnis> KalkulationsblattErgebnisse { get; set; } = [];
 }
 
 /// <summary>
@@ -3122,9 +3124,9 @@ public class Kalkulation : BaseObject
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public bool IstAktiv { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public KalkulationsArt? Art { get; set; }
 
@@ -3132,18 +3134,18 @@ public class Kalkulation : BaseObject
     /// Rechenergebnisse (ist befüllt, wenn die Kalkultion per /build/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen=true
     /// abgerufen wurde).
     /// </summary>
-    public KalkulationErgebnisse Ergebnisse { get; set; }
+    public KalkulationErgebnisse? Ergebnisse { get; set; }
 
     /// <summary>
     /// Die Notiz (als XHTML), die der Kalkulation zugeordnet ist.
     /// </summary>
-    public string Notiz { get; set; }
+    public string? Notiz { get; set; }
 
     /// <summary>
     /// Liste von untergeordneten Kalkulationen. Ist nur befüllt, wenn die Kalkulationen
     /// als Teil eines Leistungsverzeichnisses, d.h. per /build/{projektId}/leistungsverzeichnisse/{lvId} geladen wurden.
     /// </summary>
-    public List<Kalkulation> Kalkulationen { get; set; }
+    public List<Kalkulation>? Kalkulationen { get; set; }
 
     /// <summary>
     /// Enthält Informationen über die Zahl der Nachkommastellen verschiedener Feldtypen.
@@ -3151,7 +3153,7 @@ public class Kalkulation : BaseObject
     [Obsolete("Sollte nicht mehr verwendet werden. Die enthaltenen Properties stehen auf dem Projekt zur Verfügung: "
               + "RechengenauigkeitMengen, RechengenauigkeitBeträge, "
               + "DarstellungsgenauigkeitMengen, DarstellungsgenauigkeitBeträge")]
-    public KalkulationNachkommastellen Nachkommastellen { get; set; }
+    public KalkulationNachkommastellen? Nachkommastellen { get; set; }
 }
 
 public class KalkulationNachkommastellen : BaseObject
@@ -3172,26 +3174,26 @@ public class KalkulationsBlatt : BaseObject
 
     public Guid PositionId { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die Notiz (als XHTML), die diesem Kalkulationsblatt zugeordnet ist.
     /// </summary>
-    public string Notiz { get; set; }
+    public string? Notiz { get; set; }
 
     /// <summary>
     /// Objekt mit weiteren Eigenschaften, insbesondere berechnete Werte (z.B. Einheitspreis). Diese Property
     /// wird auch beim Abrufen sämtlicher Kalkulationsblätter per
     /// /build/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter befüllt.
     /// </summary>
-    public KalkulationsBlattDetails Details { get; set; }
+    public KalkulationsBlattDetails? Details { get; set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Kalkulationszeilen (hierarchisch aufgebaut).
     /// </summary>
-    public List<KalkulationsZeile> Zeilen { get; set; }
+    public List<KalkulationsZeile>? Zeilen { get; set; }
 }
 
 /// <summary>
@@ -3199,21 +3201,21 @@ public class KalkulationsBlatt : BaseObject
 /// </summary>
 public class KalkulationsBlattDetails : BaseObject
 {
-    public string PositionsNummerKomplett { get; set; }
+    public string? PositionsNummerKomplett { get; set; }
 
     public decimal? Menge { get; set; }
     public decimal? StundenProduktiv { get; set; }
     public decimal? StundenProduktivGesamt { get; set; }
-    public Money Kosten { get; set; }
-    public Money KostenGesamt { get; set; }
-    public Money Preis { get; set; }
-    public Money PreisGesamt { get; set; }
-    public Money Zuschlag { get; set; }
-    public Money ZuschlagGesamt { get; set; }
-    public Money Einheitspreis { get; set; }
-    public Money EinheitspreisGesamt { get; set; }
+    public Money? Kosten { get; set; }
+    public Money? KostenGesamt { get; set; }
+    public Money? Preis { get; set; }
+    public Money? PreisGesamt { get; set; }
+    public Money? Zuschlag { get; set; }
+    public Money? ZuschlagGesamt { get; set; }
+    public Money? Einheitspreis { get; set; }
+    public Money? EinheitspreisGesamt { get; set; }
 
-    public Dictionary<string, Money> Preisanteile { get; set; }
+    public Dictionary<string, Money>? Preisanteile { get; set; }
 }
 
 #endregion Kalkulation
@@ -3228,12 +3230,12 @@ public class PreisanteilInfo : BaseObject
     /// <summary>
     /// Der Code, der den Preisanteil definiert (z.B. "L" für Lohn").
     /// </summary>
-    public string Code { get; set; }
+    public string? Code { get; set; }
 
     /// <summary>
     /// Optionale Bezeichnung (z.B. "Lohn").
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -3243,18 +3245,18 @@ public class Gliederungskatalog : BaseObject
 {
     public Guid Id { get; set; }
 
-    public string Kennung { get; set; }
+    public string? Kennung { get; set; }
 
     public int? Versionsnummer { get; set; }
 
     public DateTime? Versionsdatum { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Wurzelknoten des Katalogs.
     /// </summary>
-    public List<Gliederungsknoten> Knoten { get; set; }
+    public List<Gliederungsknoten>? Knoten { get; set; }
 }
 
 /// <summary>
@@ -3267,14 +3269,14 @@ public class Gliederungsknoten : BaseObject
     /// <summary>
     /// Die vollständige Knotennummer (z.B. "2.7.8").
     /// </summary>
-    public string NummerKomplett { get; set; }
+    public string? NummerKomplett { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die untergeordneten Knoten.
     /// </summary>
-    public List<Gliederungsknoten> Knoten { get; set; }
+    public List<Gliederungsknoten>? Knoten { get; set; }
 }
 
 /// <summary>
@@ -3306,12 +3308,12 @@ public class NewLvInfo : BaseObject
     /// <summary>
     /// LV-Nummer
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// LV-Bezeichnung
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die LV-Art, z.B. Ausschreibung. Muss befüllt sein.
@@ -3334,22 +3336,22 @@ public class NewLvInfo : BaseObject
     /// <summary>
     /// (Optional) Objekt mit Detailinformationen zum neuen LV.
     /// </summary>
-    public LvDetails LvDetails { get; set; }
+    public LvDetails? LvDetails { get; set; }
 
     /// <summary>
     /// Falls es sich um ein ÖNorm-LV handelt: Normspezifische Detailinformationen (optional).
     /// </summary>
-    public OenormLvDetails OenormLvDetails { get; set; }
+    public OenormLvDetails? OenormLvDetails { get; set; }
 
     /// <summary>
     /// Falls es sich um ein GAEB-LV handelt: Normspezifische Detailinformationen (optional).
     /// </summary>
-    public GaebLvDetails GaebLvDetails { get; set; }
+    public GaebLvDetails? GaebLvDetails { get; set; }
 
     /// <summary>
     /// Optionales Objekt mit Binärdaten, die dem LV zugeordnet sind.
     /// </summary>
-    public LvBildDetails BildDetails { get; set; }
+    public LvBildDetails? BildDetails { get; set; }
 
     /// <summary>
     /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
@@ -3368,12 +3370,12 @@ public class Leistungsverzeichnis : BaseObject
     /// <summary>
     /// Die Nummer des LV (optional).
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Die Bezeichnung des LV.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Die Norm (ÖNorm oder GAEB). Für eine genauere Angabe, siehe NormExakt.
@@ -3392,42 +3394,42 @@ public class Leistungsverzeichnis : BaseObject
     /// <summary>
     /// Detailinformationen zum LV.
     /// </summary>
-    public LvDetails LvDetails { get; set; }
+    public LvDetails? LvDetails { get; set; }
 
     /// <summary>
     /// Nur für ÖNorm-LVs: Normspezifische Informationen.
     /// </summary>
-    public OenormLvDetails OenormLvDetails { get; set; }
+    public OenormLvDetails? OenormLvDetails { get; set; }
 
     /// <summary>
     /// Nur für GAEB-LVs: Normspezifische Informationen.
     /// </summary>
-    public GaebLvDetails GaebLvDetails { get; set; }
+    public GaebLvDetails? GaebLvDetails { get; set; }
 
     /// <summary>
     /// Enthält Binärdaten für Grafiken.
     /// </summary>
-    public LvBildDetails BildDetails { get; set; }
+    public LvBildDetails? BildDetails { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Knoten der obersten Ebene (z.B. Leistungsgruppen) einschließlich untergeordneter Knoten und Positionen.
     /// </summary>
-    public List<LvKnoten> RootKnotenListe { get; set; }
+    public List<LvKnoten>? RootKnotenListe { get; set; }
 
     /// <summary>
     /// Nur für GAEB: Positionen auf der obersten Ebene (z.B. Hinweistexte).
     /// </summary>
-    public List<LvPosition> RootPositionen { get; set; }
+    public List<LvPosition>? RootPositionen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Wurzelkalkulationen einschließlich untergeordneter Kalkulationen.
     /// </summary>
-    public List<Kalkulation> RootKalkulationen { get; set; }
+    public List<Kalkulation>? RootKalkulationen { get; set; }
 
     /// <summary>
     /// Die Rechenergebnisse auf oberster Ebene. 
     /// </summary>
-    public LvItemErgebnisse Ergebnisse { get; set; }
+    public LvItemErgebnisse? Ergebnisse { get; set; }
 }
 
 /// <summary>
@@ -3441,12 +3443,12 @@ public class GarantierteAngebotssummeGruppe
     /// <summary>
     /// Die Nummer (einstelliger Code) der Gruppe. Muss für das LV eindeutig sein und identifiziert die Gruppe.
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Beschreibende Bezeichnung der Gruppe.
     /// </summary>
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -3458,7 +3460,7 @@ public class LvDetails : BaseObject
 
     public DateTime? Auftragsdatum { get; set; }
 
-    public string Auftragsnummer { get; set; }
+    public string? Auftragsnummer { get; set; }
 
     public DateTime? Baubeginn { get; set; }
 
@@ -3511,21 +3513,21 @@ public class LvDetails : BaseObject
     /// Die Standardwährung des LVs (wenn noch nicht im Projekt vorhanden, wird zuerst die Währung aus den Stammdaten
     /// ins Projekt kopiert).
     /// </summary>
-    public string Währung { get; set; }
+    public string? Währung { get; set; }
 
     /// <summary>
     /// Die Standard-USt des LVs (wenn noch nicht im Projekt vorhanden, wird zuerst die USt aus den Stammdaten
     /// ins Projekt kopiert).  
     /// </summary>
-    public string Umsatzsteuer { get; set; }
+    public string? Umsatzsteuer { get; set; }
 
-    public string Ausschreibungsart { get; set; }
+    public string? Ausschreibungsart { get; set; }
 
-    public string Sparte { get; set; }
+    public string? Sparte { get; set; }
 
     [Obsolete("Wird künftig nicht mehr unterstützt." +
               " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
-    public string Vorhaben { get; set; }
+    public string? Vorhaben { get; set; }
 
     [Obsolete("Wird künftig nicht mehr unterstützt." +
               " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
@@ -3538,86 +3540,86 @@ public class LvDetails : BaseObject
     /// <summary>
     /// Die IDs der Gliederungskataloge, die dem LV zugeordnet sind.
     /// </summary>
-    public List<Guid> GliederungskatalogIds { get; set; }
+    public List<Guid>? GliederungskatalogIds { get; set; }
 
     /// <summary>
     /// Die Preisanteil-Arten, die in diesem LV unterstützt werden.
     /// </summary>
-    public List<PreisanteilInfo> PreisanteilInfos { get; set; }
+    public List<PreisanteilInfo>? PreisanteilInfos { get; set; }
 
     /// <summary>
     /// Die möglichen Variantenzusammenstellungen (ohne die implizit
     /// definierte Standard-Variantenzusammenstellung).
     /// </summary>
-    public List<Variantenzusammenstellung> Variantenzusammenstellungen { get; set; }
+    public List<Variantenzusammenstellung>? Variantenzusammenstellungen { get; set; }
 
     /// <summary>
     /// Die möglichen Zuordnungskennzeichen.
     /// </summary>
-    public List<Zuordnungskennzeichen> ZuordnungskennzeichenList { get; set; }
+    public List<Zuordnungskennzeichen>? ZuordnungskennzeichenList { get; set; }
 
     /// <summary>
     /// Die Nummer der aktiven Variantenzusammenstellung (oder null im Fall der
     /// Standard-Variantenzusammenstellung).
     /// </summary>
-    public string AktiveVariantenzusammenstellungNummer { get; set; }
+    public string? AktiveVariantenzusammenstellungNummer { get; set; }
 
     /// <summary>
     /// Aufschläge/Nachlässe, die auf der LV-Ebene definiert sind.
     /// </summary>
-    public NachlassInfo NachlassInfo { get; set; }
+    public NachlassInfo? NachlassInfo { get; set; }
 
     /// <summary>
     /// (Detailinfo) Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
     /// </summary>
-    public List<GarantierteAngebotssummeGruppe> GarantierteAngebotssummeGruppen { get; set; }
+    public List<GarantierteAngebotssummeGruppe>? GarantierteAngebotssummeGruppen { get; set; }
 
     /// <summary>
     /// (Detailinfo) Verweist auf die Adressen, die dem LV zugeordnet sind (inklusive Adressrollen).
     /// </summary>
-    public List<LvZugeordneteAdresse> ZugeordneteAdressen { get; set; }
+    public List<LvZugeordneteAdresse>? ZugeordneteAdressen { get; set; }
 
     /// <summary>
     /// Globale Hilfsberechnungen für die Mengenermittlung. Diese Liste wird immer nur mit den zu der angeforderten
     /// Mengenart passenden Hilfsberechnungen befüllt. 
     /// </summary>
-    public List<Hilfsberechnung> GlobaleHilfsberechungen { get; set; }
+    public List<Hilfsberechnung>? GlobaleHilfsberechungen { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung für das LV.
     /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungLV { get; set; }
+    public Zahlungsbedingung? ZahlungsbedingungLV { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung für die Abschlagrechnung.
     /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungAbschlagsrechnung { get; set; }
+    public Zahlungsbedingung? ZahlungsbedingungAbschlagsrechnung { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung für die Schlussrechnung.
     /// </summary>
-    public Zahlungsbedingung ZahlungsbedingungSchlussrechnung { get; set; }
+    public Zahlungsbedingung? ZahlungsbedingungSchlussrechnung { get; set; }
 
     /// <summary>
     /// Die formatierten Text (z.B. Notiz), die auf der LV-Wurzelebene festgelegt sind.
     /// </summary>
-    public LvItemFormatierteTexte RootFormatierteTexte { get; set; }
+    public LvItemFormatierteTexte? RootFormatierteTexte { get; set; }
 
     /// <summary>
     /// Notiz (als formatierter Text), die dem LV zugeordnet ist.
     /// </summary>
-    public string LvNotiz { get; set; }
+    public string? LvNotiz { get; set; }
 
     /// <summary>
     /// Die Nummer der Kostenstelle, die dem LV zugeordnet ist. Im Falle aktiver Finance-Integration ist das
     /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
     /// </summary>
-    public string KostenstelleNummer { get; set; }
+    public string? KostenstelleNummer { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -3626,21 +3628,21 @@ public class LvDetails : BaseObject
 /// </summary>
 public class Zahlungsbedingung : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 
-    public Fälligkeit Fälligkeit { get; set; }
+    public Fälligkeit? Fälligkeit { get; set; }
 
     public int? Postlaufzeit { get; set; }
 
-    public Skonto Skonto1 { get; set; }
+    public Skonto? Skonto1 { get; set; }
 
-    public Skonto Skonto2 { get; set; }
+    public Skonto? Skonto2 { get; set; }
 
-    public Skonto Skonto3 { get; set; }
+    public Skonto? Skonto3 { get; set; }
 }
 
 /// <summary>
@@ -3659,7 +3661,7 @@ public class Fälligkeit : BaseObject
 /// </summary>
 public class Skonto : BaseObject
 {
-    public Fälligkeit Fälligkeit { get; set; }
+    public Fälligkeit? Fälligkeit { get; set; }
 
     public decimal? Prozentsatz { get; set; }
 }
@@ -3693,7 +3695,7 @@ public class LvBildDetails : BaseObject
     /// <summary>
     /// Die Bild-Daten des LV-Bildes, falls vorhanden (sonst null).
     /// </summary>
-    public Bild Bild { get; set; }
+    public Bild? Bild { get; set; }
 }
 
 /// <summary>
@@ -3704,7 +3706,7 @@ public class Bild : BaseObject
     /// <summary>
     /// Name des Bilds (üblicherweise Dateiname ohne Verzeichnispfad)
     /// </summary>
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// Das Bildformat (png, jpeg, svg oder gif)
@@ -3715,7 +3717,7 @@ public class Bild : BaseObject
     /// <summary>
     /// Die Bilddaten
     /// </summary>
-    public byte[] Daten { get; set; }
+    public byte[]? Daten { get; set; }
 }
 
 public enum BildFormat
@@ -3728,29 +3730,29 @@ public enum BildFormat
 
 public class Variantenzusammenstellung : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
-    public string Beschreibung { get; set; }
+    public string? Beschreibung { get; set; }
 }
 
 public class Zuordnungskennzeichen : BaseObject
 {
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// Liste mit Varianten.
     /// </summary>
-    public List<Variante> Varianten { get; set; }
+    public List<Variante>? Varianten { get; set; }
 
     /// <summary>
     /// Ordnet einer Variantenzusammenstellung (identifiziert über die Nummer der Variantenzusammenstellung
     /// eine Variante zu (identifiziert über die Nummer der Variante).  
     /// </summary>
-    public Dictionary<string, int> VariantenzusammenstellungToVariante { get; set; }
+    public Dictionary<string, int>? VariantenzusammenstellungToVariante { get; set; }
 }
 
 public class Variante : BaseObject
@@ -3760,7 +3762,7 @@ public class Variante : BaseObject
     /// </summary>
     public int Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 public enum LvStatus
@@ -3836,7 +3838,7 @@ public class OenormLvDetails : BaseObject
 
     public bool NachlässeAufLeistungsverzeichnis { get; set; }
 
-    public string Vorhaben { get; set; }
+    public string? Vorhaben { get; set; }
 
     public int? Alternativangebotsnummer { get; set; }
 
@@ -3848,31 +3850,31 @@ public class OenormLvDetails : BaseObject
 /// </summary>
 public class GaebLvDetails : BaseObject
 {
-    public List<GaebGliederungsebene> Gliederungsebenen { get; set; }
+    public List<GaebGliederungsebene>? Gliederungsebenen { get; set; }
 
-    public string Füllzeichen { get; set; }
+    public string? Füllzeichen { get; set; }
 
     public GaebVergabeart? GaebVergabeArt { get; set; }
 
     /// <summary>
     /// Vergabenummer des Auftraggebers
     /// </summary>
-    public string VergabenummerAG { get; set; }
+    public string? VergabenummerAG { get; set; }
 
     /// <summary>
     /// Vergabenummer des Auftragnehmers
     /// </summary>
-    public string VergabenummerAN { get; set; }
+    public string? VergabenummerAN { get; set; }
 
-    public string DVNummerAG { get; set; }
+    public string? DVNummerAG { get; set; }
 
-    public string Abgabeort { get; set; }
+    public string? Abgabeort { get; set; }
 
-    public string Zeiteinheit { get; set; }
+    public string? Zeiteinheit { get; set; }
 
     public bool BieterkommentareErlaubt { get; set; }
 
-    public string LeitwegId { get; set; }
+    public string? LeitwegId { get; set; }
 }
 
 /// <summary>
@@ -3940,13 +3942,13 @@ public class GaebGliederungsebene : BaseObject
 {
     public GaebGliederungsebeneTyp? Typ { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     public int? Stellenzahl { get; set; }
 
     public bool IstNumerisch { get; set; }
 
-    public string Startwert { get; set; }
+    public string? Startwert { get; set; }
 
     public int? Schrittweite { get; set; }
 }
@@ -4055,15 +4057,15 @@ public class NewLvItemInfo : BaseObject
     /// </summary>
     public LvItemTyp ItemTyp { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Stichwort { get; set; }
+    public string? Stichwort { get; set; }
 
-    public LvItemFormatierteTexte FormatierteTexte { get; set; }
+    public LvItemFormatierteTexte? FormatierteTexte { get; set; }
 
-    public string Teilleistungsnummer { get; set; }
+    public string? Teilleistungsnummer { get; set; }
 
-    public string Markierungskennzeichen { get; set; }
+    public string? Markierungskennzeichen { get; set; }
 
     public Herkunftskennzeichen? Herkunftskennzeichen { get; set; }
 
@@ -4073,13 +4075,13 @@ public class NewLvItemInfo : BaseObject
 
     public bool Schreibgeschützt { get; set; }
 
-    public LvItemLbInfo LbInfo { get; set; }
+    public LvItemLbInfo? LbInfo { get; set; }
 
     public int? Variante { get; set; }
 
-    public string Zuordnungskennzeichen { get; set; }
+    public string? Zuordnungskennzeichen { get; set; }
 
-    public NachlassInfo NachlassInfo { get; set; }
+    public NachlassInfo? NachlassInfo { get; set; }
 
     /// <summary>
     /// Entfällt-Flag. Nur für GAEB.
@@ -4089,7 +4091,7 @@ public class NewLvItemInfo : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -4178,9 +4180,9 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// </summary>
     public Guid? ParentKnotenId { get; set; }
 
-    public string Einheit { get; set; }
+    public string? Einheit { get; set; }
 
-    public string Umsatzsteuer { get; set; }
+    public string? Umsatzsteuer { get; set; }
 
     public LvPositionsart? Positionsart { get; set; }
 
@@ -4255,19 +4257,19 @@ public class NewLvPositionInfo : NewLvItemInfo
 
     public bool LvMengeSchreibgeschützt { get; set; }
 
-    public string Mehrfachverwendung { get; set; }
+    public string? Mehrfachverwendung { get; set; }
 
-    public string Stichwortluecke { get; set; }
+    public string? Stichwortluecke { get; set; }
 
     /// <summary>
     /// Die auf der Position festgelegten Preisanteilbeträge.
     /// </summary>
-    public Dictionary<string, Money> Preisanteile { get; set; }
+    public Dictionary<string, Money>? Preisanteile { get; set; }
 
     /// <summary>
     /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
     /// </summary>
-    public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
+    public List<LvPositionGliederungsKnoten>? GliederungsKnotenList { get; set; }
 
     /// <summary>
     /// Nur ÖNorm
@@ -4308,7 +4310,7 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// Nur für ÖNORM-LVs ab Version A 2063:2021: Nummer der <see cref="GarantierteAngebotssummeGruppe"/>,
     /// der diese Position zugeordnet ist (optional).
     /// </summary>
-    public string GarantierteAngebotssummeNummer { get; set; }
+    public string? GarantierteAngebotssummeNummer { get; set; }
 
     /// <summary>
     /// Nur für ÖNORM-LVs bis Version A 2063:2015: Die Markierung "Garantierte Angebotssumme". 
@@ -4334,13 +4336,13 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// <summary>
     /// Nur für GAEB: Liste von zu bezuschlagenden Positionen (für Zuschlagspositionen der Art "GemäßListe").
     /// </summary>
-    public List<ZuBezuschlagendePosition> ZuBezuschlagendePositionen { get; set; }
+    public List<ZuBezuschlagendePosition>? ZuBezuschlagendePositionen { get; set; }
 
     /// <summary>
     /// Nur für GAEB: Liste von Positionen, die dieser Position untergeordnet sind (Unterbeschreibungen unter
     /// einer Leistungsposition oder Ausführungsbeschreibungstexte unter einer Ausführungsbeschreibung).
     /// </summary>
-    public List<LvPosition> Unterpositionen { get; set; }
+    public List<LvPosition>? Unterpositionen { get; set; }
 }
 
 /// <summary>
@@ -4386,40 +4388,40 @@ public class LvItemBase : BaseObject
     /// <summary>
     /// Die lokale Nummer (z.B. "03").
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
     /// <summary>
     /// Die vollständige Nummer (z.B. "01.04.03").
     /// </summary>
-    public string NummerKomplett { get; set; }
+    public string? NummerKomplett { get; set; }
 
     /// <summary>
     /// Das Stichwort. Für GAEB kann dieser String nur ausgelesen werden.
     /// Zum Manipulieren gibt es FormatierteTexte.Kurztext.
     /// </summary>
-    public string Stichwort { get; set; }
+    public string? Stichwort { get; set; }
 
     /// <summary>
     /// (Detailinfo) Objekt mit allen formatierten Texten (z.B. Langtext).
     /// </summary>
-    public LvItemFormatierteTexte FormatierteTexte { get; set; }
+    public LvItemFormatierteTexte? FormatierteTexte { get; set; }
 
-    public string Teilleistungsnummer { get; set; }
+    public string? Teilleistungsnummer { get; set; }
 
-    public string Markierungskennzeichen { get; set; }
+    public string? Markierungskennzeichen { get; set; }
 
     /// <summary>
     /// Nur für ÖNorm: Das Herkunftskennzeichen (gibt an, ob es einen LB-Bezug gibt).
     /// </summary>
     public Herkunftskennzeichen Herkunftskennzeichen { get; set; } = Herkunftskennzeichen.LB;
 
-    public LvItemLbInfo LbInfo { get; set; }
+    public LvItemLbInfo? LbInfo { get; set; }
 
     /// <summary>
     /// Enthält berechnete Werte. Ist nur befüllt, wenn das gesamte LV abgerufen wird
     /// (per /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}).
     /// </summary>
-    public LvItemErgebnisse Ergebnisse { get; set; }
+    public LvItemErgebnisse? Ergebnisse { get; set; }
 
     public bool Schreibgeschützt { get; set; }
 
@@ -4437,12 +4439,12 @@ public class LvItemBase : BaseObject
     /// <summary>
     /// Fall Variante befüllt ist: Das Zuordnungskennzeichen, zu dem die Variante gehört.
     /// </summary>
-    public string Zuordnungskennzeichen { get; set; }
+    public string? Zuordnungskennzeichen { get; set; }
 
     /// <summary>
     /// Aufschläge/Nachlässe, falls vorhanden.
     /// </summary>
-    public NachlassInfo NachlassInfo { get; set; }
+    public NachlassInfo? NachlassInfo { get; set; }
 
     /// <summary>
     /// Entfällt-Flag. Nur für GAEB.
@@ -4452,7 +4454,7 @@ public class LvItemBase : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public class NachlassInfo : BaseObject
@@ -4460,13 +4462,13 @@ public class NachlassInfo : BaseObject
     /// <summary>
     /// Aufschläge/Nachlässe pro Preisanteil (idertifiziert über den Preisanteil-Code, z.B. "L" für Lohn).
     /// </summary>
-    public Dictionary<string, Nachlass> PreisanteilNachlässe { get; set; }
+    public Dictionary<string, Nachlass>? PreisanteilNachlässe { get; set; }
 
     /// <summary>
     /// Falls Aufschläge/Nachlässe auf dem Einheitspreis unterstützt werden, kommt diese
     /// Eigenschaft zum Einsatz.
     /// </summary>
-    public Nachlass EinheitspreisNachlass { get; set; }
+    public Nachlass? EinheitspreisNachlass { get; set; }
 }
 
 public class Nachlass : BaseObject
@@ -4490,40 +4492,40 @@ public class LvItemFormatierteTexte : BaseObject
     /// <summary>
     /// Der Langtext (XHTML).
     /// </summary>
-    public string Langtext { get; set; }
+    public string? Langtext { get; set; }
 
     /// <summary>
     /// Die Baubeschreibung (XHTML).
     /// </summary>
-    public string Baubeschreibung { get; set; }
+    public string? Baubeschreibung { get; set; }
 
     /// <summary>
     /// Die Notiz (XHTML).
     /// </summary>
-    public string Notiz { get; set; }
+    public string? Notiz { get; set; }
 
     /// <summary>
     /// Nur für GAEB-LVs: Der Kurztext (XHTML).
     /// Für ÖNorm-LVs wird diese Property ignoriert, da dort für Kurztexte
     /// keine Formatierungen unterstützt werden. 
     /// </summary>
-    public string Kurztext { get; set; }
+    public string? Kurztext { get; set; }
 }
 
 public class LvItemLbInfo : BaseObject
 {
-    public string LbKennung { get; set; }
+    public string? LbKennung { get; set; }
     public int? LbVersion { get; set; }
     public DateTime? LbVersionsDatum { get; set; }
 
-    public string ErgLbKennung { get; set; }
+    public string? ErgLbKennung { get; set; }
     public int? ErgLbVersion { get; set; }
     public DateTime? ErgLbVersionsDatum { get; set; }
 
-    public string LbLgNummer { get; set; }
-    public string LbUlgNummer { get; set; }
-    public string LbGtNummer { get; set; }
-    public string LbPosNummer { get; set; }
+    public string? LbLgNummer { get; set; }
+    public string? LbUlgNummer { get; set; }
+    public string? LbGtNummer { get; set; }
+    public string? LbPosNummer { get; set; }
 
     public OnÄnderungsumfang? AenderungsUmfang { get; set; }
 }
@@ -4533,9 +4535,9 @@ public class LvItemLbInfo : BaseObject
 /// </summary>
 public class LvKnoten : LvItemBase
 {
-    public List<LvKnoten> Knoten { get; set; }
+    public List<LvKnoten>? Knoten { get; set; }
 
-    public List<LvPosition> Positionen { get; set; }
+    public List<LvPosition>? Positionen { get; set; }
 }
 
 public enum LvPositionsart
@@ -4568,9 +4570,9 @@ public enum LvPositionsart
 /// </summary>
 public class LvPosition : LvItemBase
 {
-    public string Einheit { get; set; }
+    public string? Einheit { get; set; }
 
-    public string Umsatzsteuer { get; set; }
+    public string? Umsatzsteuer { get; set; }
 
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
 
@@ -4636,19 +4638,19 @@ public class LvPosition : LvItemBase
 
     public bool LvMengeSchreibgeschützt { get; set; }
 
-    public string Mehrfachverwendung { get; set; }
+    public string? Mehrfachverwendung { get; set; }
 
-    public string Stichwortluecke { get; set; }
+    public string? Stichwortluecke { get; set; }
 
     /// <summary>
     /// Die auf der Position festgelegten Preisanteilbeträge.
     /// </summary>
-    public Dictionary<string, Money> Preisanteile { get; set; }
+    public Dictionary<string, Money>? Preisanteile { get; set; }
 
     /// <summary>
     /// Liste mit Gliederungsknoten, die der Position zugeordnet sind.
     /// </summary>
-    public List<LvPositionGliederungsKnoten> GliederungsKnotenList { get; set; }
+    public List<LvPositionGliederungsKnoten>? GliederungsKnotenList { get; set; }
 
     /// <summary>
     /// Nur ÖNorm
@@ -4689,7 +4691,7 @@ public class LvPosition : LvItemBase
     /// Nur für ÖNORM-LVs ab Version A 2063:2021: Nummer der <see cref="GarantierteAngebotssummeGruppe"/>,
     /// der diese Position zugeordnet ist (optional).
     /// </summary>
-    public string GarantierteAngebotssummeNummer { get; set; }
+    public string? GarantierteAngebotssummeNummer { get; set; }
 
     /// <summary>
     /// Nur für ÖNORM-LVs bis Version A 2063:2015: Die Markierung "Garantierte Angebotssumme". 
@@ -4715,13 +4717,13 @@ public class LvPosition : LvItemBase
     /// <summary>
     /// Nur für GAEB: Liste von zu bezuschlagenden Positionen (für Zuschlagspositionen der Art "GemäßListe").
     /// </summary>
-    public List<ZuBezuschlagendePosition> ZuBezuschlagendePositionen { get; set; }
+    public List<ZuBezuschlagendePosition>? ZuBezuschlagendePositionen { get; set; }
 
     /// <summary>
     /// Nur für GAEB: Liste von Positionen, die dieser Position untergeordnet sind (Unterbeschreibungen unter
     /// einer Leistungsposition oder Ausführungsbeschreibungstexte unter einer Ausführungsbeschreibung).
     /// </summary>
-    public List<LvPosition> Unterpositionen { get; set; }
+    public List<LvPosition>? Unterpositionen { get; set; }
 }
 
 /// <summary>
@@ -4763,27 +4765,27 @@ public class LvPositionGliederungsKnoten : BaseObject
 
 public class LvItemErgebnisse : BaseObject
 {
-    public Money Einheitspreis { get; set; }
+    public Money? Einheitspreis { get; set; }
 
     /// <summary>
     /// Gesamtbetrag (netto) inkl. Aufschläge/Nachlässe.
     /// </summary>
-    public Money Betrag { get; set; }
+    public Money? Betrag { get; set; }
 
     /// <summary>
     /// Gesamtbetrag (brutto) inkl. Aufschläge/Nachlässe.
     /// </summary>
-    public Money BetragBrutto { get; set; }
+    public Money? BetragBrutto { get; set; }
 
     /// <summary>
     /// Gesamtbetrag (netto) ohne Aufschläge/Nachlässe.
     /// </summary>
-    public Money BetragInklAN { get; set; }
+    public Money? BetragInklAN { get; set; }
 
     /// <summary>
     /// Gesamtbetrag (brutto) ohne Aufschläge/Nachlässe.
     /// </summary>
-    public Money BetragBruttoInklAN { get; set; }
+    public Money? BetragBruttoInklAN { get; set; }
 
     /// <summary>
     /// Die für die Berechnung verwendete Menge.
@@ -4797,9 +4799,9 @@ public class LvItemErgebnisse : BaseObject
 /// </summary>
 public class LeistungsverzeichnisMitImportMeldungen : BaseObject
 {
-    public Leistungsverzeichnis ImportieresLeistungsverzeichnis { get; set; }
+    public Leistungsverzeichnis? ImportieresLeistungsverzeichnis { get; set; }
 
-    public List<ResultInfo> ImporterMeldungen { get; set; }
+    public List<ResultInfo>? ImporterMeldungen { get; set; }
 }
 
 /// <summary>
@@ -4810,7 +4812,7 @@ public class ResultInfo : BaseObject
     /// <summary>
     /// Meldungstext (z.B. Fehlermeldung).
     /// </summary>
-    public string Text { get; set; }
+    public string? Text { get; set; }
 
     /// <summary>
     /// Schweregrad der Meldung.
@@ -4820,12 +4822,12 @@ public class ResultInfo : BaseObject
     /// <summary>
     /// Wert der betroffenen Property, sofern relevant.
     /// </summary>
-    public object Wert { get; set; }
+    public object? Wert { get; set; }
 
     /// <summary>
     /// Zusätzliche meldungsspezifische Informationen.
     /// </summary>
-    public object Tag { get; set; }
+    public object? Tag { get; set; }
 }
 
 /// <summary>
@@ -4847,7 +4849,7 @@ public class ImportLvVonServerpfad : BaseObject
     /// <summary>
     /// Pfad der zu importierenden Datei (muss vom Business Host erreichbar sein).
     /// </summary>
-    public string Dateipfad { get; set; }
+    public string? Dateipfad { get; set; }
 
     /// <summary>
     /// Die gewünschte LV-Art, z.B. Ausschreibung (= Default). Für Success X ist nur
@@ -4866,12 +4868,12 @@ public class ImportLvAusByteArrayInfo : BaseObject
     /// <summary>
     /// Der Inhalt der zu importierenden Datei.
     /// </summary>
-    public byte[] Inhalt { get; set; }
+    public byte[]? Inhalt { get; set; }
 
     /// <summary>
     /// Der Name der zu importierenden Datei. Wird benötigt, um anhand der Endung die Norm zu bestimmen.
     /// </summary>
-    public string Dateiname { get; set; }
+    public string? Dateiname { get; set; }
 
     /// <summary>
     /// Die gewünschte LV-Art, z.B. Ausschreibung (= Default). Für Success X ist nur
@@ -4891,20 +4893,20 @@ public class Aufmaßblatt : BaseObject
     public Guid Id { get; set; }
 
     /// <summary>
-    /// Die Mengenart, für die dieses Aufmaßblatt relevant ist. Wird nur Leseoperationen befüllt und enhält
+    /// Die Mengenart, für die dieses Aufmaßblatt relevant ist. Wird nur Leseoperationen befüllt und enthält
     /// immer die Mengenart, die bei der relevanten GET-Operation mitgegeben wird. Wird bei Schreiboperationen
     /// ignoriert.
     /// </summary>
     public MengenArt? MengenArt { get; set; }
 
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die in diesem Aufmaßblatt enthaltenen Hilfsberechnungen.
     /// </summary>
-    public List<Hilfsberechnung> Hilfsberechnungen { get; set; }
+    public List<Hilfsberechnung>? Hilfsberechnungen { get; set; }
 }
 
 public enum DBKostenart
@@ -4944,21 +4946,21 @@ public enum RechnungsArt
 
 public class NewRechnungInfo : BaseObject
 {
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 public class Rechnung : BaseObject
 {
     public Guid Id { get; set; }
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
     public DateTime? Rechnungsdatum { get; set; }
-    public string ExterneRechnungsnummer { get; set; }
+    public string? ExterneRechnungsnummer { get; set; }
     public DateTime? Eingangsdatum { get; set; }
     public DateTime? GesendetAm { get; set; }
     public RechnungsStatus? Status { get; set; }
-    public List<Zahlung> Zahlungen { get; set; }
+    public List<Zahlung>? Zahlungen { get; set; }
     public int? LaufendeNummerKapsel { get; set; }
     public RechnungsArt? Art { get; set; }
     public decimal? ProzentDerAuftragssumme { get; set; }
@@ -4974,23 +4976,23 @@ public class Rechnung : BaseObject
     /// <summary>
     /// Die Zahlungsbedingung dieser Rechnung.
     /// </summary>
-    public Zahlungsbedingung Zahlungsbedingung { get; set; }
+    public Zahlungsbedingung? Zahlungsbedingung { get; set; }
 
     /// <summary>
     /// Enthält berechnete Werte dieser Rechnung (ist auch beim Abrufen aller Rechnungen befüllt).
     /// </summary>
-    public RechnungErgebnisse Ergebnisse { get; set; }
+    public RechnungErgebnisse? Ergebnisse { get; set; }
     
     /// <summary>
     /// (Detailinfo) Ist nur befüllt, wenn die kaufmännische Integration (Finance-Anbindung) aktiv ist, nicht aber
     /// das Rechnungsausgangsbuch. Entspricht dem Inhalt des Registers "Kontierung" in der Rechnungsverwaltung.
     /// </summary>
-    public RechnungKontierung Kontierung { get; set; }
+    public RechnungKontierung? Kontierung { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue> CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -5003,27 +5005,27 @@ public class RechnungKontierung
     /// <summary>
     /// Projekt-/Auftrags-Kostenstelle (in Finance)
     /// </summary>
-    public string ProjektAuftragsKostenstelleNummer { get; set; }
+    public string? ProjektAuftragsKostenstelleNummer { get; set; }
 
     /// <summary>
     /// Rechnungskostenstelle (in Finance)
     /// </summary>
-    public string RechnungsKostenstelleNummer { get; set; }
+    public string? RechnungsKostenstelleNummer { get; set; }
 
     /// <summary>
     /// Debitor (in Finance)
     /// </summary>
-    public string DebitorNummer { get; set; }
+    public string? DebitorNummer { get; set; }
 
     /// <summary>
     /// Anzahlungsvorgang (in Finance)
     /// </summary>
-    public string AnzahlungsvorgangNummer { get; set; }
+    public string? AnzahlungsvorgangNummer { get; set; }
 
     /// <summary>
     /// Erlöskonto (in Finance)
     /// </summary>
-    public string ErlöskontoNummer { get; set; }
+    public string? ErlöskontoNummer { get; set; }
 
     public DateTime? Buchungsdatum { get; set; }
 }
@@ -5080,24 +5082,24 @@ public class Zahlung : BaseObject
     public DateTime? Zahlungsdatum { get; set; }
     public decimal? Zahlbetrag { get; set; }
     public decimal? Skontobetrag { get; set; }
-    public string Bemerkung { get; set; }
+    public string? Bemerkung { get; set; }
 }
 
 public class AbrechnungsMerkmal : BaseObject
 {
     public Guid Id { get; set; }
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
-    public string BezeichnungKomplett { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
+    public string? BezeichnungKomplett { get; set; }
     public bool IsAuswertungsKennzeichen { get; set; }
-    public List<AbrechnungsMerkmal> Merkmale { get; set; }
+    public List<AbrechnungsMerkmal>? Merkmale { get; set; }
 }
 
 public class Leistungszeitraum : BaseObject
 {
     public Guid Id { get; set; }
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
     public DateTime? Beginn { get; set; }
     public DateTime? Ende { get; set; }
 }
@@ -5121,11 +5123,11 @@ public class Positionsblock : BaseObject
     /// <summary>
     /// Die vollständige Positionsnummer.
     /// </summary>
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
 
-    public string NummerKorrigiert { get; set; }
-    public string Kurztext { get; set; }
-    public string Einheit { get; set; }
+    public string? NummerKorrigiert { get; set; }
+    public string? Kurztext { get; set; }
+    public string? Einheit { get; set; }
 
     public Guid? AufmaßblattId { get; set; }
     public Guid? LeistungszeitraumId { get; set; }
@@ -5134,9 +5136,9 @@ public class Positionsblock : BaseObject
     public decimal? Menge { get; set; }
     public decimal? MengeKorrigiert { get; set; }
 
-    public List<Aufmaßzeile> Aufmaßzeilen { get; set; }
+    public List<Aufmaßzeile>? Aufmaßzeilen { get; set; }
 
-    public List<Guid> MerkmalIds { get; set; }
+    public List<Guid>? MerkmalIds { get; set; }
 
     public bool? ErzeugtInKorrektur { get; set; }
 }
@@ -5210,17 +5212,17 @@ public class Aufmaßzeile : BaseObject
     public AufmaßzeilenArt Art { get; set; }
 
     public AufmaßzeilenArt? ArtKorrigiert { get; set; }
-    public string InternerKommentar { get; set; }
-    public string Inhalt { get; set; }
-    public string InhaltKorrigiert { get; set; }
-    public string Variable { get; set; }
-    public string Erläuterung { get; set; }
-    public string AdresseVon { get; set; }
-    public string AdresseBis { get; set; }
+    public string? InternerKommentar { get; set; }
+    public string? Inhalt { get; set; }
+    public string? InhaltKorrigiert { get; set; }
+    public string? Variable { get; set; }
+    public string? Erläuterung { get; set; }
+    public string? AdresseVon { get; set; }
+    public string? AdresseBis { get; set; }
     public decimal? Faktor { get; set; }
     public decimal? FaktorKorrigiert { get; set; }
-    public Formel Formel { get; set; }
-    public Formel FormelKorrigiert { get; set; }
+    public Formel? Formel { get; set; }
+    public Formel? FormelKorrigiert { get; set; }
     public bool? ErzeugtInKorrektur { get; set; }
     
     /// <summary>
@@ -5258,11 +5260,11 @@ public class Hilfsberechnung : BaseObject
 
     public HilfszeilenArt? ArtKorrigiert { get; set; }
 
-    public string Inhalt { get; set; }
-    public string InhaltKorrigiert { get; set; }
-    public string Variable { get; set; }
-    public Formel Formel { get; set; }
-    public Formel FormelKorrigiert { get; set; }
+    public string? Inhalt { get; set; }
+    public string? InhaltKorrigiert { get; set; }
+    public string? Variable { get; set; }
+    public Formel? Formel { get; set; }
+    public Formel? FormelKorrigiert { get; set; }
     public bool? ErzeugtInKorrektur { get; set; }
 
     public bool Geprüft { get; set; }
@@ -5280,14 +5282,14 @@ public enum HilfszeilenArt
 public class Formel : BaseObject
 {
     public int Id { get; set; }
-    public List<FormelParameter> Params { get; set; }
+    public List<FormelParameter>? Params { get; set; }
 }
 
 public class FormelParameter : BaseObject
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
     public decimal? Value { get; set; }
-    public string Variable { get; set; }
+    public string? Variable { get; set; }
 }
 
 #endregion Mengenermittlung
@@ -5308,7 +5310,7 @@ public class CustomPropertyValue : BaseObject
     /// <summary>
     /// Der Wert, falls dieser als String darstellbar ist.
     /// </summary>
-    public string StringValue { get; set; }
+    public string? StringValue { get; set; }
 
     /// <summary>
     /// Der Wert, falls dieser als Decimal darstellbar ist.
@@ -5343,13 +5345,13 @@ public class CustomPropertyValue : BaseObject
     /// <summary>
     /// Der Wert, falls dieser als Geo-Koordinate darstellbar ist.
     /// </summary>
-    public GeoCoordinate GeoCoordinateValue { get; set; }
+    public GeoCoordinate? GeoCoordinateValue { get; set; }
 
     /// <summary>
     /// Liefert den Wert der Individualeigenschaft als object-Instanz.
     /// </summary>
     /// <returns>Wert (kann null sein)</returns>
-    public object GetValueAsObject()
+    public object? GetValueAsObject()
         => ValueType switch
         {
             CustomPropertyType.Boolean => BooleanValue,
@@ -5398,19 +5400,13 @@ public enum CustomPropertyType
 /// <summary>
 /// Ein einfacher Geldbetrag (inklusive Währung).
 /// </summary>
-public class SimpleMoney : BaseObject
+public class SimpleMoney(string? currency, decimal? value) : BaseObject
 {
-    public SimpleMoney(string currency, decimal? value)
-    {
-        Currency = currency;
-        Value = value;
-    }
-
     [JsonProperty("cur")]
-    public string Currency { get; private set; }
+    public string? Currency { get; private set; } = currency;
 
     [JsonProperty("val")]
-    public decimal? Value { get; private set; }
+    public decimal? Value { get; private set; } = value;
 
     public override string ToString()
     {
@@ -5432,18 +5428,18 @@ public class Money : Collection<SimpleMoney>
         Add(currency, value);
     }
 
-    public static Money FromValues(IEnumerable<(string Currency, decimal? Value)> values)
+    public static Money? FromValues(IEnumerable<(string Currency, decimal? Value)>? values)
     {
         if (values == null)
         {
             return null;
         }
 
-        Money result = null;
+        Money? result = null;
 
         foreach (var betrag in values)
         {
-            result ??= new Money();
+            result ??= [];
             result.Add(betrag.Currency, betrag.Value);
         }
 
@@ -5459,10 +5455,19 @@ public class Money : Collection<SimpleMoney>
     /// Liefert den an erster Stelle eingefügten Geldbetrag. Normalerweise gibt es genau einen Geldbetrag, außer
     /// im Mehrwährungsfall. Wenn es keinen Geldbetrag gibt, wird null zurückgegeben.
     /// </summary>
+    [JsonIgnore]
     public decimal? FirstValue
     {
         get => this.FirstOrDefault()?.Value;
-        set => this[0] = new SimpleMoney(this[0].Currency, value);
+        set
+        {
+            if (Count == 0)
+            {
+                throw new InvalidOperationException("Cannot invoke 'FirstValue' setter on an empty Money object");
+            }
+
+            this[0] = new SimpleMoney(this[0].Currency, value);
+        }
     }
 
     public override string ToString()
@@ -5480,17 +5485,17 @@ public class Rechenwert : BaseObject
     /// <summary>
     /// Identifiziert den Wertetyp (z.B. "Lv_Listenpreis_Brutto").
     /// </summary>
-    public string Id { get; set; }
+    public string? Id { get; set; }
 
     public decimal? Wert { get; set; }
 
     public decimal? Basiswert { get; set; }
 
-    public string Währung { get; set; }
+    public string? Währung { get; set; }
 
-    public string PreisanteilCode { get; set; }
+    public string? PreisanteilCode { get; set; }
 
-    public string UmsatzsteuerCode { get; set; }
+    public string? UmsatzsteuerCode { get; set; }
 
     public int? ZuschlagIndex { get; set; }
 
@@ -5504,7 +5509,7 @@ public class Rechenwert : BaseObject
 
     public Guid? PositionId { get; set; }
 
-    public string Kostenart { get; set; }
+    public string? Kostenart { get; set; }
 
     public Guid? WarengruppeId { get; set; }
 
@@ -5519,12 +5524,12 @@ public class ProjektRechenwerte : BaseObject
     /// <summary>
     /// Die Rechenwerte, gegliedert nach LV-Art.
     /// </summary>
-    public Dictionary<LvArt, List<Rechenwert>> Werte { get; set; }
+    public Dictionary<LvArt, List<Rechenwert>>? Werte { get; set; }
 
     /// <summary>
     /// Rechenwerte aller Leistungsverzeichnisse.
     /// </summary>
-    public List<LvRechenwerte> LvWerte { get; set; }
+    public List<LvRechenwerte>? LvWerte { get; set; }
 }
 
 /// <summary>
@@ -5540,7 +5545,7 @@ public class LvRechenwerte : BaseObject
     /// <summary>
     /// Die Rechenwerte, gegliedert nach LV-Art.
     /// </summary>
-    public Dictionary<LvArt, List<Rechenwert>> Werte { get; set; }
+    public Dictionary<LvArt, List<Rechenwert>>? Werte { get; set; }
 }
 
 #region Bautagebuch
@@ -5555,41 +5560,41 @@ public class NewBautagesberichtInfo : BaseObject
 public class Bautagesbericht : BaseObject
 {
     public Guid Id { get; set; }
-    public string Nummer { get; set; }
+    public string? Nummer { get; set; }
     public DateTime? Datum { get; set; }
     public DateTime? ErfasstAm { get; set; }
-    public string ErstelltVon { get; set; }
-    public string Bauaufsicht { get; set; }
+    public string? ErstelltVon { get; set; }
+    public string? Bauaufsicht { get; set; }
     public bool? Geprueft { get; set; }
-    public string Notiz { get; set; }
+    public string? Notiz { get; set; }
 
-    public BautagesberichtArbeitszeit ArbeitsZeit { get; set; }
+    public BautagesberichtArbeitszeit? ArbeitsZeit { get; set; }
 
-    public BautagesberichtPausenzeit PausenZeit1 { get; set; }
-    public BautagesberichtPausenzeit PausenZeit2 { get; set; }
+    public BautagesberichtPausenzeit? PausenZeit1 { get; set; }
+    public BautagesberichtPausenzeit? PausenZeit2 { get; set; }
 
-    public BautagesberichtWetter WetterGanztags { get; set; }
-    public BautagesberichtWetter WetterMorgens { get; set; }
-    public BautagesberichtWetter WetterMittags { get; set; }
-    public BautagesberichtWetter WetterAbends { get; set; }
+    public BautagesberichtWetter? WetterGanztags { get; set; }
+    public BautagesberichtWetter? WetterMorgens { get; set; }
+    public BautagesberichtWetter? WetterMittags { get; set; }
+    public BautagesberichtWetter? WetterAbends { get; set; }
     public decimal? Luftfeuchtigkeit { get; set; }
 
-    public BautagesberichtSchlechtwetter SchlechtWetter1 { get; set; }
-    public BautagesberichtSchlechtwetter SchlechtWetter2 { get; set; }
+    public BautagesberichtSchlechtwetter? SchlechtWetter1 { get; set; }
+    public BautagesberichtSchlechtwetter? SchlechtWetter2 { get; set; }
 
-    public List<BautagesberichtSchnellerfassung> Arbeiter { get; set; }
-    public List<BautagesberichtSchnellerfassung> Angestellte { get; set; }
-    public List<BautagesberichtSchnellerfassung> Geraete { get; set; }
+    public List<BautagesberichtSchnellerfassung>? Arbeiter { get; set; }
+    public List<BautagesberichtSchnellerfassung>? Angestellte { get; set; }
+    public List<BautagesberichtSchnellerfassung>? Geraete { get; set; }
 
-    public List<BautagesberichtBauarbeitsschluessel> Bauarbeitsschluessel { get; set; }
+    public List<BautagesberichtBauarbeitsschluessel>? Bauarbeitsschluessel { get; set; }
 
-    public List<BautagesberichtBaustoffe> Baustoffe { get; set; }
+    public List<BautagesberichtBaustoffe>? Baustoffe { get; set; }
 
-    public string Leistungstext { get; set; }
-    public List<BautagesberichtLeistungsabrechnung> Leistungsabrechnung { get; set; }
+    public string? Leistungstext { get; set; }
+    public List<BautagesberichtLeistungsabrechnung>? Leistungsabrechnung { get; set; }
 
-    public string Regietext { get; set; }
-    public List<BautagesberichtLeistungsabrechnung> Regieabrechnung { get; set; }
+    public string? Regietext { get; set; }
+    public List<BautagesberichtLeistungsabrechnung>? Regieabrechnung { get; set; }
 }
 
 public class BautagesberichtArbeitszeit : BaseObject
@@ -5606,7 +5611,7 @@ public class BautagesberichtPausenzeit : BaseObject
 
 public class BautagesberichtWetter : BaseObject
 {
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
     public decimal? TemperaturMin { get; set; }
     public decimal? TemperaturMax { get; set; }
 }
@@ -5621,7 +5626,7 @@ public class BautagesberichtSchnellerfassung : BaseObject
 {
     public Guid? Id { get; set; }
     public Guid? DataId { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
     public decimal? Anzahl { get; set; }
 }
 
@@ -5629,8 +5634,8 @@ public class BautagesberichtBauarbeitsschluessel : BaseObject
 {
     public Guid? Id { get; set; }
     public Guid? BauarbeitsschluesselId { get; set; }
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
     public decimal? Stunden { get; set; }
 }
 
@@ -5638,12 +5643,12 @@ public class BautagesberichtBaustoffe : BaseObject
 {
     public Guid? Id { get; set; }
     public Guid? BaustoffId { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
     public BaustoffArt? Art { get; set; }
-    public string Ansatz { get; set; }
+    public string? Ansatz { get; set; }
     public decimal? Menge { get; set; }
-    public string Einheit { get; set; }
-    public string Kommentar { get; set; }
+    public string? Einheit { get; set; }
+    public string? Kommentar { get; set; }
 }
 
 public enum BaustoffArt
@@ -5657,13 +5662,13 @@ public class BautagesberichtLeistungsabrechnung : BaseObject
     public Guid? Id { get; set; }
     public Guid? PosBlockid { get; set; }
     public Guid? PositionId { get; set; }
-    public string Nummer { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Nummer { get; set; }
+    public string? Bezeichnung { get; set; }
     public decimal? LvMenge { get; set; }
-    public string Einheit { get; set; }
-    public string Inhalt { get; set; }
+    public string? Einheit { get; set; }
+    public string? Inhalt { get; set; }
     public decimal? Menge { get; set; }
-    public string InternerKommentar { get; set; }
+    public string? InternerKommentar { get; set; }
 }
 
 /// <summary>
@@ -5671,10 +5676,10 @@ public class BautagesberichtLeistungsabrechnung : BaseObject
 /// </summary>
 public class BautagebuchProjektdaten : BaseObject
 {
-    public List<BautagebuchWetterProjektdaten> WetterProjektdaten { get; set; }
-    public List<BautagebuchArbeiterProjektdaten> ArbeiterProjektdaten { get; set; }
-    public List<BautagebuchAngestellteProjektdaten> AngestellteProjektdaten { get; set; }
-    public List<BautagebuchGeraeteProjektdaten> GeraeteProjektdaten { get; set; }
+    public List<BautagebuchWetterProjektdaten>? WetterProjektdaten { get; set; }
+    public List<BautagebuchArbeiterProjektdaten>? ArbeiterProjektdaten { get; set; }
+    public List<BautagebuchAngestellteProjektdaten>? AngestellteProjektdaten { get; set; }
+    public List<BautagebuchGeraeteProjektdaten>? GeraeteProjektdaten { get; set; }
 }
 
 /// <summary>
@@ -5683,7 +5688,7 @@ public class BautagebuchProjektdaten : BaseObject
 public class BautagebuchWetterProjektdaten : BaseObject
 {
     public Guid? Id { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -5692,7 +5697,7 @@ public class BautagebuchWetterProjektdaten : BaseObject
 public class BautagebuchArbeiterProjektdaten : BaseObject
 {
     public Guid? Id { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -5701,7 +5706,7 @@ public class BautagebuchArbeiterProjektdaten : BaseObject
 public class BautagebuchAngestellteProjektdaten : BaseObject
 {
     public Guid? Id { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 /// <summary>
@@ -5710,7 +5715,7 @@ public class BautagebuchAngestellteProjektdaten : BaseObject
 public class BautagebuchGeraeteProjektdaten : BaseObject
 {
     public Guid? Id { get; set; }
-    public string Bezeichnung { get; set; }
+    public string? Bezeichnung { get; set; }
 }
 
 #endregion Bautagebuch
