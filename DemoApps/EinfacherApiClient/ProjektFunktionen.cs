@@ -31,8 +31,8 @@ public static class ProjektFunktionen
         // Erstelle Projekt
         var projekt = await stammApi.CreateProjekt(speicherortId, new NewProjektInfo
         {
-             Nummer = projektNummer,
-             Bezeichnung = projektBezeichnung
+            Nummer = projektNummer,
+            Bezeichnung = projektBezeichnung
         });
 
         // Erstelle Leistungsverzeichnis
@@ -66,8 +66,8 @@ public static class ProjektFunktionen
         // Voraussetzung ist, dass diese Individualeigenschaften in der Adminstration definiert sind.
         // (Ansonsten bleiben regionProperty und leistungsdatumProperty null).
         projekt.CustomPropertyValues.TryGetValue("Region", out var regionProperty);
-        projekt.CustomPropertyValues.TryGetValue("Leistungsdatum", out var leistungsdatumProperty); 
-        
+        projekt.CustomPropertyValues.TryGetValue("Leistungsdatum", out var leistungsdatumProperty);
+
         return new ProjektKenndaten
         {
             Nummer = projekt.Nummer,
@@ -77,7 +77,7 @@ public static class ProjektFunktionen
             Leistungsdatum = leistungsdatumProperty?.DateTimeValue
         };
     }
-    
+
     /// <summary>
     /// Setzt einzelne Kennwerte (inklusive 2 Individualeigenschaften) eines Projekts neu.
     /// </summary>
@@ -93,15 +93,15 @@ public static class ProjektFunktionen
         projekt.Nummer = kenndaten.Nummer;
         projekt.Bezeichnung = kenndaten.Bezeichnung;
         projekt.Status = kenndaten.Status;
-        projekt.CustomPropertyValues["Region"] 
+        projekt.CustomPropertyValues["Region"]
             = new CustomPropertyValue { StringValue = kenndaten.Region };
-        projekt.CustomPropertyValues["Leistungsdatum"] 
+        projekt.CustomPropertyValues["Leistungsdatum"]
             = new CustomPropertyValue { DateTimeValue = kenndaten.Leistungsdatum };
 
         // Schreibe aktualsierte Eigenschaften zurück
         await projektApi.UpdateProjekt(projektId, projekt);
     }
-    
+
     /// <summary>
     /// Objekt mit verschiedenen Kenndaten eines Projkets. Wird von <see cref="ProjektFunktionen.GetProjektKenndaten"/>
     /// zurückgegeben und an <see cref="ProjektFunktionen.UpdateProjektKenndaten"/> übergeben.  
@@ -109,13 +109,13 @@ public static class ProjektFunktionen
     public class ProjektKenndaten
     {
         public string? Nummer { get; set; }
-        
+
         public string? Bezeichnung { get; set; }
-        
+
         public string? Status { get; set; }
-        
+
         public string? Region { get; set; }
-        
+
         public DateTime? Leistungsdatum { get; set; }
     }
 }

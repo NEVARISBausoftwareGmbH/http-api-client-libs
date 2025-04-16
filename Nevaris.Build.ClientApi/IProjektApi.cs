@@ -121,22 +121,6 @@ public interface IProjektApi
         [Body] ImportLvVonServerpfad importLvInfo);
 
     /// <summary>
-    /// Nimmt eine Datei vom Client entgegen, prüft, ob es sich um einen LV-Datenträger handelt 
-    /// und importiert die Datei. Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie 
-    /// Meldungen, die im Zuge des Importvorgangs entstehen.
-    /// </summary>
-    /// <param name="projektId">Projekt-ID</param>
-    /// <param name="clientFile">Die zu importierende Datei als <see cref="FileInfoPart"/></param>
-    [Obsolete("Diese Funktion zum Importieren eines LVs wird künftig nicht mehr angeboten. "
-        + "Stattdessen sollte CreateLeistungsverzeichnisAusByteArray verwendet werden.")]
-    [Multipart]
-    [Post("/build/projekte/{projektId}/leistungsverzeichnisse/ErzeugeLvAusDatentraegerClientDatei")]
-    Task<LeistungsverzeichnisMitImportMeldungen> CreateLeistungsverzeichnisAusDatentraegerClientDatei(
-        string projektId,
-        [AliasAs("Datei")] FileInfoPart clientFile // "Datei" bezieht sich auf ImportLvVonClientdatei (serverseitig)
-    );
-
-    /// <summary>
     /// Erzeugt ein LV aus einem LV-Datenträger. Der Inhalt des Datenträgers wird als Byte-Array übergeben.
     /// Zurückgegeben wird das erzeugte Leistungsverzeichnis sowie Meldungen, die im Zuge des Importvorgangs entstehen.
     /// </summary>
@@ -239,6 +223,19 @@ public interface IProjektApi
     Task<LvPosition> CreateLvPosition(string projektId, Guid lvId, [Body] NewLvPositionInfo newLvPositionInfo);
 
     /// <summary>
+    /// Liefert die zu einem Leistungsverzeichnis (Auftrag) gehörenden Kalkulationen. Zurückgegeben wird eine
+    /// Liste von Kalkulationen (ohne Rechenergebnisse) der obersten Ebene (Wurzelkalkulationen) einschließlich
+    /// aller untergeordneter Kalkulationen.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="lvId">LV-ID</param>
+    /// <param name="strukturiert">Gibt an, ob die Kalkulationen flach oder strukturiert gelieferte werden sollen.
+    /// Im strukturierten Fall werden nur die Wurzelkalkulationen geliefert, aber dafür mit rekursiv befüllten
+    /// Unterkalkulationen.</param>
+    [Get("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/kalkulationen")]
+    Task<List<Kalkulation>> GetKalkulationen(string projektId, Guid lvId, bool strukturiert = false);
+
+    /// <summary>
     /// Erzeugt eine neue Kalkulation für dieses Leistungsverzeichnisses.
     /// </summary>
     /// <param name="projektId">Projekt-ID</param>
@@ -334,16 +331,6 @@ public interface IProjektApi
     /// <param name="rechnung">Rechnung mit den neuen Werten</param>
     [Put("/build/projekte/{projektId}/rechnungen/{rechnungId}")]
     Task UpdateRechnung(string projektId, Guid rechnungId, [Body] Rechnung rechnung);
-
-    /// <summary>
-    /// Aktualisiert eine Rechnung.
-    /// </summary>
-    /// <param name="projektId">Projekt-ID</param>
-    /// <param name="rechnungId">Rechnungs-ID</param>
-    /// <param name="rechnung">Rechnung mit den neuen Werten</param>
-    [Put("/build/projekte/{projektId}/rechnungen/{rechnungId}")]
-    [Obsolete("Diese Funktion hat einen irreführenden Namen. Stattdessen sollte UpdateRechnung verwendet werden.")]
-    Task GetRechnung(string projektId, Guid rechnungId, [Body] Rechnung rechnung);
 
     /// <summary>
     /// Löscht die Rechnung mit der angegebenen ID.

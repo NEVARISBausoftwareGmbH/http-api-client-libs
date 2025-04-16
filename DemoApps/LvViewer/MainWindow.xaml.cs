@@ -78,9 +78,12 @@ namespace Lv_Viewer
             LoadHtmlText();
         }
 
-        private void ButtonLvImportieren_Click(object sender, RoutedEventArgs e)
+        private async void ButtonLvImportieren_Click(object sender, RoutedEventArgs e)
         {
-            Model?.LeistungsverzeichnisImportieren();
+            if (Model is { } model)
+            {
+                await model.LeistungsverzeichnisImportieren();
+            }
         }
     }
 }

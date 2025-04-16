@@ -72,7 +72,7 @@ namespace KalkulationApp
                 _zeilenUp = UpDetails.Zeilen;
                 BAS = UpDetails.BasNummer;
                 IsUpZeile = true;
-                foreach (var upZeile in UpDetails.Zeilen)
+                foreach (var upZeile in UpDetails.Zeilen!)
                 {
                     var newKalkZeile = new KalkZeile(upZeile)
                     {
@@ -80,7 +80,6 @@ namespace KalkulationApp
                         Parent = this,                        
                     };
 
-                    if (Childs == null) Childs = new List<KalkZeile>();
                     Childs.Add(newKalkZeile);
                     Kalkblatt?.Zeilen.Add(newKalkZeile);
                     newKalkZeile.Generatezeile();

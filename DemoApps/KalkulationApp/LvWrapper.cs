@@ -28,7 +28,7 @@ namespace KalkulationApp
 
             var lvRootNode = CreateLvNode();
 
-            foreach (var item in _lv.RootKnotenListe)
+            foreach (var item in _lv.RootKnotenListe!)
             {
                 var rootNode = new LvNode(item);
                 lvRootNode.ItemNodes.Add(rootNode);
@@ -50,7 +50,7 @@ namespace KalkulationApp
                 //Texte auf LV Ebene
                 if (_lv != null)
                 {
-                    foreach (var pos in _lv.RootPositionen)
+                    foreach (var pos in _lv.RootPositionen!)
                     {
                         var position = new LvPosition(pos);
                         lvRootNodeItem.ItemNodes.Add(position);
@@ -64,7 +64,7 @@ namespace KalkulationApp
         private void LoadNodesRecursive(LvKnoten? root, LvNode rootLvItem)
         {
             if (root == null) { return; }
-            foreach (var node in root.Knoten)
+            foreach (var node in root.Knoten!)
             {
                 var nodeLvItem = new LvNode(node);
                 rootLvItem.ItemNodes.Add(nodeLvItem);
@@ -84,7 +84,7 @@ namespace KalkulationApp
 
         private void CreatePositionen(LvKnoten node, LvNode nodeLvItem)
         {
-            foreach (var pos in node.Positionen)
+            foreach (var pos in node.Positionen!)
             {
                 var position = new LvPosition(pos);
                 nodeLvItem.ItemNodes.Add(position);

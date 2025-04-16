@@ -162,7 +162,8 @@ public class Mandant : BaseObject
     /// Die Mandanten-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
     /// eine generierte Zufalls-ID.
     /// </summary>
-    public string? Id { get; set; }
+    [JsonProperty]
+    public string Id { get; internal set; } = "";
 
     /// <summary>
     /// Mandantenbezeichnung, wie sie in der Benutzeroberfläche angezeigt wird.
@@ -170,14 +171,15 @@ public class Mandant : BaseObject
     public string? AnzeigeText { get; set; }
 
     /// <summary>
-    /// Die Mandatenadresse, falls definiert.
+    /// Die Mandantenadresse, falls definiert.
     /// </summary>
     public AdresseKurzInfo? Adresse { get; set; }
 
     /// <summary>
     /// Liste von zugeordneten Niederlassungen.
     /// </summary>
-    public List<Niederlassung>? Niederlassungen;
+    [JsonProperty]
+    public IReadOnlyList<Niederlassung>? Niederlassungen { get; internal set; }
 
     public override string? ToString() => AnzeigeText;
 }
@@ -191,7 +193,8 @@ public class Niederlassung : BaseObject
     /// Die Niederlassungs-ID. Im integrierten Betrieb ist dies ein lesbares Kürzel, ansonsten
     /// eine generierte Zufalls-ID.
     /// </summary>
-    public string? Id { get; set; }
+    [JsonProperty]
+    public string Id { get; internal set; } = "";
 
     public string? Bezeichnung { get; set; }
 
@@ -538,14 +541,17 @@ public class Adresse : BaseObject
     public string? Beschreibung { get; set; }
 
     public List<Adressat>? Adressaten { get; set; }
+    
     public List<Bankverbindung>? Bankverbindungen { get; set; }
+    
     public List<AdressBranche>? Branchen { get; set; }
+    
     public List<AdressGewerk>? Gewerke { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Adresse zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 /// <summary>
@@ -602,12 +608,17 @@ public class Adressat : BaseObject
     public string? Briefanschrift { get; set; }
     public string? Durchwahl { get; set; }
     public string? DurchwahlFax { get; set; }
+
+    /// <summary>
+    /// Interne ID (wird derzeit nicht genutzt).
+    /// </summary>
+    [JsonProperty]
     public Guid? Guid { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Adressaten zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 public class Bankverbindung : BaseObject
@@ -659,14 +670,16 @@ public class Speicherort : BaseObject
     /// (Detailinfo) Liste aller Projekten an diesem Speicherort (unabhängig davon, ob sich diese in einem
     /// Server-Ordner oder auf der Wurzelebene befinden).
     /// </summary>
-    public List<ProjektInfo>? ProjektInfos { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<ProjektInfo>? ProjektInfos { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Projekten an diesem Speicherort auf der Wurzelebene.
     /// Diese Property ist nur befüllt, wenn beim Auslesen des Speicherorts mitOrdnern = true
     /// übergeben wurde.
     /// </summary>
-    public List<ProjektInfo>? RootProjektInfos { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<ProjektInfo>? RootProjektInfos { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Ordnern innerhalb dieses Speicherorts (auf Wurzelebene).
@@ -694,7 +707,8 @@ public class SpeicherortOrdner : BaseObject
     /// <summary>
     /// (Detailinfo) Liste von Projekten in diesem Ordner.
     /// </summary>
-    public List<ProjektInfo>? ProjektInfos { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<ProjektInfo>? ProjektInfos { get; internal set; }
 
     /// <summary>
     /// Liste mit untergeordneten Ordnern.
@@ -710,9 +724,13 @@ public class OrdnerInfo : BaseObject
 public class DatenbankInfo : BaseObject
 {
     public string? Server { get; set; }
+
     public string? Datenbank { get; set; }
+
     public string? Benutzername { get; set; }
+
     public string? Passwort { get; set; }
+
     public bool IntegratedSecurity { get; set; }
 }
 
@@ -722,11 +740,14 @@ public class DatenbankInfo : BaseObject
 /// </summary>
 public class ProjektInfo : BaseObject
 {
-    public string? Id { get; set; }
+    [JsonProperty]
+    public string Id { get; internal init; } = "";
 
-    public string? Nummer { get; set; }
+    [JsonProperty]
+    public string? Nummer { get; internal set; }
 
-    public string? Bezeichnung { get; set; }
+    [JsonProperty]
+    public string? Bezeichnung { get; internal set; }
 }
 
 /// <summary>
@@ -738,7 +759,8 @@ public class Projekt : BaseObject
     /// Die Projekt-ID im Format "[Speicherort-Guid].[Projekt-Guid]", wie sie in den URLs für Projekt-Endpunkte
     /// (/build/projekte/{projektId}/...) vorkommt. Identifiziert ein Projekt Speicherort-übergreifend.
     /// </summary>
-    public required string Id { get; init; }
+    [JsonProperty]
+    public string Id { get; internal set; } = "";
 
     /// <summary>
     /// Die ID des Projekts als Guid (ohne Speicherort-Information). Diese ID kommt zum Einsatz, wenn ein Projekt
@@ -746,7 +768,7 @@ public class Projekt : BaseObject
     /// <see cref="BetriebsmittelKosten.KostenebeneId"/>.
     /// </summary>
     public Guid Guid { get; set; }
-    
+
     /// <summary>
     /// Das Datum der letzten Änderung am Projekt.
     /// </summary>
@@ -786,12 +808,19 @@ public class Projekt : BaseObject
     public string? Bezeichnung { get; set; }
 
     public DateTime? Baubeginn { get; set; }
+
     public DateTime? Bauende { get; set; }
+
     public string? Ampel { get; set; }
+
     public string? Art { get; set; }
+
     public string? Ausschreibungsart { get; set; }
+
     public string? Status { get; set; }
+
     public string? Sparte { get; set; }
+
     public string? Typ { get; set; }
 
     /// <summary>
@@ -805,12 +834,14 @@ public class Projekt : BaseObject
     /// Auf dieses Liste kann nur lesend zugegriffen werden. Für Schreiboperationen gibt es die
     /// passenden Endpunkte unter /build/projekte/{projektId}/leistungsverzeichnisse.
     /// </summary>
-    public List<Leistungsverzeichnis>? Leistungsverzeichnisse { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Leistungsverzeichnis>? Leistungsverzeichnisse { get; internal set; }
 
     /// <summary>
     /// Liste von Gliederungskatalogen, die in diesem Projekt enthalten sind. Nur Lesezugriffe werden unterstützt.
     /// </summary>
-    public List<Gliederungskatalog>? Gliederungskataloge { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Gliederungskatalog>? Gliederungskataloge { get; internal set; }
 
     /// <summary>
     /// Liste von Leistungszeiträumen, die in diesem Projekt enthalten sind.
@@ -980,7 +1011,7 @@ public class Projekt : BaseObject
     /// <summary>
     /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 /// <summary>
@@ -1025,6 +1056,7 @@ public class ProjektZugeordneteAdresse : BaseObject
     /// <summary>
     /// Die Adressrolle (z.B. "Auftraggeber").
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public ZugeordneteAdresseRolle Rolle { get; set; }
 
     /// <summary>
@@ -1141,7 +1173,7 @@ public class BetriebsmittelStamm : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 public enum BetriebsmittelStammArt
@@ -1390,9 +1422,6 @@ public class GlobaleVariable : BaseObject
     /// </summary>
     public string? Variable { get; set; }
 
-    [Obsolete("Dieses Flag war nur von interner Bedeutung und wird nicht mehr unterstützt.")]
-    public bool? IstKalkulationsVariable { get; set; }
-
     /// <summary>
     /// Nur für Betriebsmittelstämme: Enthält den Ansatz (= Berechnungsformel). Im Projektfall steht der
     /// Ansatz kostenebenenabhängig in <see cref="Ansätze"/>.
@@ -1404,7 +1433,8 @@ public class GlobaleVariable : BaseObject
     /// Im Projektfall steht der Wert kostenebenenabhängig in <see cref="Ansätze"/>.
     /// Wird für Schreibzugriffe ignoriert.
     /// </summary>
-    public decimal? Wert { get; set; }
+    [JsonProperty]
+    public decimal? Wert { get; internal init; }
 
     /// <summary>
     /// Nur für Betriebsmittelstämme: Enthält einen optionalen Kommentar. Im Projektfall steht der
@@ -1438,7 +1468,8 @@ public class GlobaleVariableAnsatz : BaseObject
     /// Der berechnete Wert (d.h. das Ergebnis des Ansatzes). Wird für Schreibzugriffe
     /// ignoriert.
     /// </summary>
-    public decimal? Wert { get; set; }
+    [JsonProperty]
+    public decimal? Wert { get; internal init; }
 
     /// <summary>
     /// Optionaler Kommentar
@@ -1449,25 +1480,30 @@ public class GlobaleVariableAnsatz : BaseObject
 public class Warengruppe : BaseObject
 {
     public int Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
 }
 
 public class NewKostenkatalogInfo : BaseObject
 {
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
 }
 
 public class NewZuschlagskatalogInfo : BaseObject
 {
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
 }
 
 public class NewZuschlagsartInfo : BaseObject
 {
     public int Index { get; set; }
+
     public string? Bezeichnung { get; set; }
+
     public ZuschlagsTyp? Zuschlagstyp { get; set; }
 }
 
@@ -1541,14 +1577,6 @@ public class ZuschlagsgruppenWert : BaseObject
     /// für die dieser Zuschlagssatz festgelegt ist.
     /// </summary>
     public Guid ZuschlagsebeneId { get; set; }
-
-    /// <summary>
-    /// Die Nummer der <see cref="Zuschlagsgruppe"/>, zu der dieser Wert gehört.
-    /// Wurde nur für <see cref="Zuschlagskatalog.ZuschlagsgruppenWerte"/> benötigt, das mittelerweile aber
-    /// abgekündigt ist. 
-    /// </summary>
-    [Obsolete("Wurde nur für Zuschlagskatalog.ZuschlagsgruppenWerte benötigt, das aber abgekündigt ist.")]
-    public string? ZuschlagsgruppenNummer { get; set; }
 
     /// <summary>
     /// Der Zuschlagssatz (= Zuschlag in Prozent).
@@ -1648,16 +1676,6 @@ public class Zuschlagskatalog : BaseObject
     public string? Beschreibung { get; set; }
 
     public bool IstStandard { get; set; }
-
-    /// <summary>
-    /// Sollte nicht mehr verwendet werden. Stattdessen sind für ÖNORM-Stämme die Zuschlägssätze über
-    /// <see cref="Zuschlagsgruppe.Werte"/> ansprechbar.
-    /// Diese Liste wird nur noch bei Lesezugriffen befüllt. Bei Schreibzugriffen wird der Inhalt ignoriert,
-    /// da sonst die per <see cref="Zuschlagsgruppe.Werte"/> spezifizierten Werte überschrieben werden könnten.
-    /// </summary>
-    [Obsolete("Sollte nicht mehr verwendet werden. Stattdessen sind für ÖNORM-Stämme die "
-              + "Zuschlägssätze über Zuschlagsgruppe.Werte ansprechbar.")]
-    public List<ZuschlagsgruppenWert>? ZuschlagsgruppenWerte { get; set; }
 }
 
 public enum BetriebsmittelArt
@@ -1710,7 +1728,8 @@ public class BetriebsmittelCollectionResult : BaseObject
     /// <summary>
     /// Die IDs der erzeugten Betriebsmittel (einschließlich Grupper), ohne untergeordnete Betriebsmittel.
     /// </summary>
-    public IReadOnlyList<Guid> NewRootBetriebsmittelIds { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<Guid> NewRootBetriebsmittelIds { get; internal set; } = [];
 }
 
 /// <summary>
@@ -1846,31 +1865,36 @@ public class BetriebsmittelResult
     /// <summary>
     /// Liste der angeforderten Betriebsmittel (hierarchisch aufgebaut, falls mitGruppen == true).
     /// </summary>
-    public IReadOnlyList<Betriebsmittel> BetriebsmittelList { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<Betriebsmittel> BetriebsmittelList { get; internal init; } = [];
 
     /// <summary>
     /// Die Kostenebene, die für Berechnungen herangezogen wurde.
     /// </summary>
-    public Guid KostenebeneId { get; set; }
+    [JsonProperty]
+    public Guid KostenebeneId { get; internal init; }
 
     /// <summary>
     /// Alle relevanten Kostenebenen (von innen nach außen), beginnend mit <see cref="KostenebeneId"/>.
     /// Ermöglicht das Auffinden von Kostenebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
     /// z.B. per <see cref="Betriebsmittel.FindKosten"/>.
     /// </summary>
-    public IReadOnlyList<Kostenebene> Kostenebenen { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<Kostenebene> Kostenebenen { get; internal init; } = [];
 
     /// <summary>
     /// Die Zuschlagsebene, die für Berechnungen herangezogen wurde.
     /// </summary>
-    public Guid ZuschlagsebeneId { get; set; }
+    [JsonProperty]
+    public Guid ZuschlagsebeneId { get; internal init; }
 
     /// <summary>
     /// Alle relevanten Zuschlagsebenen (von innen nach außen), beginnend mit <see cref="ZuschlagsebeneId"/>.
     /// Ermöglicht das Auffinden von Zuschlagsebenen-relevanten Daten unter Berücksichtigung der Vererbungsstruktur,
     /// z.B. per <see cref="Betriebsmittel.FindZuschlag"/>.
     /// </summary>
-    public IReadOnlyList<Kostenebene> Zuschlagsebenen { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<Kostenebene> Zuschlagsebenen { get; internal init; } = [];
 }
 
 /// <summary>
@@ -1922,7 +1946,8 @@ public class Betriebsmittel : BaseObject
     /// berücksichtigt wird (d.h. wenn für die angeforderte Kostenenbene kein Kostenwert hinterlegt ist, wird
     /// die übergeordnete Kostenebene herangezogen usw.).
     /// </summary>
-    public BetriebsmittelKosten? KostenEffektiv { get; set; }
+    [JsonProperty]
+    public BetriebsmittelKosten? KostenEffektiv { get; internal set; }
 
     /// <summary>
     /// Liefert die Kosten, die für eine Kostenebene relevant sind. Übergeben wird eine Liste von Kostenebenen
@@ -1943,7 +1968,8 @@ public class Betriebsmittel : BaseObject
     /// über den "mitKosten"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich berechneter Kosten und Preise.
     /// Wird bei Schreiboperationen ignoriert.
     /// </summary>
-    public BetriebsmittelKostenDetails? KostenDetails { get; set; }
+    [JsonProperty]
+    public BetriebsmittelKostenDetails? KostenDetails { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Liste mit weiteren Kosten.
@@ -1958,13 +1984,14 @@ public class Betriebsmittel : BaseObject
     /// über den "mitZuschlägen"-Parameter das Auslesen mehrerer Betriebsmittel einschließlich Kosten.
     /// </summary>
     public List<BetriebsmittelZuschlag>? Zuschläge { get; set; }
-    
+
     /// <summary>
     /// Ist befüllt, wenn <see cref="Zuschläge"/> befüllt ist. Enthält die für die angeforderte Zuschlagsebene
     /// passenden Zuschlagsobjekte, wobei gegebenenfalls übergeordnete Gruppen und Kostenebenen herangezogen
     /// werden, um das passende Zuschlagsobjekt zu ermitteln.
     /// </summary>
-    public List<BetriebsmittelZuschlag>? ZuschlägeEffektiv { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<BetriebsmittelZuschlag>? ZuschlägeEffektiv { get; internal set; }
 
     /// <summary>
     /// Liefert den Zuschlag, der für eine Zuschlagsebene relevant ist. Übergeben wird eine Liste von Zuschlagsebenen
@@ -2048,7 +2075,7 @@ public class Betriebsmittel : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittel zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 public class BetriebsmittelDetails : BaseObject
@@ -2296,24 +2323,37 @@ public enum Antriebsart
 public class BetriebsmittelGerätDetailsSonstiges : BaseObject
 {
     public string? BglNummer { get; set; } // = BGLNummer
+
     public string? EdvKurztext { get; set; } // = BGLBezeichnung
 
     // Sonstiges
     public decimal? Vorhaltemenge { get; set; }
+
     public decimal? Vorhaltedauer { get; set; }
+
     public Antriebsart? Antriebsart1 { get; set; } // = AntriebsArt
+
     public Antriebsart? Antriebsart2 { get; set; }
+
     public decimal? Gewicht { get; set; }
+
     public decimal? TransportVolumen { get; set; }
+
     public decimal? Leistung1 { get; set; } // = GeraeteLeistung
+
     public decimal? Leistung2 { get; set; } // = GeraeteLeistung2
 
     // Bahnspezifische Angaben
     public string? Fabrikat { get; set; }
+
     public int? Mindestradius { get; set; }
+
     public int? BeherrschbareSteigung { get; set; }
+
     public string? Schallemissionspegel { get; set; }
+
     public int? Arbeitsgeschwindigkeit { get; set; }
+
     public int? GegenseitigeUeberhoehung { get; set; }
 }
 
@@ -2451,7 +2491,8 @@ public class BetriebsmittelKostenDetails : BaseObject
     /// Beim Abholen aller Betriebsmittel mittels IStammApi/IProjektApi.GetAllBetriebsmittel ist die Property
     /// nur dann befüllt, wenn die Argumente mitKosten = true, mitWeiterenKosten = true übergeben werden.
     /// </summary>
-    public List<BetriebsmittelWarenkorbItem>? WarenkorbItems { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<BetriebsmittelWarenkorbItem>? WarenkorbItems { get; internal init; }
 }
 
 /// <summary>
@@ -2632,21 +2673,29 @@ public class BetriebsmittelKostenNachunternehmerDetails : BaseObject
 
 public class KalkulationsZeileDetails : BaseObject
 {
-    public decimal? Ergebnis { get; set; }
+    [JsonProperty]
+    public decimal? Ergebnis { get; internal init; }
 
-    public decimal? MengeGesamt { get; set; }
+    [JsonProperty]
+    public decimal? MengeGesamt { get; internal init; }
 
-    public decimal? LeistungsMenge { get; set; }
+    [JsonProperty]
+    public decimal? LeistungsMenge { get; internal init; }
 
-    public Money? KostenProEinheit { get; set; }
+    [JsonProperty]
+    public Money? KostenProEinheit { get; internal init; }
 
-    public Money? Kosten { get; set; }
+    [JsonProperty]
+    public Money? Kosten { get; internal init; }
 
-    public Money? Preis { get; set; }
+    [JsonProperty]
+    public Money? Preis { get; internal init; }
 
-    public decimal? StundenProduktiv { get; set; }
+    [JsonProperty]
+    public decimal? StundenProduktiv { get; internal init; }
 
-    public Money? ZuschlagGesamt { get; set; }
+    [JsonProperty]
+    public Money? ZuschlagGesamt { get; internal init; }
 }
 
 /// <summary>
@@ -2703,7 +2752,7 @@ public class KalkulationsZeile : BaseObject
     /// Befüllt, wenn es sich um eine Summenzeile handelt.
     /// </summary>
     public SummenKalkulationsZeileDetails? SummenDetails { get; set; }
-    
+
     /// <summary>
     /// (Detailinfo) Enthält weitere Eigenschaften der Kalkulationszeile, insbesondere berechnete Werte.
     /// </summary>
@@ -2751,6 +2800,7 @@ public class KalkulationsZeileBetriebsmittelDetails : BaseObject
 public class KalkulationsZeileVariablenDetails : BaseObject
 {
     public string? Variable { get; set; }
+
     public string? Ansatz { get; set; }
 }
 
@@ -2765,6 +2815,7 @@ public class RückgriffZeileDetails : BaseObject
     public Guid? UnterpositionsZeileId { get; set; }
 
     public string? Ansatz { get; set; }
+
     public string? Variable { get; set; }
 }
 
@@ -2777,16 +2828,22 @@ public enum SummenKalkulationsZeileArt
 public class SummenKalkulationsZeileDetails : BaseObject
 {
     public SummenKalkulationsZeileArt? Art { get; set; }
+
     public string? Modifikator { get; set; }
+
     public Money? Kosten { get; set; }
+
     public Money? Preis { get; set; }
+
     public decimal? StundenProduktiv { get; set; }
 }
 
 public class KalkulationsZeileUnterpositionDetails : BaseObject
 {
     public string? Ansatz { get; set; }
+
     public string? Variable { get; set; }
+
     public string? BasNummer { get; set; }
 
     /// <summary>
@@ -2809,7 +2866,7 @@ public class KalkulationGenerierenOptionen
     /// Die ID der Quellkalkulation. Muss befüllt sein.
     /// </summary>
     public Guid QuellKalkulationId { get; set; }
-    
+
     /// <summary>
     /// Option "Vorhandene Kalkulationen von Positionen überschreiben".
     /// </summary>
@@ -2819,23 +2876,23 @@ public class KalkulationGenerierenOptionen
     /// Option "Betriebsmittel direkt aus ausgewählter Kalkulationsvorlage verwenden".
     /// </summary>
     public bool BetriebsmittelAusQuellProjektVerwenden { get; set; }
-    
+
     /// <summary>
     /// ÖNORM: Option "HG/OG nicht berücksichtigen".
     /// GAEB: Option "Los nicht berücksichtigen".
     /// </summary>
     public bool StrukturenNichtBerücksichtigen { get; set; }
-    
+
     /// <summary>
     /// Option "Nur Standardpositionen berücksichtigen".
     /// </summary>
     public bool NurStandardPositionenBerücksichtigen { get; set; }
-    
+
     /// <summary>
     /// Option "Positionen mit Vorbemerkungskennzeichen generieren".
     /// </summary>
     public bool PositionenMitVorbemerkungskennzeichenGenerieren { get; set; }
-    
+
     /// <summary>
     /// Option "Teilleistungsnummer statt OZ/Positionsnummer vergleichen".
     /// </summary>
@@ -2866,7 +2923,7 @@ public class KalkulationGenerierenOptionen
     /// Option "Unterschiedliche Einheiten ignorieren".
     /// </summary>
     public bool UnterschiedlicheEinheitenIgnorieren { get; set; }
-    
+
     /// <summary>
     /// Option "Bieterlücken bei Standardpositionen übernehmen".
     /// </summary>
@@ -2888,11 +2945,11 @@ public class KalkulationGenerierenOptionen
 /// </summary>
 public class KalkulationGenerierenTextvergleichOptionen
 {
-    public double KurztextSchwellwertInProzent { get;set; }
+    public double KurztextSchwellwertInProzent { get; set; }
 
     public bool KurztexteBerücksichtigen { get; set; }
 
-    public double LangtextSchwellwertInProzent { get;set; }
+    public double LangtextSchwellwertInProzent { get; set; }
 
     public bool LangtexteBerücksichtigen { get; set; }
 
@@ -2909,8 +2966,8 @@ public class KalkulationGenerierenResult
     /// <summary>
     /// Liste mit Einzelergebnissen (ein Objekt pro Zielposition).
     /// </summary>
-    public IReadOnlyList<KalkulationGenerierenResultItem> Items { get; set; } 
-        = Array.Empty<KalkulationGenerierenResultItem>();
+    [JsonProperty]
+    public IReadOnlyList<KalkulationGenerierenResultItem> Items { get; internal init; } = [];
 }
 
 /// <summary>
@@ -2921,12 +2978,14 @@ public class KalkulationGenerierenResultItem
     /// <summary>
     /// ID der Position im Ziel-LV, für die ein Kalkulationsblatt erzeugt/aktualisiert wurde.
     /// </summary>
-    public Guid ZielPositionId { get; set; }
+    [JsonProperty]
+    public Guid ZielPositionId { get; internal init; }
 
     /// <summary>
     /// Die ID der Position im Quell-LV, dessen Kalkulationsdaten übernommen wurden.
     /// </summary>
-    public Guid QuellPositionId { get; set; }
+    [JsonProperty]
+    public Guid QuellPositionId { get; internal init; }
 }
 
 public enum TextvergleichAlgorithmus
@@ -3040,10 +3099,15 @@ public enum KalkulationsArt
 public class NewKalkulationInfo : BaseObject
 {
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
+
     public KalkulationsArt? KalkulationsArt { get; set; }
+
     public Guid BetriebsmittelStammId { get; set; }
+
     public Guid? KostenkatalogId { get; set; }
+
     public Guid? ZuschlagskatalogId { get; set; }
 }
 
@@ -3055,17 +3119,20 @@ public class BetriebsmittelErgebnis : BaseObject
     /// <summary>
     /// Id des Betriebsmittels.
     /// </summary>
-    public Guid Id { get; set; }
+    [JsonProperty]
+    public Guid Id { get; internal init; }
 
     /// <summary>
     /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
     /// </summary>
-    public string? NummerKomplett { get; set; }
+    [JsonProperty]
+    public string? NummerKomplett { get; internal init; }
 
     /// <summary>
     /// Die berechnete Warenkorbmenge. Dies ist aktuell der einzige gelieferte Rechenwert.
     /// </summary>
-    public decimal WarenkorbMenge { get; set; }
+    [JsonProperty]
+    public decimal WarenkorbMenge { get; internal init; }
 }
 
 /// <summary>
@@ -3078,17 +3145,106 @@ public class KalkulationsBlattErgebnis : BaseObject
     /// abzurufen (über den Endpunkt
     /// /build/projekte/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter/{positionId}). 
     /// </summary>
-    public Guid Id { get; set; }
+    [JsonProperty]
+    public Guid Id { get; internal init; }
 
     /// <summary>
     /// Vollständige Nummer der dazugehörigen Position
     /// </summary>
-    public string? Positionsnummer { get; set; }
+    [JsonProperty]
+    public string? Positionsnummer { get; internal init; }
 
     /// <summary>
     /// Die Ergebnisse der im Kalkulationsblatt verwendeten Betriebsmittel
     /// </summary>
-    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; internal init; } = [];
+
+    /// <summary>
+    /// Die Menge die bei der Berechnung des Kalkulationsblattes verwendet wurde. Standardmäßig wird mit der LV Menge gerechnet
+    /// </summary>
+    [JsonProperty]
+    public decimal? Menge { get; internal init; }
+
+    /// <summary>
+    /// Die Summe der Stunden von produktiven Löhnen
+    /// </summary>
+    [JsonProperty]
+    public decimal? StundenProduktiv { get; internal init; }
+
+    /// <summary>
+    /// Die Summe der Stunden von produktiven Löhnen multipliziert mit der Menge
+    /// </summary>
+    [JsonProperty]
+    public decimal? StundenProduktivGesamt { get; internal init; }
+
+    /// <summary>
+    /// Die Kosten des Kalkulationsblattes
+    /// </summary>
+    [JsonProperty]
+    public Money? Kosten { get; internal init; }
+
+    /// <summary>
+    /// Die Kosten des Kalkulationsblattes multipliziert mit der Menge
+    /// </summary>
+    [JsonProperty]
+    public Money? KostenGesamt { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Preis des Kalkulationsblattes
+    /// </summary>
+    [JsonProperty]
+    public Money? Preis { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Preis des Kalkulationsblattes multipliziert mit der Menge
+    /// </summary>
+    [JsonProperty]
+    public Money? PreisGesamt { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag
+    /// </summary>
+    [JsonProperty]
+    public Money? Zuschlag { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag multipliziert mit der Menge
+    /// </summary>
+    [JsonProperty]
+    public Money? ZuschlagGesamt { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Preis aufgeschlüsselt auf die Preisanteile
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<string, Money>? Preisanteile { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufteilt auf die jeweiligen Zuschlagstypen (BGK, AGK, Wagnis, Gewinn)
+    /// </summary>
+    ///<remarks>Nur bei Projekten / Betriebsmittelstämmen mit der Norm Deutschland / Freie Form gefüllt</remarks>
+    [JsonProperty]
+    public IReadOnlyDictionary<ZuschlagsTyp, Money>? ZuschlägeJeTyp { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufteilt auf die jeweiligen Zuschlagstypen (BGK, AGK, Wagnis, Gewinn) multipliziert mit der Menge
+    /// </summary>
+    ///<remarks>Nur bei Projekten / Betriebsmittelstämmen mit der Norm Deutschland / Freie Form gefüllt</remarks>
+    [JsonProperty]
+    public IReadOnlyDictionary<ZuschlagsTyp, Money>? ZuschlägeJeTypGesamt { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufgeteilt auf die einzelnen Zuschlagsspalten
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<int, Money>? Zuschläge { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufgeteilt auf die einzelnen Zuschlagsspalten multipliziert mit der Menge
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<int, Money>? ZuschlägeGesamt { get; internal init; }
 }
 
 public class KalkulationErgebnisse : BaseObject
@@ -3096,17 +3252,63 @@ public class KalkulationErgebnisse : BaseObject
     /// <summary>
     /// Die kalkulierte Angebotssumme für die das gesamte LV (ohne Nachträge).
     /// </summary>
-    public decimal? Angebotssumme { get; set; }
+    [JsonProperty]
+    public decimal? Angebotssumme { get; internal init; }
 
     /// <summary>
     /// Die Ergebnisse der verwendeten Betriebsmittel (über das gesamte LV)
     /// </summary>
-    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<BetriebsmittelErgebnis> BetriebsmittelErgebnisse { get; internal init; } = [];
 
     /// <summary>
     /// Die Ergebnisse der Kalkulationsblätter (pro Position)
     /// </summary>
-    public IReadOnlyList<KalkulationsBlattErgebnis> KalkulationsblattErgebnisse { get; set; } = [];
+    [JsonProperty]
+    public IReadOnlyList<KalkulationsBlattErgebnis> KalkulationsblattErgebnisse { get; internal init; } = [];
+
+    /// <summary>
+    /// Die Summe der Stunden von produktiven Löhnen
+    /// </summary>
+    [JsonProperty]
+    public decimal? StundenProduktiv { get; internal init; }
+
+    /// <summary>
+    /// Die Gesamtkosten
+    /// </summary>
+    [JsonProperty]
+    public Money? Kosten { get; internal init; }
+
+    /// <summary>
+    /// der kalkulierte Preis
+    /// </summary>
+    [JsonProperty]
+    public Money? Preis { get; internal init; }
+
+    /// <summary>
+    /// der kalkulierte Zuschlag (Zuschlag = Preis - Kosten)
+    /// </summary>
+    [JsonProperty]
+    public Money? Zuschlag { get; internal init; }
+
+    /// <summary>
+    /// der kalkulierte Preis, aufgeschlüsselt auf die Preisanteile
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<string, Money>? Preisanteile { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufgeteilt auf die jeweiligen Zuschlagstypen (BGK, AGK, Wagnis, Gewinn)
+    /// </summary>
+    ///<remarks>Nur bei Projekten / Betriebsmittelstämmen mit der Norm Deutschland / Freie Form gefüllt</remarks>
+    [JsonProperty]
+    public IReadOnlyDictionary<ZuschlagsTyp, Money>? ZuschlägeJeTyp { get; internal init; }
+
+    /// <summary>
+    /// Der kalkulierte Zuschlag aufgeteilt auf die einzelnen Zuschlagsspalten
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<int, Money>? Zuschläge { get; internal init; }
 }
 
 /// <summary>
@@ -3131,10 +3333,11 @@ public class Kalkulation : BaseObject
     public KalkulationsArt? Art { get; set; }
 
     /// <summary>
-    /// Rechenergebnisse (ist befüllt, wenn die Kalkultion per /build/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen=true
+    /// Rechenergebnisse (ist befüllt, wenn die Kalkulation per /build/{projektId}/kalkulationen/{kalkulationId}?mitErgebnissen=true
     /// abgerufen wurde).
     /// </summary>
-    public KalkulationErgebnisse? Ergebnisse { get; set; }
+    [JsonProperty]
+    public KalkulationErgebnisse? Ergebnisse { get; internal set; }
 
     /// <summary>
     /// Die Notiz (als XHTML), die der Kalkulation zugeordnet ist.
@@ -3143,24 +3346,21 @@ public class Kalkulation : BaseObject
 
     /// <summary>
     /// Liste von untergeordneten Kalkulationen. Ist nur befüllt, wenn die Kalkulationen
-    /// als Teil eines Leistungsverzeichnisses, d.h. per /build/{projektId}/leistungsverzeichnisse/{lvId} geladen wurden.
+    /// als Teil eines Leistungsverzeichnisses, d.h. per /build/{projektId}/leistungsverzeichnisse/{lvId} geladen
+    /// wurden oder über den Endpunkt /build/{projektId}/leistungsverzeichnisse/{lvId}/kalkulationen&amp;strukturiert=true.
     /// </summary>
-    public List<Kalkulation>? Kalkulationen { get; set; }
-
-    /// <summary>
-    /// Enthält Informationen über die Zahl der Nachkommastellen verschiedener Feldtypen.
-    /// </summary>
-    [Obsolete("Sollte nicht mehr verwendet werden. Die enthaltenen Properties stehen auf dem Projekt zur Verfügung: "
-              + "RechengenauigkeitMengen, RechengenauigkeitBeträge, "
-              + "DarstellungsgenauigkeitMengen, DarstellungsgenauigkeitBeträge")]
-    public KalkulationNachkommastellen? Nachkommastellen { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Kalkulation>? Kalkulationen { get; internal set; }
 }
 
 public class KalkulationNachkommastellen : BaseObject
 {
     public int? Ansatz { get; set; }
+
     public int? AnsatzUI { get; set; }
+
     public int? KostenPreise { get; set; }
+
     public int? KostenPreiseUI { get; set; }
 }
 
@@ -3174,8 +3374,10 @@ public class KalkulationsBlatt : BaseObject
 
     public Guid PositionId { get; set; }
 
+    [Obsolete("Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
     public string? Nummer { get; set; }
 
+    [Obsolete("Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
     public string? Bezeichnung { get; set; }
 
     /// <summary>
@@ -3188,7 +3390,14 @@ public class KalkulationsBlatt : BaseObject
     /// wird auch beim Abrufen sämtlicher Kalkulationsblätter per
     /// /build/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter befüllt.
     /// </summary>
+    [Obsolete("Diese Eigenschaft wurde durch die Eigenschaft Ergebnisse ersetzt und wird in Zukunft nicht mehr weiter unterstützt.")]
     public KalkulationsBlattDetails? Details { get; set; }
+
+    /// <summary>
+    /// Objekt mit den gerechneten Werten eines Kalkualtionsblattes.
+    /// </summary>
+    [JsonProperty]
+    public KalkulationsBlattErgebnis? Ergebnisse { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Liste von Kalkulationszeilen (hierarchisch aufgebaut).
@@ -3197,22 +3406,33 @@ public class KalkulationsBlatt : BaseObject
 }
 
 /// <summary>
-/// Detailinformationen (insbesondere berechnete Werte) eines Kalkulationsblattes
+/// Detailinformationen (insbesondere berechnete Werte) eines Kalkulationsblattes.
+/// Diese Klasse ist obsolet und wurde durch <see cref="KalkulationsBlattErgebnis"/> ersetzt.
 /// </summary>
 public class KalkulationsBlattDetails : BaseObject
 {
     public string? PositionsNummerKomplett { get; set; }
 
     public decimal? Menge { get; set; }
+
     public decimal? StundenProduktiv { get; set; }
+
     public decimal? StundenProduktivGesamt { get; set; }
+
     public Money? Kosten { get; set; }
+
     public Money? KostenGesamt { get; set; }
+
     public Money? Preis { get; set; }
+
     public Money? PreisGesamt { get; set; }
+
     public Money? Zuschlag { get; set; }
+
     public Money? ZuschlagGesamt { get; set; }
+
     public Money? Einheitspreis { get; set; }
+
     public Money? EinheitspreisGesamt { get; set; }
 
     public Dictionary<string, Money>? Preisanteile { get; set; }
@@ -3256,7 +3476,8 @@ public class Gliederungskatalog : BaseObject
     /// <summary>
     /// (Detailinfo) Die Wurzelknoten des Katalogs.
     /// </summary>
-    public List<Gliederungsknoten>? Knoten { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Gliederungsknoten>? Knoten { get; internal set; }
 }
 
 /// <summary>
@@ -3276,7 +3497,8 @@ public class Gliederungsknoten : BaseObject
     /// <summary>
     /// Die untergeordneten Knoten.
     /// </summary>
-    public List<Gliederungsknoten>? Knoten { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Gliederungsknoten>? Knoten { get; init; }
 }
 
 /// <summary>
@@ -3325,6 +3547,7 @@ public class NewLvInfo : BaseObject
     /// <summary>
     /// Die exakte Norm, z.B. A2063:2021.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public NormExakt NormExakt { get; set; }
 
     /// <summary>
@@ -3357,6 +3580,7 @@ public class NewLvInfo : BaseObject
     /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
     /// <see cref="LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public MengenArt MengenArt { get; set; } = MengenArt.Lv;
 }
 
@@ -3414,22 +3638,26 @@ public class Leistungsverzeichnis : BaseObject
     /// <summary>
     /// (Detailinfo) Die Knoten der obersten Ebene (z.B. Leistungsgruppen) einschließlich untergeordneter Knoten und Positionen.
     /// </summary>
-    public List<LvKnoten>? RootKnotenListe { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<LvKnoten>? RootKnotenListe { get; internal set; }
 
     /// <summary>
     /// Nur für GAEB: Positionen auf der obersten Ebene (z.B. Hinweistexte).
     /// </summary>
-    public List<LvPosition>? RootPositionen { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<LvPosition>? RootPositionen { get; internal set; }
 
     /// <summary>
     /// (Detailinfo) Die Wurzelkalkulationen einschließlich untergeordneter Kalkulationen.
     /// </summary>
-    public List<Kalkulation>? RootKalkulationen { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<Kalkulation>? RootKalkulationen { get; internal set; }
 
     /// <summary>
     /// Die Rechenergebnisse auf oberster Ebene. 
     /// </summary>
-    public LvItemErgebnisse? Ergebnisse { get; set; }
+    [JsonProperty]
+    public LvItemErgebnisse? Ergebnisse { get; internal init; }
 }
 
 /// <summary>
@@ -3507,6 +3735,7 @@ public class LvDetails : BaseObject
     /// </summary>
     public int? NachkommastellenPreisanteile { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
     /// <summary>
@@ -3525,38 +3754,32 @@ public class LvDetails : BaseObject
 
     public string? Sparte { get; set; }
 
-    [Obsolete("Wird künftig nicht mehr unterstützt." +
-              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
-    public string? Vorhaben { get; set; }
-
-    [Obsolete("Wird künftig nicht mehr unterstützt." +
-              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
-    public int? Alternativangebotsnummer { get; set; }
-
-    [Obsolete("Wird künftig nicht mehr unterstützt." +
-              " Bitte stattdessen die gleichnamige Eigenschaft in OenormLvDetails verwenden.")]
     public int? Abänderungsangebotsnummer { get; set; }
 
     /// <summary>
     /// Die IDs der Gliederungskataloge, die dem LV zugeordnet sind.
     /// </summary>
-    public List<Guid>? GliederungskatalogIds { get; set; }
+    [JsonProperty]
+    public List<Guid>? GliederungskatalogIds { get; internal set; }
 
     /// <summary>
     /// Die Preisanteil-Arten, die in diesem LV unterstützt werden.
     /// </summary>
-    public List<PreisanteilInfo>? PreisanteilInfos { get; set; }
+    [JsonProperty]
+    public List<PreisanteilInfo>? PreisanteilInfos { get; internal set; }
 
     /// <summary>
     /// Die möglichen Variantenzusammenstellungen (ohne die implizit
     /// definierte Standard-Variantenzusammenstellung).
     /// </summary>
-    public List<Variantenzusammenstellung>? Variantenzusammenstellungen { get; set; }
+    [JsonProperty]
+    public List<Variantenzusammenstellung>? Variantenzusammenstellungen { get; internal set; }
 
     /// <summary>
     /// Die möglichen Zuordnungskennzeichen.
     /// </summary>
-    public List<Zuordnungskennzeichen>? ZuordnungskennzeichenList { get; set; }
+    [JsonProperty]
+    public List<Zuordnungskennzeichen>? ZuordnungskennzeichenList { get; internal set; }
 
     /// <summary>
     /// Die Nummer der aktiven Variantenzusammenstellung (oder null im Fall der
@@ -3619,7 +3842,7 @@ public class LvDetails : BaseObject
     /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 /// <summary>
@@ -3739,20 +3962,24 @@ public class Variantenzusammenstellung : BaseObject
 
 public class Zuordnungskennzeichen : BaseObject
 {
-    public string? Nummer { get; set; }
+    [JsonProperty]
+    public string? Nummer { get; internal init; }
 
-    public string? Bezeichnung { get; set; }
+    [JsonProperty]
+    public string? Bezeichnung { get; internal init; }
 
     /// <summary>
     /// Liste mit Varianten.
     /// </summary>
-    public List<Variante>? Varianten { get; set; }
+    [JsonProperty]
+    public List<Variante>? Varianten { get; internal init; }
 
     /// <summary>
     /// Ordnet einer Variantenzusammenstellung (identifiziert über die Nummer der Variantenzusammenstellung
     /// eine Variante zu (identifiziert über die Nummer der Variante).  
     /// </summary>
-    public Dictionary<string, int>? VariantenzusammenstellungToVariante { get; set; }
+    [JsonProperty]
+    public Dictionary<string, int>? VariantenzusammenstellungToVariante { get; internal init; }
 }
 
 public class Variante : BaseObject
@@ -3760,9 +3987,11 @@ public class Variante : BaseObject
     /// <summary>
     /// Nummer der Variante (identifiziert die Variante innerhalb ihres Zuordnungskennzeichen).
     /// </summary>
-    public int Nummer { get; set; }
+    [JsonProperty]
+    public int Nummer { get; internal init; }
 
-    public string? Bezeichnung { get; set; }
+    [JsonProperty]
+    public string? Bezeichnung { get; internal init; }
 }
 
 public enum LvStatus
@@ -3975,6 +4204,21 @@ public enum OenormLvArt
     VertragsanpassungsLV,
 };
 
+public enum LbTyp
+{
+    Leistungsbeschreibung,
+    Ergaenzungsleistungsbeschreibung,
+}
+
+public enum LbItemTyp
+{
+    Leistungsgruppe,
+    Untergruppe,
+    Grundtext,
+    Leistungsposition,
+    Vorbemerkungsposition,
+}
+
 public enum LvItemTyp
 {
     None,
@@ -4055,6 +4299,7 @@ public class NewLvItemInfo : BaseObject
     /// <summary>
     /// Der Typ des neuen Knoten (z.B. Leistungsgruppe) oder Position (z.B. Leistungsposition). Muss befüllt sein.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public LvItemTyp ItemTyp { get; set; }
 
     public string? Nummer { get; set; }
@@ -4091,7 +4336,7 @@ public class NewLvItemInfo : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 /// <summary>
@@ -4246,9 +4491,9 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9".
     /// </summary>
     public decimal? Prognosemenge10 { get; set; }
-    
+
     public decimal? Umlagemenge { get; set; }
-    
+
     public bool EinheitSchreibgeschützt { get; set; }
 
     public bool EinheitspreisSchreibgeschützt { get; set; }
@@ -4421,7 +4666,8 @@ public class LvItemBase : BaseObject
     /// Enthält berechnete Werte. Ist nur befüllt, wenn das gesamte LV abgerufen wird
     /// (per /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}).
     /// </summary>
-    public LvItemErgebnisse? Ergebnisse { get; set; }
+    [JsonProperty]
+    public LvItemErgebnisse? Ergebnisse { get; internal set; }
 
     public bool Schreibgeschützt { get; set; }
 
@@ -4454,7 +4700,7 @@ public class LvItemBase : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 public class NachlassInfo : BaseObject
@@ -4535,9 +4781,17 @@ public class LvItemLbInfo : BaseObject
 /// </summary>
 public class LvKnoten : LvItemBase
 {
-    public List<LvKnoten>? Knoten { get; set; }
+    /// <summary>
+    /// Die untergeordneten Knoten. Ist befüllt beim Auslesen des gesamten Leistungsverzeichnisses.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyList<LvKnoten>? Knoten { get; internal set; }
 
-    public List<LvPosition>? Positionen { get; set; }
+    /// <summary>
+    /// Die enthaltenen Positionen. Ist befüllt beim Auslesen des gesamten Leistungsverzeichnisses.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyList<LvPosition>? Positionen { get; internal set; }
 }
 
 public enum LvPositionsart
@@ -4627,7 +4881,7 @@ public class LvPosition : LvItemBase
     /// Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9".
     /// </summary>
     public decimal? Prognosemenge10 { get; set; }
-    
+
     public decimal? Umlagemenge { get; set; }
 
     public bool EinheitSchreibgeschützt { get; set; }
@@ -4765,43 +5019,62 @@ public class LvPositionGliederungsKnoten : BaseObject
 
 public class LvItemErgebnisse : BaseObject
 {
-    public Money? Einheitspreis { get; set; }
+    [JsonProperty]
+    public Money? Einheitspreis { get; internal set; }
 
     /// <summary>
     /// Gesamtbetrag (netto) inkl. Aufschläge/Nachlässe.
     /// </summary>
-    public Money? Betrag { get; set; }
+    [JsonProperty]
+    public Money? Betrag { get; internal set; }
 
     /// <summary>
     /// Gesamtbetrag (brutto) inkl. Aufschläge/Nachlässe.
     /// </summary>
-    public Money? BetragBrutto { get; set; }
+    [JsonProperty]
+    public Money? BetragBrutto { get; internal set; }
 
     /// <summary>
     /// Gesamtbetrag (netto) ohne Aufschläge/Nachlässe.
     /// </summary>
-    public Money? BetragInklAN { get; set; }
+    [JsonProperty]
+    public Money? BetragInklAN { get; internal set; }
 
     /// <summary>
     /// Gesamtbetrag (brutto) ohne Aufschläge/Nachlässe.
     /// </summary>
-    public Money? BetragBruttoInklAN { get; set; }
+    [JsonProperty]
+    public Money? BetragBruttoInklAN { get; internal set; }
 
     /// <summary>
     /// Die für die Berechnung verwendete Menge.
     /// </summary>
-    public decimal? Menge { get; set; }
+    [JsonProperty]
+    public decimal? Menge { get; internal set; }
 }
 
 /// <summary>
-/// Enthält ein importieres Leistungsverzeichnis mit den vom 
-/// Importer erzeugten Meldungen.
+/// Enthält das Ergebnis eines Leistungsverzeichnis-Imports.
 /// </summary>
 public class LeistungsverzeichnisMitImportMeldungen : BaseObject
 {
-    public Leistungsverzeichnis? ImportieresLeistungsverzeichnis { get; set; }
+    [Obsolete("Dieses Property wird künftig nicht mehr unterstützt. Verwenden Sie stattdessen die Property "
+        + "LeistungsverzeichnisId, um die ID des importierten LVs zu erhalten.")]
+    [JsonProperty]
+    public Leistungsverzeichnis? ImportieresLeistungsverzeichnis { get; internal init; }
 
-    public List<ResultInfo>? ImporterMeldungen { get; set; }
+    /// <summary>
+    /// Im Fall eines erfolgreichen LV-Imports enthält diese Property die ID des importierten LVs.
+    /// </summary>
+    [JsonProperty]
+    public Guid? LeistungsverzeichnisId { get; internal init; }
+
+    /// <summary>
+    /// Eine Liste von Meldungen, die während des Imports aufgetreten sind. Insbesondere sind hier im Fall eines
+    /// fehlgeschlagenen Imports Fehlermeldungen enthalten.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyList<ResultInfo> ImporterMeldungen { get; internal init; } = [];
 }
 
 /// <summary>
@@ -4812,22 +5085,26 @@ public class ResultInfo : BaseObject
     /// <summary>
     /// Meldungstext (z.B. Fehlermeldung).
     /// </summary>
-    public string? Text { get; set; }
+    [JsonProperty]
+    public string? Text { get; internal init; }
 
     /// <summary>
     /// Schweregrad der Meldung.
     /// </summary>
-    public MeldungSeverity Severity { get; set; }
+    [JsonProperty]
+    public MeldungSeverity Severity { get; internal init; }
 
     /// <summary>
     /// Wert der betroffenen Property, sofern relevant.
     /// </summary>
-    public object? Wert { get; set; }
+    [JsonProperty]
+    public object? Wert { get; internal init; }
 
     /// <summary>
     /// Zusätzliche meldungsspezifische Informationen.
     /// </summary>
-    public object? Tag { get; set; }
+    [JsonProperty]
+    public object? Tag { get; internal init; }
 }
 
 /// <summary>
@@ -4885,6 +5162,211 @@ public class ImportLvAusByteArrayInfo : BaseObject
 }
 
 #endregion Leistungsverzeichnis
+
+#region Leistungsbeschreibung
+
+public enum LbÄnderungsumfang
+{
+    Unverändert,
+    GeringfuegigGeändert,
+    Geändert
+}
+
+/// <summary>
+/// Basisklasse für LB Gruppen und Positionen
+/// </summary>
+public abstract class LbItemBase : BaseObject
+{
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Art der Position oder Gruppe.
+    /// </summary>
+    public LbItemTyp ItemTyp { get; set; }
+
+    /// <summary>
+    /// Die lokale Nummer (z.B. "03").
+    /// </summary>
+    public string? Nummer { get; set; }
+
+    /// <summary>
+    /// Die vollständige Nummer (z.B. "01.04.03").
+    /// </summary>
+    public string? NummerKomplett { get; set; }
+
+    /// <summary>
+    /// Das Stichwort.
+    /// </summary>
+    public string? Stichwort { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob die Position oder Gruppe in der Leistungsbeschreibungergänzung verändert wurde.
+    /// </summary>
+    public LbÄnderungsumfang? LbÄnderungsumfang { get; set; }
+
+    /// <summary>
+    /// Id der Leistungsbeschreibungergänzung in der die Position oder Gruppe definiert wurde.
+    /// </summary>
+    public Guid? LeistungsbeschreibungsErgänzung { get; set; }
+
+
+    /// <summary>
+    /// Vorposition Lg
+    /// </summary>
+    public string? VorpositionLg { get; set; }
+
+    /// <summary>
+    /// Vorposition Ulg
+    /// </summary>
+    public string? VorpositionUlg { get; set; }
+
+    /// <summary>
+    /// Vorposition Gtnr
+    /// </summary>
+    public string? VorpositionGtnr { get; set; }
+
+    /// <summary>
+    /// Vorposition Ftnr
+    /// </summary>
+    public string? VorpositionFtnr { get; set; }
+
+    /// <summary>
+    /// Version
+    /// </summary>
+    public int? Version { get; set; }
+
+    /// <summary>
+    /// NichtInTeilausgabe
+    /// </summary>
+    public bool? NichtInTeilausgabe { get; set; }
+
+
+    /// <summary>
+    /// Der Langtext als XHTML
+    /// </summary>
+    public string? Langtext { get; set; }
+}
+
+/// <summary>
+/// Beschreibung einer LB Position 
+/// </summary>
+public sealed class LbPosition : LbItemBase
+{
+    /// <summary>
+    /// Anzeigename optionalen Einheit
+    /// </summary>
+    public string? Einheit { get; set; }
+}
+
+public sealed class LbKnoten : LbItemBase
+{
+    public List<LbKnoten>? Knoten { get; set; }
+
+    public List<LbPosition>? Positionen { get; set; }
+}
+
+/// <summary>
+/// Beschreibt eine Leistungsbeschreibung / Leistungsbeschreibungergänzung
+/// </summary>
+public sealed class Leistungsbeschreibung : BaseObject
+{
+    public Guid? Id { get; set; }
+
+    /// <summary>
+    /// Die Id der Basisleistungsbeschreibung. Eigenschaft nur gesetzt, wenn es sich um eine Leistungsbeschreibungergänzung handelt.
+    /// </summary>
+    public Guid? LeistungsbeschreibungId { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob es sich um eine Leisungsbeschreibung oder um eine Leistungsbeschreibungergänzung handelt.
+    /// </summary>
+    public LbTyp? Typ { get; set; }
+
+
+    /// <summary>
+    /// Die Bezeichnung der Leistungsbeschreibung / Leistungsbeschreibungergänzung
+    /// </summary>
+    public string? Bezeichnung { get; set; }
+
+    /// <summary>
+    /// (Detailinfo) Die Knoten der obersten Ebene (z.B. Leistungsgruppen) einschließlich untergeordneter Knoten und Positionen.
+    /// </summary>
+    public List<LbKnoten>? RootKnotenListe { get; set; }
+
+    /// <summary>
+    /// Kenndaten der Leistungsbeschreibung oder Leistungsbeschreibungergänzung
+    /// </summary>
+    public LeistungsbeschreibungKenndaten? Kenndaten { get; set; }
+
+    /// <summary>
+    /// Wenn vorhanden die Kenndaten der Vorversion
+    /// </summary>
+    public LeistungsbeschreibungKenndaten? KenndatenVorversion { get; set; }
+
+    public NormExakt? Ausgabe { get; set; }
+}
+
+public enum LbStatus
+{
+    Entwurf,
+    Freigegeben,
+}
+
+public sealed class Kontaktdaten : BaseObject
+{
+    public string? Firmenname { get; set; }
+    public string? Vorname { get; set; }
+    public string? Nachname { get; set; }
+
+    public string? Strasse { get; set; }
+    public string? Ort { get; set; }
+    public string? Plz { get; set; }
+    public string? Email { get; set; }
+    public string? Homepage { get; set; }
+    public string? Zusatzinfo { get; set; }
+    public string? Telefon { get; set; }
+    public string? Fax { get; set; }
+}
+
+public sealed class LeistungsbeschreibungKenndaten : BaseObject
+{
+    /// <summary>
+    /// Versionsdatum
+    /// </summary>
+    public DateTime? VersionsDatum { get; set; }
+
+    /// <summary>
+    /// Version der LB z.B.: 22
+    /// </summary>
+    public int? VersionsNummer { get; set; }
+
+    /// <summary>
+    /// Kennung der LB z.B.: "LB"
+    /// </summary>
+    public string? Kennung { get; set; }
+
+    /// <summary>
+    /// Entwurf o. Freigegeben
+    /// </summary>
+    public LbStatus? Status { get; set; }
+
+    public string? DownloadLink { get; set; }
+
+    public string? Teilausgabe { get; set; }
+
+    /// <summary>
+    /// Kontaktdaten der herausgebenden Firma
+    /// </summary>
+    public Kontaktdaten? Firma { get; set; }
+
+
+    /// <summary>
+    /// Kontaktdaten der herausgebenden Person
+    /// </summary>
+    public Kontaktdaten? Kontaktperson { get; set; }
+}
+
+#endregion Leistungsbeschreibung
 
 #region Mengenermittlung
 
@@ -4947,30 +5429,50 @@ public enum RechnungsArt
 public class NewRechnungInfo : BaseObject
 {
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
 }
 
 public class Rechnung : BaseObject
 {
     public Guid Id { get; set; }
+
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
+
     public DateTime? Rechnungsdatum { get; set; }
+
     public string? ExterneRechnungsnummer { get; set; }
+
     public DateTime? Eingangsdatum { get; set; }
+
     public DateTime? GesendetAm { get; set; }
+
     public RechnungsStatus? Status { get; set; }
+
     public List<Zahlung>? Zahlungen { get; set; }
+
     public int? LaufendeNummerKapsel { get; set; }
+
     public RechnungsArt? Art { get; set; }
+
     public decimal? ProzentDerAuftragssumme { get; set; }
+
     public bool? IstInforechnung { get; set; }
+
     public decimal? NettoUngeprüft { get; set; }
+
     public decimal? NettoForderungKorrektur { get; set; }
+
     public bool? IstGeschützt { get; set; }
+
     public bool? BürgschaftBankhaftbrief { get; set; }
+
     public DateTime? GewährleistungBeginn { get; set; }
+
     public DateTime? GewährleistungBis { get; set; }
+
     public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
 
     /// <summary>
@@ -4981,8 +5483,9 @@ public class Rechnung : BaseObject
     /// <summary>
     /// Enthält berechnete Werte dieser Rechnung (ist auch beim Abrufen aller Rechnungen befüllt).
     /// </summary>
-    public RechnungErgebnisse? Ergebnisse { get; set; }
-    
+    [JsonProperty]
+    public RechnungErgebnisse? Ergebnisse { get; internal init; }
+
     /// <summary>
     /// (Detailinfo) Ist nur befüllt, wenn die kaufmännische Integration (Finance-Anbindung) aktiv ist, nicht aber
     /// das Rechnungsausgangsbuch. Entspricht dem Inhalt des Registers "Kontierung" in der Rechnungsverwaltung.
@@ -4992,7 +5495,7 @@ public class Rechnung : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
 }
 
 /// <summary>
@@ -5035,89 +5538,129 @@ public class RechnungKontierung
 /// </summary>
 public class RechnungErgebnisse
 {
-    public decimal? RechnungsbetragNetto { get; set; }
+    [JsonProperty]
+    public decimal? RechnungsbetragNetto { get; internal init; }
 
-    public decimal? NettobetragInklAN { get; set; }
-    
-    public decimal? RechnungsbetragKumuliertNetto { get; set; }
-    
-    public decimal? NettobetragInklANKumuliert { get; set; }
-    
-    public decimal? RechnungsbetragBrutto { get; set; }
-    
-    public decimal? RechnungsbetragKumuliertBrutto { get; set; }
-    
-    public decimal? FreigabeNetto { get; set; }
-    
-    public decimal? NettobetragInklANKorrigiert { get; set; }
-    
-    public decimal? FreigabeKumuliertNetto { get; set; }
-    
-    public decimal? NettobetragInklANKumuliertKorrigiert { get; set; }
-    
-    public decimal? FreigabeBrutto { get; set; }
-    
-    public decimal? FreigabeKumuliertBrutto { get; set; }
-    
-    public decimal? Zahlungen { get; set; }
-    
-    public decimal? Skonto { get; set; }
-    
-    public decimal? Ausbuchung { get; set; }
+    [JsonProperty]
+    public decimal? NettobetragInklAN { get; internal init; }
 
-    public decimal? Offen { get; set; }
+    [JsonProperty]
+    public decimal? RechnungsbetragKumuliertNetto { get; internal init; }
 
-    public decimal? ZahlungenKumuliert { get; set; }
-    
-    public decimal? SkontoKumuliert { get; set; }
-    
-    public decimal? AusbuchungKumuliert { get; set; }
+    [JsonProperty]
+    public decimal? NettobetragInklANKumuliert { get; internal init; }
 
-    public decimal? OffenKumuliert { get; set; }
+    [JsonProperty]
+    public decimal? RechnungsbetragBrutto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? RechnungsbetragKumuliertBrutto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? FreigabeNetto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? NettobetragInklANKorrigiert { get; internal init; }
+
+    [JsonProperty]
+    public decimal? FreigabeKumuliertNetto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? NettobetragInklANKumuliertKorrigiert { get; internal init; }
+
+    [JsonProperty]
+    public decimal? FreigabeBrutto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? FreigabeKumuliertBrutto { get; internal init; }
+
+    [JsonProperty]
+    public decimal? Zahlungen { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Skonto { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Ausbuchung { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Offen { get; internal set; }
+
+    [JsonProperty]
+    public decimal? ZahlungenKumuliert { get; internal set; }
+
+    [JsonProperty]
+    public decimal? SkontoKumuliert { get; internal set; }
+
+    [JsonProperty]
+    public decimal? AusbuchungKumuliert { get; internal set; }
+
+    [JsonProperty]
+    public decimal? OffenKumuliert { get; internal set; }
 }
 
 public class Zahlung : BaseObject
 {
     public Guid Id { get; set; }
+
     public DateTime? Zahlungsdatum { get; set; }
+
     public decimal? Zahlbetrag { get; set; }
+
     public decimal? Skontobetrag { get; set; }
+
     public string? Bemerkung { get; set; }
 }
 
 public class AbrechnungsMerkmal : BaseObject
 {
     public Guid Id { get; set; }
+
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
+
     public string? BezeichnungKomplett { get; set; }
+
     public bool IsAuswertungsKennzeichen { get; set; }
+
     public List<AbrechnungsMerkmal>? Merkmale { get; set; }
 }
 
 public class Leistungszeitraum : BaseObject
 {
     public Guid Id { get; set; }
+
     public string? Nummer { get; set; }
+
     public string? Bezeichnung { get; set; }
+
     public DateTime? Beginn { get; set; }
+
     public DateTime? Ende { get; set; }
 }
 
 public class NewPositionsblockInfo : BaseObject
 {
     public MengenArt? MengenArt { get; set; }
+
     public Guid? PositionId { get; set; }
+
     public Guid? VerherigePositionId { get; set; }
+
     public Guid? AufmaßblattId { get; set; }
+
     public Guid? LeistungszeitraumId { get; set; }
+
     public Guid? RechnungId { get; set; }
 }
 
 public class Positionsblock : BaseObject
 {
     public Guid Id { get; set; }
+
     public Guid? PositionId { get; set; }
+
     public Guid? PositionKorrigiertId { get; set; }
 
     /// <summary>
@@ -5126,14 +5669,19 @@ public class Positionsblock : BaseObject
     public string? Nummer { get; set; }
 
     public string? NummerKorrigiert { get; set; }
+
     public string? Kurztext { get; set; }
+
     public string? Einheit { get; set; }
 
     public Guid? AufmaßblattId { get; set; }
+
     public Guid? LeistungszeitraumId { get; set; }
+
     public Guid? RechnungId { get; set; }
 
     public decimal? Menge { get; set; }
+
     public decimal? MengeKorrigiert { get; set; }
 
     public List<Aufmaßzeile>? Aufmaßzeilen { get; set; }
@@ -5152,7 +5700,7 @@ public enum MengenArt
     AbrechnungKorrigiert = 4,
     Rechnung = 5,
     Rechnungkorrigiert = 6,
-    
+
     /// <summary>
     /// Prognose1: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "VA_Menge"
     /// </summary>
@@ -5212,28 +5760,42 @@ public class Aufmaßzeile : BaseObject
     public AufmaßzeilenArt Art { get; set; }
 
     public AufmaßzeilenArt? ArtKorrigiert { get; set; }
+
     public string? InternerKommentar { get; set; }
+
     public string? Inhalt { get; set; }
+
     public string? InhaltKorrigiert { get; set; }
+
     public string? Variable { get; set; }
+
     public string? Erläuterung { get; set; }
+
     public string? AdresseVon { get; set; }
+
     public string? AdresseBis { get; set; }
+
     public decimal? Faktor { get; set; }
+
     public decimal? FaktorKorrigiert { get; set; }
+
     public Formel? Formel { get; set; }
+
     public Formel? FormelKorrigiert { get; set; }
+
     public bool? ErzeugtInKorrektur { get; set; }
-    
+
     /// <summary>
     /// Die berechnete Menge (wird bei Schreibzugriffen ignoriert)
     /// </summary>
-    public decimal? Menge { get; set; }
+    [JsonProperty]
+    public decimal? Menge { get; internal init; }
 
     /// <summary>
     /// Die berechnete Korrekturmenge (wird bei Schreibzugriffen ignoriert)
     /// </summary>
-    public decimal? MengeKorrigiert { get; set; }
+    [JsonProperty]
+    public decimal? MengeKorrigiert { get; internal init; }
 
     public bool Geprüft { get; set; }
 
@@ -5261,10 +5823,15 @@ public class Hilfsberechnung : BaseObject
     public HilfszeilenArt? ArtKorrigiert { get; set; }
 
     public string? Inhalt { get; set; }
+
     public string? InhaltKorrigiert { get; set; }
+
     public string? Variable { get; set; }
+
     public Formel? Formel { get; set; }
+
     public Formel? FormelKorrigiert { get; set; }
+
     public bool? ErzeugtInKorrektur { get; set; }
 
     public bool Geprüft { get; set; }
@@ -5282,13 +5849,16 @@ public enum HilfszeilenArt
 public class Formel : BaseObject
 {
     public int Id { get; set; }
+
     public List<FormelParameter>? Params { get; set; }
 }
 
 public class FormelParameter : BaseObject
 {
     public string? Name { get; set; }
+
     public decimal? Value { get; set; }
+
     public string? Variable { get; set; }
 }
 
@@ -5485,35 +6055,50 @@ public class Rechenwert : BaseObject
     /// <summary>
     /// Identifiziert den Wertetyp (z.B. "Lv_Listenpreis_Brutto").
     /// </summary>
-    public string? Id { get; set; }
+    [JsonProperty]
+    public string Id { get; internal init; } = "";
 
-    public decimal? Wert { get; set; }
+    [JsonProperty]
+    public decimal? Wert { get; internal init; }
 
-    public decimal? Basiswert { get; set; }
+    [JsonProperty]
+    public decimal? Basiswert { get; internal init; }
 
-    public string? Währung { get; set; }
+    [JsonProperty]
+    public string? Währung { get; internal init; }
 
-    public string? PreisanteilCode { get; set; }
+    [JsonProperty]
+    public string? PreisanteilCode { get; internal init; }
 
-    public string? UmsatzsteuerCode { get; set; }
+    [JsonProperty]
+    public string? UmsatzsteuerCode { get; internal init; }
 
-    public int? ZuschlagIndex { get; set; }
+    [JsonProperty]
+    public int? ZuschlagIndex { get; internal init; }
 
-    public ZuschlagsTyp? ZuschlagsTyp { get; set; }
+    [JsonProperty]
+    public ZuschlagsTyp? ZuschlagsTyp { get; internal init; }
 
-    public decimal? PreisanteilUmrechnungssatz { get; set; }
+    [JsonProperty]
+    public decimal? PreisanteilUmrechnungssatz { get; internal init; }
 
-    public Guid? PreisperiodeId { get; set; }
+    [JsonProperty]
+    public Guid? PreisperiodeId { get; internal init; }
 
-    public int? PreisperiodeNummer { get; set; }
+    [JsonProperty]
+    public int? PreisperiodeNummer { get; internal init; }
 
-    public Guid? PositionId { get; set; }
+    [JsonProperty]
+    public Guid? PositionId { get; internal init; }
 
-    public string? Kostenart { get; set; }
+    [JsonProperty]
+    public string? Kostenart { get; internal init; }
 
-    public Guid? WarengruppeId { get; set; }
+    [JsonProperty]
+    public Guid? WarengruppeId { get; internal init; }
 
-    public DBKostenart? DBKostenart { get; set; }
+    [JsonProperty]
+    public DBKostenart? DBKostenart { get; internal init; }
 }
 
 /// <summary>
@@ -5524,12 +6109,14 @@ public class ProjektRechenwerte : BaseObject
     /// <summary>
     /// Die Rechenwerte, gegliedert nach LV-Art.
     /// </summary>
-    public Dictionary<LvArt, List<Rechenwert>>? Werte { get; set; }
+    [JsonProperty]
+    public IReadOnlyDictionary<LvArt, IReadOnlyList<Rechenwert>>? Werte { get; internal init; }
 
     /// <summary>
     /// Rechenwerte aller Leistungsverzeichnisse.
     /// </summary>
-    public List<LvRechenwerte>? LvWerte { get; set; }
+    [JsonProperty]
+    public IReadOnlyList<LvRechenwerte>? LvWerte { get; internal init; }
 }
 
 /// <summary>
@@ -5540,12 +6127,14 @@ public class LvRechenwerte : BaseObject
     /// <summary>
     /// ID des Leistungsverzeichnisses.
     /// </summary>
-    public Guid LvId { get; set; }
+    [JsonProperty]
+    public Guid LvId { get; internal init; }
 
     /// <summary>
     /// Die Rechenwerte, gegliedert nach LV-Art.
     /// </summary>
-    public Dictionary<LvArt, List<Rechenwert>>? Werte { get; set; }
+    [JsonProperty]
+    public IReadOnlyDictionary<LvArt, IReadOnlyList<Rechenwert>>? Werte { get; internal init; }
 }
 
 #region Bautagebuch

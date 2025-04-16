@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Win32;
 using Nevaris.Build.ClientApi;
@@ -57,10 +58,10 @@ namespace Lv_Viewer
 
                         // Durch enthaltene Ordner rekursiv iterieren 
                         AddOrdners(
-                            projektServerDetailed.RootOrdnerList,
+                            projektServerDetailed.RootOrdnerList!,
                             parentPfad: projektServerDetailed.Bezeichnung);
 
-                        void AddOrdners(IEnumerable<SpeicherortOrdner> ordnerList, string parentPfad)
+                        void AddOrdners(IEnumerable<SpeicherortOrdner> ordnerList, string? parentPfad)
                         {
                             foreach (var ordner in ordnerList)
                             {
@@ -72,7 +73,7 @@ namespace Lv_Viewer
                                         ordner: ordner,
                                         pfad: pfad));
 
-                                AddOrdners(ordner.OrdnerList, parentPfad: pfad);
+                                AddOrdners(ordner.OrdnerList!, parentPfad: pfad);
                             }
                         }
                     }
@@ -115,7 +116,7 @@ namespace Lv_Viewer
 
             if (SelectedSpeicherOrt == null || Client == null) return;
 
-            var projektInfos = SelectedSpeicherOrt.Ordner?.ProjektInfos ?? SelectedSpeicherOrt.Speicherort.RootProjektInfos;
+            var projektInfos = SelectedSpeicherOrt.Ordner?.ProjektInfos ?? SelectedSpeicherOrt.Speicherort.RootProjektInfos!;
             foreach (var p in projektInfos.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
             {
                 Projekte.Add(p);
@@ -184,7 +185,7 @@ namespace Lv_Viewer
 
                 if (projekt != null)
                 {
-                    foreach (var lv in projekt.Leistungsverzeichnisse.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
+                    foreach (var lv in projekt.Leistungsverzeichnisse!.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
                     {
                         Lvs.Add(lv);
                     }
@@ -285,7 +286,7 @@ namespace Lv_Viewer
         /// Methode zum Importieren eines Leistungsvezeichnis Datenträger und Anzeige des daraus erzeugten
         /// Leistungsverzeichnis.
         /// </summary>
-        internal async void LeistungsverzeichnisImportieren()
+        internal async Task LeistungsverzeichnisImportieren()
         {
             _mainWindow.SetWaitSpinner(false);
             if (SelectedProjekt == null || Client == null)
@@ -300,21 +301,29 @@ namespace Lv_Viewer
             if (openFileDialog.ShowDialog() == true)
             {
                 _mainWindow.SetWaitSpinner(true);
-                var fileInfo = new FileInfo(openFileDialog.FileName);
-                FileInfoPart fileInfoPart = new FileInfoPart(fileInfo, fileInfo.Name);
-                var importResult = await Client.ProjektApi.CreateLeistungsverzeichnisAusDatentraegerClientDatei(SelectedProjekt.Id, fileInfoPart);
+                var inputArray = await File.ReadAllBytesAsync(openFileDialog.FileName);
+                var importResult = await Client.ProjektApi.CreateLeistungsverzeichnisAusByteArray(
+                    SelectedProjekt.Id,
+                    new ImportLvAusByteArrayInfo
+                    {
+                        Inhalt = inputArray,
+                        Dateiname = openFileDialog.FileName
+                    });
 
                 /* Das Resultat des Importvorgangs ist ein Leistungsverzeichnis und Meldungen die 
                  * während des Importvorganges entstanden sind. */
-                var importieresLv = importResult.ImportieresLeistungsverzeichnis;
+                var importieresLvId = importResult.LeistungsverzeichnisId;
                 var meldungenVonImporter = importResult.ImporterMeldungen;
 
-                if (importieresLv == null)
+                if (importieresLvId == null)
                 {
                     MessageBox.Show("Es wurde kein Leistungsverzeichnis importiert.");
                 }
                 else
                 {
+                    var importieresLv = await Client.ProjektApi.GetLeistungsverzeichnis(
+                        SelectedProjekt.Id, importieresLvId.Value);
+                    
                     // Das erzeugte LV anzeigen.
                     SelectedLv = importieresLv;
                 }

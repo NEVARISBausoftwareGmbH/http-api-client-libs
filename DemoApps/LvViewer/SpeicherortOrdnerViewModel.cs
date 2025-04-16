@@ -7,7 +7,7 @@ namespace Lv_Viewer;
 /// </summary>
 public class SpeicherortOrdnerViewModel
 {
-    public SpeicherortOrdnerViewModel(Speicherort speicherort, SpeicherortOrdner? ordner, string pfad)
+    public SpeicherortOrdnerViewModel(Speicherort speicherort, SpeicherortOrdner? ordner, string? pfad)
     {
         Speicherort = speicherort;
         Ordner = ordner;
@@ -27,5 +27,5 @@ public class SpeicherortOrdnerViewModel
     /// <summary>
     /// Der vollständige Pfad (Speicherort-Name + Ordner-Namen)
     /// </summary>
-    public string Pfad { get; }
+    public string? Pfad { get; }
 }

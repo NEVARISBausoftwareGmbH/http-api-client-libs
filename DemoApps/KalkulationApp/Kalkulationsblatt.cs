@@ -21,7 +21,7 @@ namespace KalkulationApp
         {
             if (OrigianlKalkblatt != null)
             {                
-                foreach (var zeile in OrigianlKalkblatt.Zeilen)
+                foreach (var zeile in OrigianlKalkblatt.Zeilen!)
                 {
                     var newKalkZeile = new KalkZeile(zeile);
                     newKalkZeile.Kalkblatt = this;

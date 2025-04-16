@@ -7,8 +7,8 @@ try
     // erst beim ersten API-Aufruf (hier: client.StammApi.GetSpeicherorte()).
     using var client = new NevarisBuildClient("https://localhost:8500", new NevarisBuildClientOptions
     {
-        // Falls Businessdienst-seitig das Setting BuildApiAuthenticationRequired = True gesetzt ist,
-        // müssen hier die Authentifizierungsinformationen übergeben werden.
+        // Hier müssen Authentifizierungsdaten übergeben werden, außer die API wird per Build
+        // gehostet oder DisableBuildApiAuthentication = true gesetzt.
         // Username = "<Username>",
         // Password = "<Password>"
     });
@@ -19,6 +19,14 @@ try
     {
         throw new InvalidOperationException(
             $"Versionskonflikt: API: {versionCheckResult.ApiVersion}, client: {versionCheckResult.ClientVersion}");
+    }
+
+    // Auslesen der Mandanten
+    var mandanten = await client.StammApi.GetMandaten();
+
+    foreach (var mandant in mandanten)
+    {
+        Console.WriteLine($"{mandant.Id}: {mandant.AnzeigeText}");
     }
 
     // Auslesen der Speicherorte

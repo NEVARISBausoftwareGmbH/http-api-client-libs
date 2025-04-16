@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
-using Nevaris.Build.ClientApi.Fianance;
+using Nevaris.Build.ClientApi.Finance;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;

@@ -28,7 +28,7 @@ namespace Lv_Viewer
 
             var lvRootNode = CreateLvNode();
 
-            LoadNodesRecursive(_lv.RootKnotenListe, lvRootNode);
+            LoadNodesRecursive(_lv.RootKnotenListe!, lvRootNode);
         }
 
         private LvNode CreateLvNode()
@@ -38,14 +38,17 @@ namespace Lv_Viewer
             
             if (_lv != null)
             {
-                lvRootNodeItem = new(null);
-                lvRootNodeItem.NummerUndBezeichnung = String.Join(" - ", _lv.Nummer, _lv.Bezeichnung);
-                lvRootNodeItem.Betrag = _lv?.Ergebnisse?.Betrag?.FirstValue;
+                lvRootNodeItem = new LvNode(null)
+                {
+                    NummerUndBezeichnung = String.Join(" - ", _lv.Nummer, _lv.Bezeichnung),
+                    Betrag = _lv?.Ergebnisse?.Betrag?.FirstValue
+                };
+
                 RootNodes.Add(lvRootNodeItem);
                 //Texte auf LV Ebene
                 if (_lv != null)
                 {
-                    foreach (var pos in _lv.RootPositionen)
+                    foreach (var pos in _lv.RootPositionen!)
                     {
                         var position = new LvPosition(pos, _mengenArt);
                         lvRootNodeItem.ItemNodes.Add(position);
@@ -63,13 +66,13 @@ namespace Lv_Viewer
                 rootLvItem.ItemNodes.Add(nodeLvItem);
                 CreatePositionen(node, nodeLvItem);
 
-                LoadNodesRecursive(node.Knoten, nodeLvItem);
+                LoadNodesRecursive(node.Knoten!, nodeLvItem);
             }
         }
 
         private void CreatePositionen(LvKnoten node, LvNode nodeLvItem)
         {
-            foreach (var pos in node.Positionen)
+            foreach (var pos in node.Positionen!)
             {
                 var position = new LvPosition(pos, _mengenArt);
                 nodeLvItem.ItemNodes.Add(position);
@@ -80,7 +83,7 @@ namespace Lv_Viewer
 
         public ObservableCollection<LvNode> RootNodes
         {
-            get { return _rootNodes; }
+            get => _rootNodes;
             set { _rootNodes = value; OnPropertyChanged(nameof(RootNodes)); }
         }
 
@@ -99,7 +102,7 @@ namespace Lv_Viewer
 
         public LvItem? SelectedLvItem
         {
-            get { return _selectedLvItem; }
+            get => _selectedLvItem;
             set 
             {
                 _selectedLvItem = value; 

@@ -13,7 +13,7 @@ namespace Nevaris.Build.ClientApi;
 /// <summary>
 /// HttpMessageHandler, der bei jedem ausgehenden HTTP-Request aufgerufen wird. Sorgt dafür, dass ein zu den
 /// Benutzerdaten passendes JWT (Json Web Token) im Header mitgegeben wird. Beim ersten Aufruf wird
-/// das Token vom API-Endpunkt /authentication/login angefordert.
+/// das Token vom API-Endpunkt POST /authentication/login angefordert.
 /// </summary>
 /// <remarks>
 /// Diese Klasse wird intern von <see cref="NevarisBuildClient"/> verwendet, wenn per
@@ -44,6 +44,12 @@ public class NevarisIdentityHandler : DelegatingHandler
         _username = username;
         _password = password;
     }
+
+    /// <summary>
+    /// Optionaler HttpClient, über den die Authentifizierung, d.h. der Request gegen POST /authentication/login
+    /// durchgeführt wird. Ist primär für Diagnosezwecke gedacht. Falls null, wird der HttpClient implizit erzeugt.
+    /// </summary>
+    public HttpClient? CustomHttpClient { get; set; }
 
     /// <inheritdoc />
     protected override async Task<HttpResponseMessage> SendAsync(
@@ -76,11 +82,11 @@ public class NevarisIdentityHandler : DelegatingHandler
             return cachedToken;
         }
 
-        using var client = new HttpClient(NevarisBuildClientUtils.CreateHttpClientHandler());
-        client.BaseAddress = new Uri(_hostUrl);
+        var effectiveHttpClient = CustomHttpClient ?? CreateHttpClient();
+        using var disposableClient = CustomHttpClient is not null ? null : effectiveHttpClient;
 
         // Token von API-Endpunkt /authentication/login anfordern 
-        var token = await client.GetStringAsync(
+        var token = await effectiveHttpClient.GetStringAsync(
                 $"authentication/login?userName={Uri.EscapeDataString(_username)}&password={Uri.EscapeDataString(_password)}")
             .ConfigureAwait(false) ?? throw new AuthenticationException("Missing JWT");
 
@@ -92,6 +98,13 @@ public class NevarisIdentityHandler : DelegatingHandler
         entry.AbsoluteExpiration = GetTokenExpirationTime(token).Subtract(TimeSpan.FromMinutes(2));
 
         return token;
+    }
+
+    private HttpClient CreateHttpClient()
+    {
+        var client = new HttpClient(NevarisBuildClientUtils.CreateHttpClientHandler());
+        client.BaseAddress = new Uri(_hostUrl);
+        return client;
     }
 
     /// <summary>

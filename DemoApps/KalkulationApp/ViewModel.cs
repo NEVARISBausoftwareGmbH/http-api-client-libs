@@ -102,7 +102,7 @@ namespace KalkulationApp
 
                 if (speicherort != null)
                 {
-                    foreach (var p in speicherort.ProjektInfos.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
+                    foreach (var p in speicherort.ProjektInfos!.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
                     {
                         Projekte.Add(p);
                     }
@@ -149,7 +149,7 @@ namespace KalkulationApp
 
                 if (projekt != null)
                 {
-                    foreach (var lv in projekt.Leistungsverzeichnisse.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
+                    foreach (var lv in projekt.Leistungsverzeichnisse!.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
                     {
                         Lvs.Add(lv);
                     }
@@ -232,7 +232,7 @@ namespace KalkulationApp
        
         private void LoadKalkulationen(Leistungsverzeichnis fullLv)
         {
-            foreach (var kalkulation in fullLv.RootKalkulationen.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
+            foreach (var kalkulation in fullLv.RootKalkulationen!.OrderBy(_ => _.Nummer).ThenBy(_ => _.Bezeichnung))
             {
                 Kalkulationen.Add(kalkulation);
             }
@@ -457,9 +457,9 @@ namespace KalkulationApp
                         {
                             KalkulationsZeile? zeileVariableSk = null;
                             decimal? kosten_Eigenleistung = null;
-                            bool hasEigenleistung = originalKalkblatt.Zeilen.Any(IsEigenleistung);
+                            bool hasEigenleistung = originalKalkblatt.Zeilen!.Any(IsEigenleistung);
                             bool kostenFromZZeile = false;
-                            foreach (var kalkZeile in originalKalkblatt.Zeilen)
+                            foreach (var kalkZeile in originalKalkblatt.Zeilen!)
                             {
                                 if (kalkZeile.VariablenDetails != null && kalkZeile.VariablenDetails.Variable == "sk")
                                 {
@@ -506,7 +506,7 @@ namespace KalkulationApp
         {
             if (kosten_Eigenleistung == null || zeileVariableSk == null) { return; }
             //Update vornehmen mit den gemerkten Werten.
-            var ansatzSplit = zeileVariableSk.VariablenDetails.Ansatz.Split("*");
+            var ansatzSplit = (zeileVariableSk.VariablenDetails!.Ansatz ?? "").Split("*");
             ansatzSplit[0] = kosten_Eigenleistung.Value.ToString("N2");
             if (ansatzSplit.Length > 1)
             {
@@ -545,7 +545,7 @@ namespace KalkulationApp
         private static decimal? ErmittleEigeneKosten(decimal? kosten_Eigenleistung, KalkulationsZeile kalkZeile, ref bool kostenFromZZeile)
         {        
             //Erste Z-Zeile die Kosten verwenden.
-            if (!kostenFromZZeile && kalkZeile.SummenDetails.Art == SummenKalkulationsZeileArt.Absolut)
+            if (!kostenFromZZeile && kalkZeile.SummenDetails!.Art == SummenKalkulationsZeileArt.Absolut)
             {
                 //Bei der Z-Zeile muss es sich um Eigenleistung handeln.
                 if (IsEigenleistung(kalkZeile))
@@ -558,7 +558,7 @@ namespace KalkulationApp
             {
                 //Wenn die Kosten von der Z-Zeile bereits zugewiesen wurden diese verwenden
                 //sonst sollen die Kosten der T-Zeile genommen werden.
-                kosten_Eigenleistung = kalkZeile.SummenDetails.Kosten?.FirstValue;
+                kosten_Eigenleistung = kalkZeile.SummenDetails!.Kosten?.FirstValue;
             }
 
             return kosten_Eigenleistung;

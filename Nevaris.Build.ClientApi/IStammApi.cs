@@ -320,15 +320,6 @@ public interface IStammApi
         string? niederlassungId = null);
 
     /// <summary>
-    /// Aktualisiert eine Kostenart.
-    /// </summary>
-    /// <param name="kostenartNummer">Nummer der Kostenart</param>
-    /// <param name="kostenart">Kostenart mit den neuen Werten</param>
-    [Obsolete("Diese Funktion hat einen irreführenden Namen. Stattdessen sollte UpdateKostenart verwendet werden.")]
-    [Put("/build/global/kostenarten/{kostenartNummer}")]
-    Task CreateKostenart(string kostenartNummer, [Body] Kostenart kostenart);
-
-    /// <summary>
     /// Löscht eine Kostenart.
     /// </summary>
     /// <param name="kostenartNummer">Nummer der Kostenart</param>
@@ -337,4 +328,54 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Delete("/build/global/kostenarten/{kostenartNummer}")]
     Task DeleteKostenart(string kostenartNummer, string? mandantId = null, string? niederlassungId = null);
+
+    /// <summary>
+    /// Liefert alle Leistungsbeschreibungen und Ergänzungsleistungsbeschreibungen.
+    /// </summary>
+    [Get("/build/global/leistungsbeschreibungen")]
+    Task<List<Leistungsbeschreibung>> GetLeistungsbeschreibungen();
+
+    /// <summary>
+    /// Liefert die Leistungsbeschreibung mit der angegebenen ID.
+    /// </summary>
+    [Get("/build/global/leistungsbeschreibungen/{lbId}")]
+    Task<Leistungsbeschreibung> GetLeistungsbeschreibung(
+        Guid lbId,
+        bool mitKnoten = true,
+        bool mitFormatiertenTexten = true);
+
+    /// <summary>
+    /// Liefert den LB-Knoten mit der angegebenen ID.
+    /// </summary>
+    [Get("/build/global/lbknoten/{knotenId}")]
+    Task<LbKnoten> GetLbKnoten(Guid knotenId);
+
+    /// <summary>
+    /// Liefert die LB-Position mit der angegebenen ID.  
+    /// </summary>
+    /// <param name="positionId"></param>
+    /// <returns></returns>
+    [Get("/build/global/lbpositionen/{positionId}")]
+    Task<LbPosition> GetLbPosition(Guid positionId);
+
+    /// <summary>
+    /// Liefert einen LB-Knoten (z.B.: Leistungsgruppe) entsprechend der angegebenen Suchkriterien.
+    /// </summary>
+    /// <param name="katalogId">Katalog, in dem gesucht werden soll</param>
+    /// <param name="lgNr">die LG Nummer</param>
+    /// <param name="ugNr">optional die UG Nummer</param>
+    /// <param name="gtNr">optional die GT Nummer</param>
+    [Get("/build/global/lbknoten")]
+    Task<LbKnoten> GetLbKnoten(Guid katalogId, string lgNr, string? ugNr = null, string? gtNr = null);
+
+    /// <summary>
+    /// Liefert eine LB-Position (z.B.: Einheitenposition) entsprechend der angegebenen Suchkriterien.
+    /// </summary>
+    /// <param name="katalogId">Katalog, in dem gesucht werden soll</param>
+    /// <param name="lgNr">die LG Nummer</param>
+    /// <param name="ugNr">die UG Nummer</param>
+    /// <param name="gtNr">die GT Nummer</param>
+    /// <param name="ftNr">optional die Folgetext Nummer</param>
+    [Get("/build/global/lbpositionen")]
+    Task<LbPosition> GetLbPosition(Guid katalogId, string lgNr, string ugNr, string gtNr, string? ftNr = null);
 }
