@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35919.96 d17.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nevaris.Build.ClientApi", "Nevaris.Build.ClientApi\Nevaris.Build.ClientApi.csproj", "{F68A6621-8699-4A2C-9E08-84A25F19F2BB}"
 EndProject
@@ -33,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LvKopierenApp", "DemoApps\LvKopierenApp\LvKopierenApp.csproj", "{9EC594C3-E333-4DAA-A3CF-416F9D32FA33}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lv Viewer", "DemoApps\LvViewer\Lv Viewer.csproj", "{2461F285-0764-4E8B-83B3-A4B623D92C84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetriebsmittelKostenAktualisierenConsoleApp", "DemoApps\BetriebsmittelKostenAktualisierenConsoleApp\BetriebsmittelKostenAktualisierenConsoleApp.csproj", "{1E32E0A8-0877-4756-A33E-469B6B020406}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,6 +74,10 @@ Global
 		{2461F285-0764-4E8B-83B3-A4B623D92C84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2461F285-0764-4E8B-83B3-A4B623D92C84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2461F285-0764-4E8B-83B3-A4B623D92C84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E32E0A8-0877-4756-A33E-469B6B020406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E32E0A8-0877-4756-A33E-469B6B020406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E32E0A8-0877-4756-A33E-469B6B020406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E32E0A8-0877-4756-A33E-469B6B020406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{E7DB5D44-2346-47F4-A6CE-D82A5353F5F6} = {E0D65BB9-939A-46F3-A685-4DAF9EDBF209}
 		{9EC594C3-E333-4DAA-A3CF-416F9D32FA33} = {E0D65BB9-939A-46F3-A685-4DAF9EDBF209}
 		{2461F285-0764-4E8B-83B3-A4B623D92C84} = {E0D65BB9-939A-46F3-A685-4DAF9EDBF209}
+		{1E32E0A8-0877-4756-A33E-469B6B020406} = {E0D65BB9-939A-46F3-A685-4DAF9EDBF209}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {57FB4B54-505F-400C-B853-7412AAC8FC45}

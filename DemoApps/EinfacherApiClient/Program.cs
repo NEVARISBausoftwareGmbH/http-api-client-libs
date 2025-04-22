@@ -35,6 +35,13 @@ try
     foreach (var speicherort in speicherorte)
     {
         Console.WriteLine($"{speicherort.Id}: {speicherort.Bezeichnung}");
+
+        /* Ermitteln der Projekte eines Speicherorts */
+        //var speicherortMiProjektInfos = await client.StammApi.GetSpeicherort(speicherort.Id, mitProjektInfos: true);
+        //foreach (var projektInfo in speicherortMiProjektInfos.ProjektInfos!)
+        //{
+        //    Console.WriteLine($"  {projektInfo.Id}: {projektInfo.Bezeichnung}");
+        //}
     }
 }
 catch (Refit.ApiException ex)
