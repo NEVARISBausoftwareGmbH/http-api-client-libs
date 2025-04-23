@@ -314,7 +314,7 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task UpdateKostenart(
-        string kostenartNummer, 
+        string kostenartNummer,
         [Body] Kostenart kostenart,
         string? mandantId = null,
         string? niederlassungId = null);
@@ -378,4 +378,21 @@ public interface IStammApi
     /// <param name="ftNr">optional die Folgetext Nummer</param>
     [Get("/build/global/lbpositionen")]
     Task<LbPosition> GetLbPosition(Guid katalogId, string lgNr, string ugNr, string gtNr, string? ftNr = null);
+
+
+    /// <summary>
+    /// Importiere Leistungsbeschreibung mit den übergebenen Daten.
+    /// </summary>
+    /// <param name="args">Objekt mit den zu importierenden Daten</param>
+    [Post("/build/global/Leistungsbeschreibungen/ImportiereLeistungsbeschreibung")]
+    Task<ImportiereLeistungsbeschreibungErgebnis> ImportiereLeistungsbeschreibung(
+        [Body] ImportiereLeistungsbeschreibungInfo args);
+
+    /// <summary>
+    /// Importiere Ergänzungsleistungsbeschreibung mit den übergebenen Daten.
+    /// </summary>
+    /// <param name="args">Objekt mit den zu importierenden Daten</param>
+    [Post("/build/global/Leistungsbeschreibungen/ImportiereErgaenzungsleistungsbeschreibung")]
+    Task<ImportiereLeistungsbeschreibungErgebnis> ImportiereErgänzungsleistungsbeschreibung(
+        [Body] ImportiereErgänzungsleistungsbeschreibungInfo args);
 }

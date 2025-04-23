@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using Newtonsoft.Json;
 // ReSharper disable CollectionNeverUpdated.Global
 #pragma warning disable CS1591
 
@@ -541,11 +541,11 @@ public class Adresse : BaseObject
     public string? Beschreibung { get; set; }
 
     public List<Adressat>? Adressaten { get; set; }
-    
+
     public List<Bankverbindung>? Bankverbindungen { get; set; }
-    
+
     public List<AdressBranche>? Branchen { get; set; }
-    
+
     public List<AdressGewerk>? Gewerke { get; set; }
 
     /// <summary>
@@ -2853,6 +2853,94 @@ public class KalkulationsZeileUnterpositionDetails : BaseObject
 }
 
 /// <summary>
+/// Objekt mit Parametern und Optionen die beim Einfügen von LV Elementen benötigt werden.
+/// </summary>
+public sealed class PasteToLvOptionen
+{
+    public TypedId? ZielElement { get; set; }
+
+    /// <summary>
+    /// Wenn die einzufügenden Daten aus einer ÖNORM Leistungsbeschreibung zu übernehmen sind, dann ist diese Property zu befüllen
+    /// </summary>
+    public Guid? QuellLeistungsbeschreibungId { get; set; }
+
+    /// <summary>
+    /// Wenn die einzufügenden Daten aus einem Projekt stammen muss die Projekt-ID des Quellprojekts befüllt werden.
+    /// </summary>
+    public string? QuellProjektId { get; set; }
+
+    /// <summary>
+    /// Die Id des Leistungsverzeichnisses aus dem die Daten stammen.
+    /// Verpflichtend anzugeben wenn QuellProjektId befüllt ist.
+    /// </summary>
+    public Guid? QuellLeistungsverzeichnisId { get; set; }
+
+    public IReadOnlyCollection<TypedId>? QuellElemente { get; set; }
+
+    /// <summary>
+    /// Wenn True werden in den QuellElementen fehlende Strukturen selbstständig erkannt und bei Bedarf im Ziel eingefügt.
+    /// </summary>
+    public bool VervollständigeFehlendeKnotenAutomatisch { get; set; }
+
+    /// <summary>
+    /// Steuert wie beim Einfügen mit Gruppen umgegangen wird, wenn im Ziel bereits eine Gruppe mit den gleichen Daten existiert.
+    /// </summary>
+    public ExistierendeKnotenHandling ExistierendeKnotenHandling { get; set; }
+
+    /// <summary>
+    /// Wenn True wird die Mengenermittlung der Quelle ins Ziel übernommen. Nur bei bei relevant wenn sich bei der Quelle um ein LV handelt.
+    /// </summary>
+    public bool MengenermittlungÜbernehmen { get; set; } = true;
+
+    /// <summary>
+    /// Wenn True werden die Mengen der Position ins Ziel übernommen. Nur bei relevant wenn sich bei der Quelle um ein LV handelt.
+    /// </summary>
+    public bool MengenÜbernehmen { get; set; } = true;
+
+    /// <summary>
+    /// Wenn True werden die Preise der Position ins Ziel übernommen. Nur bei relevant wenn sich bei der Quelle um ein LV handelt.
+    /// </summary>
+    public bool PreiseÜbernehmen { get; set; } = true;
+
+}
+
+public enum ExistierendeKnotenHandling
+{
+    UseExisting,
+    PasteAsZKnoten,
+}
+
+public sealed class PasteToLvResult
+{
+
+    /// <summary>
+    /// Mapping zwischen dem einzufügendem Element und dem eingefügtem Element
+    /// </summary>
+    public IReadOnlyList<SourceItemTargetItemMapping> SourceItemTargetItemMappings { get; set; } = [];
+
+    public sealed class SourceItemTargetItemMapping
+    {
+        public SourceItemTargetItemMapping()
+        {
+
+        }
+        public SourceItemTargetItemMapping(TypedId sourceItem)
+        {
+            SourceItem = sourceItem;
+        }
+
+        public SourceItemTargetItemMapping(TypedId sourceItem, TypedId? targetItem) : this(sourceItem)
+        {
+            TargetItem = targetItem;
+        }
+
+
+        public TypedId? SourceItem { get; set; }
+        public TypedId? TargetItem { get; set; }
+    }
+}
+
+/// <summary>
 /// Optionen-Objekt für die Funktion "Kalkulation generieren".
 /// </summary>
 public class KalkulationGenerierenOptionen
@@ -4072,6 +4160,11 @@ public class OenormLvDetails : BaseObject
     public int? Alternativangebotsnummer { get; set; }
 
     public int? Abänderungsangebotsnummer { get; set; }
+
+    /// <summary>
+    /// Nur im Falle eines Leistungsverzeichnisses mit LG Struktur befüllt. Property gibt Information welche Leistungsbeschreibung verwendet wird.
+    /// </summary>
+    public LvItemLbInfo? LbInfo { get; set; }
 }
 
 /// <summary>
@@ -4618,10 +4711,68 @@ public class ZuBezuschlagendePosition : BaseObject
     public decimal? Menge { get; set; }
 }
 
+
+/// <summary>
+/// Bildet Werte für alle Typen ab die in <see cref="TypedId"/> benötigt werden.
+/// </summary>
+public enum ObjectTyp
+{
+    None,
+
+    OnLvLeistungsposition,
+    OnLvVorbemerkungsposition,
+    OnLvHauptgruppe,
+    OnLvObergruppe,
+    OnLvLeistungsgruppe,
+    OnLvUntergruppe,
+    OnLvGrundtext,
+
+    GaebLeistungsposition,
+    GaebZuschlagsposition,
+    GaebAusfuehrungsbeschreibung,
+    GaebAusfuehrungsbeschreibungText,
+    GaebHinweistext,
+    GaebTitel,
+    GaebLos,
+    GaebUnterbeschreibung,
+    GaebZusatztext,
+
+    OnLbLeistungsgruppe,
+    OnLbUntergruppe,
+    OnLbGrundtext,
+    OnLbLeistungsposition,
+    OnLbVorbemerkungsposition,
+}
+
+
+/// <summary>
+/// Schlüssel und Typ eines Objekts
+/// </summary>
+/// <param name="Id"></param>
+/// <param name="Type"></param>
+public record TypedId(Guid Id, ObjectTyp Type)
+{
+    public static List<TypedId> FromCollection(params IEnumerable<IObjectWithTypedId> items)
+    => [.. items.Select(i => i.GetTypedId())];
+}
+
+
+/// <summary>
+/// Interface für Objekte mit einer TypedId
+/// </summary>
+public interface IObjectWithTypedId
+{
+    /// <summary>
+    /// Gibt die TypedId des Objekts zurück
+    /// </summary>
+    /// <returns></returns>
+    TypedId GetTypedId();
+}
+
 /// <summary>
 /// Ein LV-Item, d.h. ein Gruppenelement (z.B. Leistungsgruppe oder Titel) oder eine Position.
 /// </summary>
-public class LvItemBase : BaseObject
+public class LvItemBase : BaseObject, IObjectWithTypedId
 {
     public Guid Id { get; set; }
 
@@ -4701,6 +4852,10 @@ public class LvItemBase : BaseObject
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+
+    /// <inheritdoc/>
+    public TypedId GetTypedId() => new(Id, ItemTyp.ToObjectTyp());
+
 }
 
 public class NachlassInfo : BaseObject
@@ -4774,6 +4929,7 @@ public class LvItemLbInfo : BaseObject
     public string? LbPosNummer { get; set; }
 
     public OnÄnderungsumfang? AenderungsUmfang { get; set; }
+
 }
 
 /// <summary>
@@ -5165,6 +5321,28 @@ public class ImportLvAusByteArrayInfo : BaseObject
 
 #region Leistungsbeschreibung
 
+/// <summary>
+/// Objekt, das Informationen zu der zu importierenden Datei (LB-Datenträger) enthält.
+/// </summary>
+public class ImportiereLeistungsbeschreibungInfo : BaseObject
+{
+    /// <summary>
+    /// Der Inhalt der zu importierenden Datei.
+    /// </summary>
+    public byte[]? Data { get; set; }
+}
+
+/// <summary>
+/// Objekt, das Informationen zu der zu importierenden Datei (Ergänzung-LB) enthält.
+/// </summary>
+public class ImportiereErgänzungsleistungsbeschreibungInfo : BaseObject
+{
+    /// <summary>
+    /// Der Inhalt der zu importierenden Datei.
+    /// </summary>
+    public byte[]? Data { get; set; }
+}
+
 public enum LbÄnderungsumfang
 {
     Unverändert,
@@ -5175,7 +5353,7 @@ public enum LbÄnderungsumfang
 /// <summary>
 /// Basisklasse für LB Gruppen und Positionen
 /// </summary>
-public abstract class LbItemBase : BaseObject
+public abstract class LbItemBase : BaseObject, IObjectWithTypedId
 {
     public Guid Id { get; set; }
 
@@ -5245,6 +5423,10 @@ public abstract class LbItemBase : BaseObject
     /// Der Langtext als XHTML
     /// </summary>
     public string? Langtext { get; set; }
+
+    /// <inheritdoc/>
+    public TypedId GetTypedId() => new(Id, ItemTyp.ToObjectTyp());
+
 }
 
 /// <summary>
@@ -5263,6 +5445,7 @@ public sealed class LbKnoten : LbItemBase
     public List<LbKnoten>? Knoten { get; set; }
 
     public List<LbPosition>? Positionen { get; set; }
+
 }
 
 /// <summary>
@@ -5365,6 +5548,26 @@ public sealed class LeistungsbeschreibungKenndaten : BaseObject
     /// </summary>
     public Kontaktdaten? Kontaktperson { get; set; }
 }
+
+/// <summary>
+/// Enthält das Ergebnis eines (Ergänzungs)LB Import Vorgangs
+/// </summary>
+public sealed class ImportiereLeistungsbeschreibungErgebnis : BaseObject
+{
+    /// <summary>
+    /// Eine Liste von Meldungen, die während des Imports aufgetreten sind. Insbesondere sind hier im Fall eines
+    /// fehlgeschlagenen Imports Fehlermeldungen enthalten.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyList<ResultInfo> ImporterMeldungen { get; internal init; } = [];
+
+    /// <summary>
+    /// Im Fall eines erfolgreichen LB-Imports enthält diese Property die ID des importierten LBs.
+    /// </summary>
+    [JsonProperty]
+    public Guid? LeistungsbeschreibungId { get; internal init; }
+}
+
 
 #endregion Leistungsbeschreibung
 

@@ -703,4 +703,29 @@ public interface IProjektApi
     /// <param name="gliederungsKatalogId">ID des Gliederungskatalogs</param>
     [Get("/build/projekte/{projektId}/gliederungskataloge/{gliederungsKatalogId}")]
     Task<Bautagesbericht> GetGliederungsKatalog(string projektId, Guid gliederungsKatalogId);
+
+    /// <summary>
+    /// Fügt OnLv Elemente in das OnLv ein.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="lvId">Leistungsverzeichnis-ID des Ziel-Leistungsverzeichnis</param>
+    /// <param name="optionen">Optionenobjekt mit den einzufügenden Daten</param>
+    [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/PasteOnLvDataIntoOnLv")]
+    Task<PasteToLvResult> PasteOnLvDataIntoOnLv(
+        string projektId,
+        Guid lvId,
+        [Body] PasteToLvOptionen optionen);
+
+    /// <summary>
+    /// Fügt OnLb Elemente in das OnLv ein.
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="lvId">Leistungsverzeichnis-ID des Ziel-Leistungsverzeichnis</param>
+    /// <param name="optionen">Optionenobjekt mit den einzufügenden Daten</param>
+    [Post("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/PasteOnLbDataIntoOnLv")]
+    Task<PasteToLvResult> PasteOnLbDataIntoOnLv(
+        string projektId,
+        Guid lvId,
+        [Body] PasteToLvOptionen optionen);
+
 }
