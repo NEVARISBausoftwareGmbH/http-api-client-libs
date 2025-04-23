@@ -4752,7 +4752,7 @@ public enum ObjectTyp
 /// <param name="Type"></param>
 public record TypedId(Guid Id, ObjectTyp Type)
 {
-    public static List<TypedId> FromCollection(params IEnumerable<IObjectWithTypedId> items)
+    public static List<TypedId> FromCollection(params IObjectWithTypedId[] items)
     => [.. items.Select(i => i.GetTypedId())];
 }
 
