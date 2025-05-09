@@ -314,7 +314,7 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task UpdateKostenart(
-        string kostenartNummer,
+        string kostenartNummer, 
         [Body] Kostenart kostenart,
         string? mandantId = null,
         string? niederlassungId = null);

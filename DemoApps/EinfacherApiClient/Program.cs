@@ -36,12 +36,12 @@ try
     {
         Console.WriteLine($"{speicherort.Id}: {speicherort.Bezeichnung}");
 
-        /* Ermitteln der Projekte eines Speicherorts */
-        //var speicherortMiProjektInfos = await client.StammApi.GetSpeicherort(speicherort.Id, mitProjektInfos: true);
-        //foreach (var projektInfo in speicherortMiProjektInfos.ProjektInfos!)
-        //{
-        //    Console.WriteLine($"  {projektInfo.Id}: {projektInfo.Bezeichnung}");
-        //}
+        // Ermitteln der Projekte eines Speicherorts
+        var speicherortMiProjektInfos = await client.StammApi.GetSpeicherort(speicherort.Id, mitOrdnern: false);
+        foreach (var projektInfo in speicherortMiProjektInfos.ProjektInfos!)
+        {
+            Console.WriteLine($"  {projektInfo.Id}: {projektInfo.Nummer} – {projektInfo.Bezeichnung}");
+        }
     }
 }
 catch (Refit.ApiException ex)

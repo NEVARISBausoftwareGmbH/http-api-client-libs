@@ -13,7 +13,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi-Library für Build 2025.1 Patch 1</PackageReleaseNotes>
+    <PackageReleaseNotes>ClientApi-Library für Build 2025.1 Patch 1 (Erweiterungen im Bereich Leistungsbeschreibungen, Kalkulationen und Rechnungen)</PackageReleaseNotes>
     <PackageVersion>5.0.0</PackageVersion>
     <AssemblyVersion>5.0.0</AssemblyVersion>
     <FileVersion>5.0.0</FileVersion>

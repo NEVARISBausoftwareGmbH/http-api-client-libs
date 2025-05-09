@@ -541,11 +541,11 @@ public class Adresse : BaseObject
     public string? Beschreibung { get; set; }
 
     public List<Adressat>? Adressaten { get; set; }
-
+    
     public List<Bankverbindung>? Bankverbindungen { get; set; }
-
+    
     public List<AdressBranche>? Branchen { get; set; }
-
+    
     public List<AdressGewerk>? Gewerke { get; set; }
 
     /// <summary>
@@ -2912,7 +2912,6 @@ public enum ExistierendeKnotenHandling
 
 public sealed class PasteToLvResult
 {
-
     /// <summary>
     /// Mapping zwischen dem einzufügendem Element und dem eingefügtem Element
     /// </summary>
@@ -2922,7 +2921,7 @@ public sealed class PasteToLvResult
     {
         public SourceItemTargetItemMapping()
         {
-
+                
         }
         public SourceItemTargetItemMapping(TypedId sourceItem)
         {
@@ -3482,7 +3481,7 @@ public class KalkulationsBlatt : BaseObject
     public KalkulationsBlattDetails? Details { get; set; }
 
     /// <summary>
-    /// Objekt mit den gerechneten Werten eines Kalkualtionsblattes.
+    /// Objekt mit den gerechneten Werten eines Kalkulationsblattes.
     /// </summary>
     [JsonProperty]
     public KalkulationsBlattErgebnis? Ergebnisse { get; internal set; }
@@ -3666,7 +3665,7 @@ public class NewLvInfo : BaseObject
 
     /// <summary>
     /// Die gewünschte Mengenart. Ist nur relevant für den Fall, dass per
-    /// <see cref="LvDetails.GlobaleHilfsberechungen"/> globale Hilfsberechnungen mitgegeben werden.
+    /// <see cref="LvDetails.GlobaleHilfsberechnungen"/> globale Hilfsberechnungen mitgegeben werden.
     /// </summary>
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public MengenArt MengenArt { get; set; } = MengenArt.Lv;
@@ -3833,7 +3832,7 @@ public class LvDetails : BaseObject
     public string? Währung { get; set; }
 
     /// <summary>
-    /// Die Standard-USt des LVs (wenn noch nicht im Projekt vorhanden, wird zuerst die USt aus den Stammdaten
+    /// Der Code der Standard-USt des LVs (wenn noch nicht im Projekt vorhanden, wird zuerst die USt aus den Stammdaten
     /// ins Projekt kopiert).  
     /// </summary>
     public string? Umsatzsteuer { get; set; }
@@ -3894,7 +3893,8 @@ public class LvDetails : BaseObject
     /// Globale Hilfsberechnungen für die Mengenermittlung. Diese Liste wird immer nur mit den zu der angeforderten
     /// Mengenart passenden Hilfsberechnungen befüllt. 
     /// </summary>
-    public List<Hilfsberechnung>? GlobaleHilfsberechungen { get; set; }
+    [JsonProperty("GlobaleHilfsberechungen")] // Tippfehler (kann aus Kompatibilitätsgründen nicht geändert werden)
+    public List<Hilfsberechnung>? GlobaleHilfsberechnungen { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung für das LV.
@@ -3926,6 +3926,16 @@ public class LvDetails : BaseObject
     /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
     /// </summary>
     public string? KostenstelleNummer { get; set; }
+
+    /// <summary>
+    /// Lieferanten-/Kreditornummer (für e-Rechnung)
+    /// </summary>
+    public string? KreditorNummer { get; set; }
+
+    /// <summary>
+    /// Auftragsreferenz (für e-Rechnung)
+    /// </summary>
+    public string? Auftragsreferenz { get; set; }
 
     /// <summary>
     /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
@@ -4752,7 +4762,7 @@ public enum ObjectTyp
 /// <param name="Type"></param>
 public record TypedId(Guid Id, ObjectTyp Type)
 {
-    public static List<TypedId> FromCollection(params IObjectWithTypedId[] items)
+    public static List<TypedId> FromCollection(params IEnumerable<IObjectWithTypedId> items)
     => [.. items.Select(i => i.GetTypedId())];
 }
 
@@ -5633,7 +5643,18 @@ public class NewRechnungInfo : BaseObject
 {
     public string? Nummer { get; set; }
 
+    /// <summary>
+    /// Die IDs der Leistungszeiträume, auf die sich die Rechnung bezieht (für Pauschalrechnungen).
+    /// </summary>
+    public List<Guid>? LeistungszeitraumIds { get; set; }
+
     public string? Bezeichnung { get; set; }
+
+    public RechnungsArt Art { get; set; } = RechnungsArt.Einzelrechnung;
+    
+    public DateTime? Rechnungsdatum { get; set; }
+    
+    public bool? IstGeschützt { get; set; }
 }
 
 public class Rechnung : BaseObject
@@ -5642,6 +5663,17 @@ public class Rechnung : BaseObject
 
     public string? Nummer { get; set; }
 
+    /// <summary>
+    /// Die IDs der Leistungszeiträume, auf die sich Rechnung bezieht. Dieses Array ist nur befüllt, wenn die
+    /// Leistungszeiträume explizit zugewiesen wurden (typischerweise für Pauschalrechungen). Wenn die
+    /// Leistungszeiträume dagegen implizit über die Positionsblöcke der Mengenermittlung bestimmt sind, ist diese
+    /// Property null und kann auch nicht befüllt werden.
+    /// </summary>
+    public List<Guid>? LeistungszeitraumIds { get; set; }
+
+    /// <summary>
+    /// Die Rechnungsüberschrift
+    /// </summary>
     public string? Bezeichnung { get; set; }
 
     public DateTime? Rechnungsdatum { get; set; }
@@ -5650,15 +5682,56 @@ public class Rechnung : BaseObject
 
     public DateTime? Eingangsdatum { get; set; }
 
+    /// <summary>
+    /// Zustelldatum
+    /// </summary>
     public DateTime? GesendetAm { get; set; }
 
-    public RechnungsStatus? Status { get; set; }
+    /// <summary>
+    /// Der Rechungsstatus. Dieses Property kann derzeit nicht per API geändert werden.
+    /// </summary>
+    [JsonProperty]
+    public RechnungsStatus? Status { get; internal set; }
 
     public List<Zahlung>? Zahlungen { get; set; }
 
     public int? LaufendeNummerKapsel { get; set; }
 
     public RechnungsArt? Art { get; set; }
+
+    /// <summary>
+    /// Der Code der Umsatzsteuer (wenn auf der Rechnung mit einer anderen Umsatzsteuer als jener auf dem Auftrag
+    /// gerechnet wird).
+    /// </summary>
+    public string? Umsatzsteuer { get; set; }
+
+    public string? Abrechnungskurzzeichen { get; set; }
+
+    /// <summary>
+    /// Der Rechnungsempfängers (ID der Projektadresse)
+    /// </summary>
+    public Guid? RechnungsEmpfängerId { get; set; }
+
+    /// <summary>
+    /// Die Debitornummer. Ist im Fall des aktivierten Rechnungsausgangsbuchs nur lesbar (und wird dann implizit über
+    /// die RechnungsEmpfängerId bestimmt).
+    /// </summary>
+    public string? DebitorNummer { get; set; }
+
+    /// <summary>
+    /// Rechnungskostenstelle
+    /// </summary>
+    public string? RechnungsKostenstelleNummer { get; set; }
+    
+    /// <summary>
+    /// Erlöskonto (in Finance). Ist nur befüllt, wenn das Rechnungsausgangsbuch aktiv ist.
+    /// </summary>
+    public string? ErlöskontoNummer { get; set; }
+
+    /// <summary>
+    /// Notiz (formatierter Text im XHTML-Format)
+    /// </summary>
+    public string? Notiz { get; set; }
 
     public decimal? ProzentDerAuftragssumme { get; set; }
 
@@ -5699,6 +5772,37 @@ public class Rechnung : BaseObject
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+}
+
+/// <summary>
+/// Rückgabeobjekt des Endpunkts /build/projekte/{projektId}/rechnungen/{rechnungId}/reports/positionen.
+/// Enthält die Postionsdaten, die auch vom Bericht "Rechnung" geliefert werden.
+/// </summary>
+public class RechnungReportPositionenResult
+{
+    [JsonProperty]
+    public IReadOnlyList<RechnungReportPositionen> Positionen { get; internal set; } = [];
+}
+
+public class RechnungReportPositionen
+{
+    [JsonProperty]
+    public Guid PositionId { get; internal set; }
+
+    [JsonProperty]
+    public string? PositionNummerKomplett { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Menge { get; internal set; }
+
+    [JsonProperty]
+    public string? Einheit { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Einheitspreis { get; internal set; }
+
+    [JsonProperty]
+    public decimal? Betrag { get; internal set; }
 }
 
 /// <summary>

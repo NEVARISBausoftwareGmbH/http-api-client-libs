@@ -1,12 +1,75 @@
-# http-api-client-libs für NEVARIS Build 2024.2
+# http-api-client-libs für NEVARIS Build 2025.1
 
-## Nevaris.Build.ClientApi 4.11.0
+## Nevaris.Build.ClientApi 5.0.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2024.2 Sie ist auch als
-[nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
+von NEVARIS Build 2025.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.0.0 (für Build 2025.1 Patch 1 – 25.1.25127.703) – _12.05.2025_
+
+#### Neue Funktionen
+
+- Lesender Zugriff auf Leistungsbeschreibungen (ÖNORM):
+  - _IStammApi.GetLeistungsbeschreibungen_ (GET /build/global/leistungsbeschreibungen): Liefert alle Leistungsbeschreibungen.
+  - _IStammApi.GetLeistungsbeschreibung_ (GET /build/global/leistungsbeschreibungen/{lbId}): Liefert eine Leistungsbeschreibung.
+  - _IStammApi.GetLbKnoten_ (GET /build/global/lbpositionen/{positionId}): Liefert einen Knoten einer Leistungsbeschreibung.
+  - _IStammApi.GetLbPosition_ (GET /build/global/lbpositionen/{positionId}): Liefert eine Position einer Leistungsbeschreibung.
+
+- Import von Leistungsbeschreibungen (ÖNORM):
+  - _IStammApi.ImportiereLeistungsbeschreibung_ (POST /build/global/Leistungsbeschreibungen/ImportiereLeistungsbeschreibung)
+  - _IStammApi.ImportiereErgänzungsleistungsbeschreibung_ (POST /build/global/Leistungsbeschreibungen/ImportiereErgaenzungsleistungsbeschreibung)
+
+- Übernahme von LV-Positionen aus einer Leistungsbeschreibung oder einem anderen Leistungsverzeichnis (ÖNORM):
+  - _IProjektApi.PasteOnLbDataIntoOnLv_ (POST /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/PasteOnLbDataIntoOnLv)
+  - _IProjektApi.PasteOnLvDataIntoOnLv_ (POST /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/PasteOnLvDataIntoOnLv)
+
+- Rechnungen:
+  - _IProjektApi.GetRechnungReportPositionen_ (GET /build/projekte/{projektId}/rechnungen/{rechnungId}/reports/positionen):
+  Ermittelt Positionsdaten einer Rechnung, entsprechend dem Bericht _Rechnung_.
+
+- Kalkulationen:
+  - _IProjektApi.GetKalkulationen_ (GET /build/projekte/{projektId}/leistungsverzeichnisse/{lvId}/kalkulationen):
+Liefert die Kalkulationen eines Projekts. (Bislang kam man nur per _IProjektApi.GetLeistungsverzeichnis_ an die Kalkulationen.)
+
+#### Neue Properties
+
+- Rechenwerte der Kalkulation (Funktion: _IProjektApi.GetKalkulation_):
+  - _Kalkulation.Ergebnisse_: Diese Property liefert ein Objekt vom Typ _KalkulationErgebnisse_, das nun alle
+    relevanten Rechenergebnisse der Kalkulation enthält.
+
+- Rechenwerte der Kalkulationsblätter (Funktionen: _IProjektApi.GetKalkulationsBlatt_, _IProjektApi.GetKalkulationsBlätter_):
+  - _KalkulationsBlattDetails.Rechenwerte_: Diese Property ersetzt die bisherige Property
+_KalkulationsBlattDetails.Details_. Sie liefert ein Objekt vom Typ _KalkulationsBlattDetails_, das alle relevanten
+Rechenergebnisse des Kalkulationsblatts enthält.
+
+- Rechnungen:
+  - Klasse _Rechnung_: _LeistungszeitraumIds_, _Umsatzsteuer_, _Abrechnungskurzzeichen_, _RechnungsEmpfängerId_,
+_DebitorNummer_, _RechnungsKostenstelleNummer_, _ErlöskontoNummer_, _Notiz_ (Eigenschaften aus dem Register _Rechnungskopf_)
+
+- Leistungsverzeichnisse:
+  - _OenormLvDetails.LbInfo_: Verknüpfung zu einer Leistungsbeschreibung (nur für Leistungsverzeichnisse mit LG-Struktur).
+  - _LvDetails.KreditorNummer_, _LvDetails.Auftragsreferenz_
+
+#### Breaking Changes
+
+- Mehrere abgekündigte (d.h. mit \[Obsolete\] markierte) Funktionen, Klassen und Properties entfernt.
+- Zahlreichen Properties (z.B. solche, die Rechenwerte liefert), wurden readonly gemacht, d.h. es gibt keinen Setter
+mehr (Beispiel: _Rechenwert.Wert_). Bislang war das Befüllen solcher Properties möglich, hatte aber keine Auswirkung.
+- Diverse Properties vom Typ List\<T\> (z.B. _Projekt.Leistungsverzeichnisse_) wurden durch den Typ
+IReadOnlyList\<T\> ersetzt, um klarer zu kommunizieren, dass eine Änderung der Werte nicht vorgesehen ist.
+- Mehrere Properties wurden abgekündigt (d.h. mit \[Obsolete\] markiert) und sollten nicht mehr genutzt werden:
+  - _KalkulationsBlatt.Details_ (stattdessen: _KalkulationsBlatt.Ergebnisse_)
+  - _KalkulationsBlatt.Nummer_
+  - _KalkulationsBlatt.Bezeichnung_
+  - _LeistungsverzeichnisMitImportMeldungen.ImportieresLeistungsverzeichnis_
+  - _LvDetails.GlobaleHilfsberechungen_ (der Name enthielt einen Tippfehler, es heißt nun korrekt _GlobaleHilfsberechnungen_)
+
+#### Sonstiges
+
+- [Nullable reference types](https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references) 
+sind nun durchgehend aktiviert.
 
 ### 4.11.0 (für Build 2024.2 Patch 1 – 24.2.24320.859) – _19.11.2024_
 

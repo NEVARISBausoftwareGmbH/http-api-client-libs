@@ -138,7 +138,7 @@ public interface IProjektApi
     /// <param name="lvId">LV-ID</param>
     /// <param name="lv">Leistungsverzeichnis mit den neuen Werten</param>
     /// <param name="mengenArt">Die gewünschte Mengenart (nur relevant als Filterkriterium für die Liste der
-    /// globalen Hilfsberechnungen, d.h. <see cref="LvDetails.GlobaleHilfsberechungen"/>)</param>
+    /// globalen Hilfsberechnungen, d.h. <see cref="LvDetails.GlobaleHilfsberechnungen"/>)</param>
     [Put("/build/projekte/{projektId}/leistungsverzeichnisse/{lvId}")]
     Task UpdateLeistungsverzeichnis(
         string projektId,
@@ -322,6 +322,15 @@ public interface IProjektApi
     /// <param name="rechnungId">Rechnungs-ID</param>
     [Get("/build/projekte/{projektId}/rechnungen/{rechnungId}")]
     Task<Rechnung> GetRechnung(string projektId, Guid rechnungId);
+
+    /// <summary>
+    /// Ermittelt die Positionen einer Rechnung einschließlich der Mengen und Beträge. Die gelieferten Daten
+    /// entsprechen den Positionszeilen aus dem Bericht "Rechnung".
+    /// </summary>
+    /// <param name="projektId">Projekt-ID</param>
+    /// <param name="rechnungId">Rechnungs-ID</param>
+    [Get("/build/projekte/{projektId}/rechnungen/{rechnungId}/reports/positionen")]
+    Task<RechnungReportPositionenResult> GetRechnungReportPositionen(string projektId, Guid rechnungId);
 
     /// <summary>
     /// Aktualisiert eine Rechnung.
