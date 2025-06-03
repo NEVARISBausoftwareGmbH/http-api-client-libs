@@ -1,11 +1,22 @@
 # http-api-client-libs für NEVARIS Build 2025.1
 
-## Nevaris.Build.ClientApi 5.0.0
+## Nevaris.Build.ClientApi 5.1.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2025.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.1.0 (für Build 2025.1 Patch 2 – 25.1.25148.817) – _03.06.2025_
+
+- _BetriebsmittelKosten_: Neue Properties _DatumLetztePreiswartung_ und _BenutzerLetztePreiswartung_
+(lesender und schreibender Zugriff auf Preiswartungsinformatioen von Betriebsmitteln)
+- _CustomPropertyValues_: Diese Property, die es in mehreren Klassen gibt (z.B. _LvDetails_, _Projekt_, _Betriebsmittel_) und den Zugriff auf
+Individualeigenschaften erlaubt, ist nun wieder nullable
+und wird somit als Detailinfo behandelt. Das bedeutet, dass sie bei Update-Operationen nur dann beachtet wird, wenn sie ungleich null ist. Die
+mit Version 5.0.0 im Zuge der Umstellung auf [Nullable reference types](https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references) eingeführte 
+Anforderung, dass die Property immer befüllt sein muss, hatte zur Folge, dass es möglich war, durch versehentliches
+Übergeben einer leeren Liste die bestehenden Individualeigenschaften zu löschen.
 
 ### 5.0.0 (für Build 2025.1 Patch 1 – 25.1.25127.703) – _12.05.2025_
 

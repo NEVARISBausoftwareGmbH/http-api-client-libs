@@ -551,7 +551,7 @@ public class Adresse : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Adresse zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -618,7 +618,7 @@ public class Adressat : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Adressaten zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public class Bankverbindung : BaseObject
@@ -1009,9 +1009,9 @@ public class Projekt : BaseObject
     public List<DbBetriebsmittelGruppe>? DbBetriebsmittelGruppen { get; set; }
 
     /// <summary>
-    /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
+    /// (Detailinfo) Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -1173,7 +1173,7 @@ public class BetriebsmittelStamm : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public enum BetriebsmittelStammArt
@@ -2068,14 +2068,14 @@ public class Betriebsmittel : BaseObject
     public BetriebsmittelBausteinDetails? BausteinDetails { get; set; }
 
     /// <summary>
-    /// Zeigt an ob es sich um ein Freies Betriebmsittel handelt.
+    /// Zeigt an ob es sich um ein Freies Betriebsmsittel handelt.
     /// </summary>
     public bool IsFreiesBetriebsmittel { get; set; }
 
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittel zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 public class BetriebsmittelDetails : BaseObject
@@ -2563,6 +2563,17 @@ public class BetriebsmittelKosten : BaseObject
     /// Befüllt, wenn das Betriebsmittel ein Nachunternehmer ist.
     /// </summary>
     public BetriebsmittelKostenNachunternehmerDetails? NachunternehmerDetails { get; set; }
+
+
+    /// <summary>
+    /// Datum der letzten Preiswartung
+    /// </summary>
+    public DateTime? DatumLetztePreiswartung { get; set; }
+
+    /// <summary>
+    /// Benutzer der letzten Preiswartung
+    /// </summary>
+    public string? BenutzerLetztePreiswartung { get; set; }
 }
 
 public enum KostenebeneTyp
@@ -3481,7 +3492,7 @@ public class KalkulationsBlatt : BaseObject
     public KalkulationsBlattDetails? Details { get; set; }
 
     /// <summary>
-    /// Objekt mit den gerechneten Werten eines Kalkulationsblattes.
+    /// Objekt mit den gerechneten Werten eines Kalkualtionsblattes.
     /// </summary>
     [JsonProperty]
     public KalkulationsBlattErgebnis? Ergebnisse { get; internal set; }
@@ -3938,9 +3949,9 @@ public class LvDetails : BaseObject
     public string? Auftragsreferenz { get; set; }
 
     /// <summary>
-    /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
+    /// (Detailinfo) Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -4439,7 +4450,7 @@ public class NewLvItemInfo : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -4861,7 +4872,7 @@ public class LvItemBase : BaseObject, IObjectWithTypedId
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die diesem LV-Item zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 
     /// <inheritdoc/>
     public TypedId GetTypedId() => new(Id, ItemTyp.ToObjectTyp());
@@ -5621,6 +5632,8 @@ public enum RechnungsStatus
     Ersetzt = 4,
     Gesendet = 10,
     Erfasst = 11,
+    Storniert = 12,
+    GesendetVeraendern = 13
 }
 
 public enum RechnungsArt
@@ -5637,6 +5650,7 @@ public enum RechnungsArt
     AbschlagsrechnungNichtKumuliertPauschal = 10,
     SchlussrechnungPauschal = 11,
     TeilschlussrechnungPauschal = 12,
+    HaftungsruecklassGewaehrleistungseinbehalt = 13
 }
 
 public class NewRechnungInfo : BaseObject
@@ -5771,7 +5785,7 @@ public class Rechnung : BaseObject
     /// <summary>
     /// (Detailinfo) Die Individualeigenschaften, die dieser Rechnung zugeordnet sind.
     /// </summary>
-    public Dictionary<string, CustomPropertyValue?> CustomPropertyValues { get; set; } = [];
+    public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
 
 /// <summary>
@@ -6056,7 +6070,11 @@ public enum MengenArt
     /// <summary>
     /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9"
     /// </summary>
-    Prognose10 = 19
+    Prognose10 = 19,
+    
+    Abgrenzungsmenge = 20,
+    Leistungsmenge = 21,
+    LeistungsmengeAbgrenzung = 22
 }
 
 public class Aufmaßzeile : BaseObject
@@ -6150,7 +6168,8 @@ public enum HilfszeilenArt
 {
     Ansatz = 0,
     Formel,
-    Kommentar
+    Kommentar,
+    Anhang
 }
 
 public class Formel : BaseObject
