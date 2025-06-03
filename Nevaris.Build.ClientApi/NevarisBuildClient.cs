@@ -108,14 +108,20 @@ public class NevarisBuildClient : IDisposable
         return new VersionCheckResult(clientVersion: clientVersion, apiVersion: apiVersion);
     }
 
-    private static readonly RefitSettings _refitSettings = new RefitSettings
+    private static readonly RefitSettings _refitSettings = new()
     {
         ContentSerializer = new NewtonsoftJsonContentSerializer(new JsonSerializerSettings
         {
             ContractResolver = new JsonContractResolver(),
             Converters = { new StringEnumConverter { NamingStrategy = new CamelCaseNamingStrategy() } },
             NullValueHandling = NullValueHandling.Ignore
-        })
+        }),
+
+        // Für die Serialisierung von Objekten, die im Body übergeben werden, kommt per Default der
+        // Newtonsoft.Json.Converters.IsoDateTimeConverter zum Einsatz, der die verlustfreie Formatierung
+        // von Datumswerten sicherstellt. Für die Übergabe an Query-Parameter (z.B. über die Klasse FilterObject)
+        // müssen wir dagegen explizit für die korrekte Formatierung sorgen:
+        UrlParameterFormatter = IsoDateUrlParameterFormatter.Instance
     };
 
     private static HttpClient CreateHttpClient(string hostUrl, NevarisBuildClientOptions options)
@@ -151,5 +157,28 @@ public class NevarisBuildClient : IDisposable
             // diese Property auf true setzt.)
             NamingStrategy!.ProcessDictionaryKeys = false;
         }
+    }
+
+    /// <summary>
+    /// Stellt verlustfreie Übergabe von Datumswerten an Query-Parameter sicher
+    /// </summary>
+    private class IsoDateUrlParameterFormatter : IUrlParameterFormatter
+    {
+        // Aus Newtonsoft.Json.Converters.IsoDateTimeConverter übernommen
+        private const string DefaultDateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK";
+
+        public static IsoDateUrlParameterFormatter Instance { get; } = new();
+
+        public string? Format(object? value, ICustomAttributeProvider attributeProvider, Type type)
+            => value switch
+            {
+                DateTime dateTime
+                    => dateTime.ToString(DefaultDateTimeFormat, CultureInfo.InvariantCulture),
+                DateTimeOffset dateTimeOffset
+                    => dateTimeOffset.ToString(DefaultDateTimeFormat, CultureInfo.InvariantCulture),
+                IFormattable formattable
+                    => formattable.ToString(null, CultureInfo.InvariantCulture),
+                _ => value?.ToString()
+            };
     }
 }
