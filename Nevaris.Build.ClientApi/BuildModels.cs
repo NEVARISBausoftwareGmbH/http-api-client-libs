@@ -1012,6 +1012,27 @@ public class Projekt : BaseObject
     /// (Detailinfo) Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+
+    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; } // = IsZuschlagsgruppeDetailberechnungEnabled
+
+    /// <summary>
+    /// Optionale Bezeichnung eines Zuschlags für die detailierte Berechnung von Zuschlagsgruppen. Nur für B2061:2020 relevant.
+    /// </summary>
+    public string? BezeichnungFreierZuschlag { get; set; }
+}
+
+/// <summary>
+/// Enthält Informationen zu den Projektdokumenten eines Projekts.
+/// Aktuell ist das nur die ID der Dokumentenablage.
+/// </summary>
+public class ProjektDokumenteContainer : BaseObject
+{
+    /// <summary>
+    /// Die ID der Dokumentenablage für dieses Projekt. Die Dokumente werden serverseitig in dem Verzeichnis
+    /// %LOCALAPPDATA%\Nemetschek\Nevaris\DMS\{ID} abgelegt.
+    /// </summary>
+    [JsonProperty]
+    public Guid Id { get; internal set; }
 }
 
 /// <summary>
@@ -1108,6 +1129,14 @@ public class BetriebsmittelStamm : BaseObject
     public int? RechengenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreise
     public int? DarstellungsgenauigkeitMengen { get; set; } // = NachkommastellenAnsatzUI
     public int? DarstellungsgenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreiseUI
+
+    
+    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; } // = IsZuschlagsgruppeDetailberechnungEnabled
+
+    /// <summary>
+    /// Optionale Bezeichnung eines Zuschlags für die detailierte Berechnung von Zuschlagsgruppen. Nur für B2061:2020 relevant.
+    /// </summary>
+    public string? BezeichnungFreierZuschlag { get; set; }
 
     public Guid LohnRootGruppeId { get; set; }
     public Guid MaterialRootGruppeId { get; set; }
@@ -1580,10 +1609,34 @@ public class ZuschlagsgruppenWert : BaseObject
 
     /// <summary>
     /// Der Zuschlagssatz (= Zuschlag in Prozent).
+    /// Bei aktiver Detailzuschlagsberechnung (B2061:2020) enthält diese Eigenschaft den errechneten Gesamtzuschlagssatz
     /// </summary>
     public decimal? Wert { get; set; }
 
-    // TODO Weitere Properties wie ZuschlagGewinn implementieren
+    /// <summary>
+    /// Beliebig benennbarer Zuschlag. Nur für ÖNORM B2061:2020 relevant, wenn die Detailzuschlagsberechnung aktiviert ist.
+    /// </summary>
+    public decimal? FreierZuschlag { get; set; }
+
+    /// <summary>
+    /// Zuschlag für Gemeinkosten. Nur für ÖNORM B2061:2020 relevant, wenn die Detailzuschlagsberechnung aktiviert ist
+    /// </summary>
+    public decimal? ZuschlagGemeinkosten { get; set; }
+
+    /// <summary>
+    /// Zuschlag für Finanzierungskosten. Nur für ÖNORM B2061:2020 relevant, wenn die Detailzuschlagsberechnung aktiviert ist
+    /// </summary>
+    public decimal? ZuschlagFinanzierungskosten { get; set; }
+
+    /// <summary>
+    /// Zuschlag für Wagnis. Nur für ÖNORM B2061:2020 relevant, wenn die Detailzuschlagsberechnung aktiviert ist
+    /// </summary>
+    public decimal? ZuschlagWagnis { get; set; }
+
+    /// <summary>
+    /// Zuschlag für Gewinn. Nur für ÖNORM B2061:2020 relevant, wenn die Detailzuschlagsberechnung aktiviert ist
+    /// </summary>
+    public decimal? ZuschlagGewinn { get; set; }
 }
 
 /// <summary>
@@ -3407,6 +3460,13 @@ public class KalkulationErgebnisse : BaseObject
     /// </summary>
     [JsonProperty]
     public IReadOnlyDictionary<int, Money>? Zuschläge { get; internal init; }
+
+    /// <summary>
+    /// Liste mit den Ids jener Positionen die bei der Berechnung der Kalkulation nicht zur kalkulierten Angebotssumme beitragen.
+    /// Standardmäßig handelt es sich um Eventual, Wahl- und Alternativpositionen.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyCollection<Guid> NichtBerechnetePositionen { get; internal init; } = [];
 }
 
 /// <summary>
@@ -3833,6 +3893,10 @@ public class LvDetails : BaseObject
     /// </summary>
     public int? NachkommastellenPreisanteile { get; set; }
 
+    /// <summary>
+    /// Die Gliederungsart. Wenn der Defaultwert verwendet wird, wird für ÖNORM ein LV mit LG-Gliederung erzeugt,
+    /// für GAEB dagegen ein LV ohne Gliederung.
+    /// </summary>
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GliederungsArt GliederungsArt { get; set; } = GliederungsArt.OhneGliederung;
 
@@ -6076,6 +6140,7 @@ public enum MengenArt
     Leistungsmenge = 21,
     LeistungsmengeAbgrenzung = 22
 }
+
 
 public class Aufmaßzeile : BaseObject
 {

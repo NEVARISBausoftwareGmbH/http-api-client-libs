@@ -1,11 +1,22 @@
 # http-api-client-libs für NEVARIS Build 2025.1
 
-## Nevaris.Build.ClientApi 5.1.0
+## Nevaris.Build.ClientApi 5.1.1
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2025.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.1.1 (für Build 2025.1 Patch 4 – 25.1.25148.817) – _12.09.2025_
+
+- Über die kann nun die Detailberechnung für Zuschlagsgruppen aktiviert und die Bezeichnung 
+des freien Zuschlags erfasst werden. Zudem können Werte für die Detailberechnung erfasst und
+ausgelesen werden. Die Ergebnisse von Berechnungen berücksichtigen die getroffenen Einstellungen.
+Neue Properties:
+  - _Projekt: BezeichnungFreierZuschlag_
+  - _BetriebsmittelStamm: IstZuschlagsgruppeDetailberechnungAktiv, BezeichnungFreierZuschlag_
+  - _ZuschlagsgruppenWert: FreierZuschlag, ZuschlagGemeinkosten, ZuschlagFinanzierungskosten, ZuschlagWagnis, ZuschlagGewinn_
+  - _KalkulationErgebnisse: NichtBerechnetePositionen_
 
 ### 5.1.0 (für Build 2025.1 Patch 2 – 25.1.25148.817) – _03.06.2025_
 

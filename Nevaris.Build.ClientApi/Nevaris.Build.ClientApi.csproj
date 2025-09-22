@@ -9,14 +9,14 @@
     <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>5.1.0</Version>
+    <Version>5.1.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi-Library für Build 2025.1 Patch 2 (Zugriff auf Preiswartungsinformatioen und Änderung beim Zugriff auf Individualeigenschaften)</PackageReleaseNotes>
-    <PackageVersion>5.1.0</PackageVersion>
-    <AssemblyVersion>5.1.0</AssemblyVersion>
-    <FileVersion>5.1.0</FileVersion>
+    <PackageReleaseNotes>ClientApi-Library für Build 2025.1 Patch 4 (Erweiterungen im Bereich der Zuschlagsgruppen)</PackageReleaseNotes>
+    <PackageVersion>5.1.1</PackageVersion>
+    <AssemblyVersion>5.1.1</AssemblyVersion>
+    <FileVersion>5.1.1</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
