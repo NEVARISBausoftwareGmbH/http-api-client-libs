@@ -63,9 +63,12 @@ public interface IStammApi
     /// <summary>
     /// Liefert alle Speicherorte.
     /// </summary>
+    /// <param name="mitProjektOrdnern">true (= Default), werden neben SQL-Datenbanken auch
+    /// Projektordner geliefert. Dieser Parameter kann explizit auf false gesetzt werden, um die Rückgabeliste
+    /// auf SQL-Datenbanken zu beschränken.</param>
     /// <returns>Liste von Speicherorten (ohne ProjektInfos)</returns>
     [Get("/build/global/speicherorte")]
-    Task<List<Speicherort>> GetSpeicherorte();
+    Task<List<Speicherort>> GetSpeicherorte(bool mitProjektOrdnern = true);
 
     /// <summary>
     /// Liefert den Speicherort mit der angegebenen ID.
@@ -74,11 +77,16 @@ public interface IStammApi
     /// <param name="mitProjektInfos">Falls true (= Default), werden auch die Projekte des
     /// Speicherorts ermittelt und in <see cref="Speicherort.ProjektInfos"/> abgelegt.</param>
     /// <param name="mitOrdnern">Falls true (= Default), werden auch Informationen zu den
-    /// Ordnern innherhalb dieses Speicherorts mitgeliefert (Properties <see cref="Speicherort.RootOrdnerList"/>
+    /// Ordnern innerhalb dieses Speicherorts mitgeliefert (Properties <see cref="Speicherort.RootOrdnerList"/>
     /// und <see cref="Speicherort.RootProjektInfos"/>).
     /// Nur relevant für Server-Speicherorte.</param>
+    /// <param name="filter">Ermöglicht die Filterung der gelieferten Projekte nach dem Änderungsdatum</param>
     [Get("/build/global/speicherorte/{speicherortId}")]
-    Task<Speicherort> GetSpeicherort(Guid speicherortId, bool mitProjektInfos = true, bool mitOrdnern = true);
+    Task<Speicherort> GetSpeicherort(
+        Guid speicherortId,
+        bool mitProjektInfos = true,
+        bool mitOrdnern = true,
+        FilterObject? filter = null);
 
     /// <summary>
     /// Aktualisiert den Speicherort mit der angegebenen ID. Diese Operation erlaubt keine Projektoperationen
@@ -395,4 +403,28 @@ public interface IStammApi
     [Post("/build/global/Leistungsbeschreibungen/ImportiereErgaenzungsleistungsbeschreibung")]
     Task<ImportiereLeistungsbeschreibungErgebnis> ImportiereErgänzungsleistungsbeschreibung(
         [Body] ImportiereErgänzungsleistungsbeschreibungInfo args);
+}
+
+/// <summary>
+/// Wird an bestimmte GET-Endpunkte übergeben, um beim Auslesen von Objektlisten nach dem Änderungsdatum zu filtern.
+/// </summary>
+public class FilterObject
+{
+    /// <summary>
+    /// Wenn angegeben, werden nur Objekte geliefert, deren Änderungsdatum größer als dieses Datum ist.
+    /// </summary>
+    public DateTimeOffset? ModifiedAtGt { get; set; }
+
+    /// <summary>
+    /// Wenn angegeben, werden nur Objekte geliefert, deren Änderungsdatum größer gleich diesem Datum ist.
+    /// </summary>
+    public DateTimeOffset? ModifiedAtGe { get; set; }
+
+    /// <summary>
+    /// Liefert den Vergleichswert für eine "größer"-Abfrage, unabhängig davon, ob <see cref="ModifiedAtGe"/>
+    /// oder <see cref="ModifiedAtGe"/> befüllt ist. Setzt eine zeitliche Auflösung von 100ns voraus, was für
+    /// SQL-Server-Datenbanken korrekt ist.
+    /// </summary>
+    public DateTimeOffset? GetGtDateForSqlServer()
+        => ModifiedAtGe is { } d ? d.AddTicks(-1) : ModifiedAtGt;
 }

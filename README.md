@@ -1,11 +1,22 @@
-# http-api-client-libs für NEVARIS Build 2025.1
+# http-api-client-libs für NEVARIS Build 2025.2
 
-## Nevaris.Build.ClientApi 5.1.1
+## Nevaris.Build.ClientApi 5.2.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2025.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
+von NEVARIS Build 2025.2 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.2.0 (für Build 2025.2 – 25.2.25287.513) – _21.10.2025_
+
+- _ProjektInfo_: Neue Properties _ModificationDate_ und _ModificationUser_ zum Auslesen des Änderungsdatums und des
+Änderungsbenutzers eines Projekts.
+- _LvArt_: Neuer Wert _BimKosten_ (LV zur Nachbearbeitung im Prozess _Planen | BIM-Kosten_)
+- _BetriebsmittelErgebnis_: Neue Properties _GesamtKosten_ und _GesamtPreis_ (befüllt beim Auslesen einer Kalkulation oder eines einzelnen Kalkulationsblatts)
+- _Rechnung_: Neue Property _AnzahlungsvorgangNummer_ (befüllt bei aktiver kaufmännischer Integration und aktivem Rechnungsausgangsbuch)
+- _Adresse_: Die ungenutzte Property _Guid_ wurde entfernt
+- _IStammApi.GetSpeicherort_: Neuer optionaler Parameter _mitProjektOrdnern_, um dateibasierte Speicherorte auszuschließen
+- _IProjektApi.GetSpeicherort_: Neuer optionaler Parameter _filter_, um eine Filterung nach dem Änderungsdatum zu ermöglichen
 
 ### 5.1.1 (für Build 2025.1 Patch 4 – 25.1.25148.817) – _12.09.2025_
 
@@ -308,7 +319,7 @@ erforderlich):
 using Nevaris.Build.ClientApi;
 
 // Verbindung zum Businessdienst herstellen
-using var nevarisBuildClient = new NevarisBuildClient(hostUrl: "http://localhost:8500");
+using var nevarisBuildClient = new NevarisBuildClient(hostUrl: "https://localhost:8500");
 
 // Build- und API-Version auslesen
 var versionInfo = await nevarisBuildClient.StammApi.GetVersion();
@@ -325,7 +336,7 @@ foreach (var speicherort in speicherorte)
 ### Demo-Apps ###
 
 Die Solution _http-api-client-libs.sln_ enthält neben dem Quellcode der Nevaris.Build.ClientApi
-auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2023.1 über
+auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2025.2 über
 die Nevaris.Build.ClientApi demonstrieren.
 
 * *EinfacherApiClient:* Minimale Konsolenapplikation, die die Verwendung der Nevaris.Build.ClientApi zeigt.
@@ -341,38 +352,9 @@ die Nevaris.Build.ClientApi demonstrieren.
   auf die enthaltenen Kalkulationen möglich.
 * *BetriebsmittelStammApp:* WPF-Applikation, die Betriebsmittelstämme von einem System in ein anderes kopiert.
 
-## Voraussetzungen ##
+## Installation ##
 
 Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server
-der NEVARIS Businessdienst installiert werden. Dazu muss das Setup.exe per
-
-_setup.exe /hiddenfeatures restfulapi_
-
-gestartet werden und dann _Benutzerdefiniert_ ausgewählt werden:
-
-![SetupBenutzerdefiniert](Docs/SetupBenutzerdefiniert.png)
-
-und anschließend in der Installationsauswahl _Businessdienst_ und _RESTful API_ angehakt werden:
-
-![SetupAuswahl](Docs/SetupAuswahl.png)
-
-Der Port, über den die RESTful API erreichbar ist, ist konfigurierbar (der Standardwert ist 8500):
-
-![SetupBusinessdienstKonfiguration](Docs/SetupBusinessdienstKonfiguration.png)
-
-Die im Setup getätigten Einstellungen führen dazu, dass in der Nevaris.config
-dieser Eintrag erzeugt wird, der den Businessdienst dazu veranlasst, die RESTful API
-am Port 8500 bereitzustellen:
-
-````xml
-<RestfulApiBaseAddress>http://*:8500</RestfulApiBaseAddress>
-````
-
-Nach erfolgreicher Installation wird der Dienstprozess _NEVARIS Build Businessdienst_ gestartet. Dieser stellt
-die RESTful API sowie eine HTML-basierte Dokumentation bereit, die über die
-URL **http://\<servername\>:8500/api-docs** erreichbar ist (falls 8500 als Portnummer gewählt wurde):
-
-![SwaggerDoku](Docs/SwaggerDoku.png)
-
-Die Doku enthält auch einen Link auf eine swagger.json-Datei, die eine formale Beschreibung der API enthält.
-Daraus lässt sich mit geeigneten Tools auch automatisiert ein Client-Proxy erzeugen, falls dies erwünscht ist.
+der NEVARIS Businessdienst installiert und entsprechend konfiguriert werden. Die notwendigen Schritte sind
+in der [Installationsanleitung](https://nevaris-gmbh.atlassian.net/wiki/spaces/NDB/pages/406913095/Installationsanleitung+Build+API+ab+Version+2025.1+-+Hosting+HTTPS+Authentifizierung+Authorizierung)
+beschrieben.

@@ -510,12 +510,6 @@ public class Adresse : BaseObject
     public string? Auslandsvorwahl { get; set; }
     public string? DurchwahlFax { get; set; }
     public string? DurchwahlZentrale { get; set; }
-
-    /// <summary>
-    /// Nur für globale Adressen: Eine ID in GUID-Format, die derzeit nur für interne Zwecke genutzt wird.
-    /// </summary>
-    public Guid? Guid { get; set; }
-
     public string? Hauptanschlussnummer { get; set; }
     public bool? IsReadOnlyNumber { get; set; }
     public string? Ortskennzahl { get; set; }
@@ -748,6 +742,18 @@ public class ProjektInfo : BaseObject
 
     [JsonProperty]
     public string? Bezeichnung { get; internal set; }
+
+    /// <summary>
+    /// Das Datum der letzten Änderung am Projekt.
+    /// </summary>
+    [JsonProperty]
+    public DateTimeOffset? ModificationDate { get; internal set; }
+
+    /// <summary>
+    /// Der Benutzer, der die letzte Änderung am Projekt gemacht hat.
+    /// </summary>
+    [JsonProperty]
+    public string? ModificationUser { get; internal set; }
 }
 
 /// <summary>
@@ -3200,7 +3206,12 @@ public enum LvArt
     /// LV für Success X. Wenn ein Projekt ein LV mit dieser Art besitzt, wird das Projekt als
     /// Success X-Projekt betrachtet.
     /// </summary>
-    VereinfachterModus
+    VereinfachterModus,
+
+    /// <summary>
+    /// LV zur Nachbearbeitung im Prozess "Planen | BIM-Kosten"
+    /// </summary>
+    BimKosten
 }
 
 public enum GliederungsArt
@@ -3280,10 +3291,22 @@ public class BetriebsmittelErgebnis : BaseObject
     public string? NummerKomplett { get; internal init; }
 
     /// <summary>
-    /// Die berechnete Warenkorbmenge. Dies ist aktuell der einzige gelieferte Rechenwert.
+    /// Die berechnete Warenkorbmenge
     /// </summary>
     [JsonProperty]
     public decimal WarenkorbMenge { get; internal init; }
+
+    /// <summary>
+    /// Die Gesamtkosten eines Betriebsmittels (je nach Verwendung bezogen auf das Kalkulationsblatt, bzw. auf die gesamte Kalkulation).
+    /// </summary>
+    [JsonProperty]
+    public Money? GesamtKosten { get; internal init; }
+
+    /// <summary>
+    /// Der Gesamtpreis eines Betriebsmittels (je nach Verwendung bezogen auf das Kalkulationsblatt, bzw. auf die gesamte Kalkulation).
+    /// </summary>
+    [JsonProperty]
+    public Money? GesamtPreis { get; internal init; }
 }
 
 /// <summary>
@@ -3552,7 +3575,7 @@ public class KalkulationsBlatt : BaseObject
     public KalkulationsBlattDetails? Details { get; set; }
 
     /// <summary>
-    /// Objekt mit den gerechneten Werten eines Kalkualtionsblattes.
+    /// Objekt mit den gerechneten Werten eines Kalkulationsblattes.
     /// </summary>
     [JsonProperty]
     public KalkulationsBlattErgebnis? Ergebnisse { get; internal set; }
@@ -5800,9 +5823,10 @@ public class Rechnung : BaseObject
     /// Rechnungskostenstelle
     /// </summary>
     public string? RechnungsKostenstelleNummer { get; set; }
-    
+
     /// <summary>
-    /// Erlöskonto (in Finance). Ist nur befüllt, wenn das Rechnungsausgangsbuch aktiv ist.
+    /// Erlöskonto (in Finance). Ist nur befüllt, wenn die kaufmännische Integration (Finance-Anbindung)
+    /// und das Rechnungsausgangsbuch aktiviert sind.
     /// </summary>
     public string? ErlöskontoNummer { get; set; }
 
@@ -5828,6 +5852,13 @@ public class Rechnung : BaseObject
     public DateTime? GewährleistungBis { get; set; }
 
     public DateTime? RückgabeGewährleistungseinbehaltBar { get; set; }
+
+    /// <summary>
+    /// Anzahlungsvorgang (in Finance): Ist nur befüllt, wenn die kaufmännische Integration (Finance-Anbindung)
+    /// und das Rechnungsausgangsbuch aktiviert sind. Bei nicht-aktiviertem Rechnungsausgangsbuch kommt dagegen
+    /// die gleichnamige Property in <see cref="Kontierung"/> zum Einsatz.
+    /// </summary>
+    public string? AnzahlungsvorgangNummer { get; set; }
 
     /// <summary>
     /// Die Zahlungsbedingung dieser Rechnung.
