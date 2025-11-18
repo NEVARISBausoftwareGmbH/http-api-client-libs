@@ -1,11 +1,17 @@
 # http-api-client-libs für NEVARIS Build 2025.2
 
-## Nevaris.Build.ClientApi 5.2.0
+## Nevaris.Build.ClientApi 5.3.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2025.2 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.3.0 (für Build 2025.2 Patch 1 – 25.2.25318.511) – _18.11.2025_
+
+- _Projekt_: Neue Properties _KostenKatalogId_ und _ZuschlagsKatalogId_ (liefern die ID des Kosten-/Zuschlagskatalogs, der
+beim erstmaligen Anlegen einer Kalkulation festgelegt wurde)
+- _BetriebsmittelErgebnis_: Neue Property _GesamtZuschläge_ (liefert den Gesamtzuschlag, aufgeteilt auf die Einzelzuschläge)
 
 ### 5.2.0 (für Build 2025.2 – 25.2.25287.513) – _21.10.2025_
 

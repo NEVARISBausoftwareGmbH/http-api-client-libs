@@ -885,6 +885,23 @@ public class Projekt : BaseObject
     public Guid? BetriebsmittelStammId { get; set; }
 
     /// <summary>
+    /// Die ID des Kostenkatalogs, der für dieses Projekt hinterlegt ist. Kann nicht direkt gesetzt werden,
+    /// sondern wird beim erstmaligen Anlegen einer Kalkulation befüllt.
+    /// Es ist möglich, dass es zu der hier hinterlegten ID keinen Kostenkatalog gibt, da z.B.
+    /// der Kostenkatalog nachträglich gelöscht worden sein kann, wovon das Projekt jedoch nichts mitbekommt.
+    /// </summary>
+    public Guid? KostenKatalogId { get; set; }
+
+    /// <summary>
+    /// Die ID des Zuschlagskatalogs, der für dieses Projekt hinterlegt ist. Kann nicht direkt gesetzt werden,
+    /// sondern wird beim erstmaligen Anlegen einer Kalkulation befüllt.
+    /// Es ist möglich, dass es zu der hier hinterlegten ID keinen Zuschlagskatalog gibt, da z.B.
+    /// der Zuschlagskatalog nachträglich gelöscht worden sein kann, wovon das Projekt jedoch nichts mitbekommt.
+    /// </summary>
+    public Guid? ZuschlagsKatalogId { get; set; }
+
+
+    /// <summary>
     /// Die Nummer des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
     /// befüllt ist und wenn die Betriebsmittelstamm-ID auf einen existierenden Betriebsmittelstamm verweist.
     /// </summary>
@@ -2543,7 +2560,7 @@ public class BetriebsmittelKostenDetails : BaseObject
     public Money? PreisGesamt { get; set; }
 
     /// <summary>
-    /// Der Warenkorb dieses Betriebsmittel, d.h. eine Auflistung aller in den weiteren Kosten vorkommenen
+    /// Der Warenkorb dieses Betriebsmittel, d.h. eine Auflistung aller in den weiteren Kosten vorkommenden
     /// Betriebsmittel (rekursiv aufgelöst) jeweils inklusive der kumulierten Menge und der kumulierten Kosten.
     /// Diese Property wird beim Abrufen eines einzelnen Betriebsmittels per IStammApi/IProjektApi.GetBetriebsmittel
     /// immer befüllt (und ist eine leere Liste im Fall eines Betriebsmittels ohne weitere Kosten).
@@ -3301,6 +3318,15 @@ public class BetriebsmittelErgebnis : BaseObject
     /// </summary>
     [JsonProperty]
     public Money? GesamtKosten { get; internal init; }
+
+    /// <summary>
+    /// Der Gesamtzuschlag aufgeteilt auf die Einzelzuschläge.
+    /// Key: Index des Zuschlags (-1..10). 
+    /// -1 = Zuschlag für Umlage BGK (bei Projekten mit der Norm Deutschland / Freie Form).
+    /// Value: Der Betrag des Zuschlags.
+    /// </summary>
+    [JsonProperty]
+    public IReadOnlyDictionary<int, Money>? GesamtZuschläge { get; internal init; }
 
     /// <summary>
     /// Der Gesamtpreis eines Betriebsmittels (je nach Verwendung bezogen auf das Kalkulationsblatt, bzw. auf die gesamte Kalkulation).
@@ -5885,7 +5911,7 @@ public class Rechnung : BaseObject
 
 /// <summary>
 /// Rückgabeobjekt des Endpunkts /build/projekte/{projektId}/rechnungen/{rechnungId}/reports/positionen.
-/// Enthält die Postionsdaten, die auch vom Bericht "Rechnung" geliefert werden.
+/// Enthält die Positionsdaten, die auch vom Bericht "Rechnung" geliefert werden.
 /// </summary>
 public class RechnungReportPositionenResult
 {
