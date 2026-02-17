@@ -242,6 +242,7 @@ public class AdresseKurzInfo : BaseObject
 
     public string? Straße { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GesperrtArt GesperrtArt { get; set; }
 
     public override string ToString() => $"{Code}: {Name}";
@@ -268,6 +269,7 @@ public class NewAdresseInfo : BaseObject
     /// <summary>
     /// Die Adressart: Organisation oder Person.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
 
     /// <summary>
@@ -301,6 +303,7 @@ public class NewProjektAdresseInfo : BaseObject
     /// <summary>
     /// Die Adressart: Organisation oder Person.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AdressArt AdressArt { get; set; }
 
     /// <summary>
@@ -358,6 +361,7 @@ public class LvZugeordneteAdresse : BaseObject
     /// <summary>
     /// Die Adressrolle (z.B. "Auftraggeber").
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public ZugeordneteAdresseRolle Rolle { get; set; }
 
     /// <summary>
@@ -501,6 +505,7 @@ public class Adresse : BaseObject
     public string? UrsprungsCode { get; set; }
     public string? TitelImAnschreiben { get; set; }
     public DateTime? Geburtsdatum { get; set; }
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GesperrtArt GesperrtArt { get; set; }
     public DateTime? GültigAb { get; set; }
     public DateTime? GültigBis { get; set; }
@@ -757,9 +762,68 @@ public class ProjektInfo : BaseObject
 }
 
 /// <summary>
+/// Gemeinsames Interface für <see cref="BetriebsmittelStamm"/> und <see cref="Projekt"/>
+/// </summary>
+internal interface IBetriebsmittelRoot
+{
+
+    /// <summary>
+    /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
+    /// </summary>
+    BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob die detailierte Zuschlagsgruppenberechnung aktiv ist.
+    /// </summary>
+    /// <remarks>
+    /// // = IsZuschlagsgruppeDetailberechnungEnabled
+    /// </remarks>
+    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; }
+
+    /// <summary>
+    /// Optionale Bezeichnung eines Zuschlags für die detailierte Berechnung von Zuschlagsgruppen. Nur für B2061:2020 relevant.
+    /// </summary>
+    public string? BezeichnungFreierZuschlag { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob die Rundung für Ansätze aktiviert ist
+    /// </summary>
+    public bool IstNachkommastellenAnsatzRundungAktiv { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob die Rundung für Beträge (Kosten / Preise) aktiviert ist.
+    /// </summary>
+    public bool IstNachkommastellenBeträgeRundungAktiv { get; set; }
+
+    /// <summary>
+    /// Die Anzahl der Nachkommastellen für die Berechnung der Mengen. Wird beim Anlegen einer Kalkulation
+    /// aus dem Betriebsmittelstamm übernommen.
+    /// </summary>
+    public int? RechengenauigkeitMengen { get; set; }
+
+    /// <summary>
+    /// Die Anzahl der Nachkommastellen für die Berechnung der Beträge. Wird beim Anlegen einer Kalkulation
+    /// aus dem Betriebsmittelstamm übernommen.
+    /// </summary>
+    public int? RechengenauigkeitBeträge { get; set; }
+
+    /// <summary>
+    /// Die Anzahl der Nachkommastellen für die Darstellung der Mengen. Wird beim Anlegen einer Kalkulation
+    /// aus dem Betriebsmittelstamm übernommen.
+    /// </summary>
+    public int? DarstellungsgenauigkeitMengen { get; set; }
+
+    /// <summary>
+    /// Die Anzahl der Nachkommastellen für die Darstellung der Beträge. Wird beim Anlegen einer Kalkulation
+    /// aus dem Betriebsmittelstamm übernommen.
+    /// </summary>
+    public int? DarstellungsgenauigkeitBeträge { get; set; }
+}
+
+/// <summary>
 /// Ein Projekt.
 /// </summary>
-public class Projekt : BaseObject
+public class Projekt : BaseObject, IBetriebsmittelRoot
 {
     /// <summary>
     /// Die Projekt-ID im Format "[Speicherort-Guid].[Projekt-Guid]", wie sie in den URLs für Projekt-Endpunkte
@@ -816,6 +880,10 @@ public class Projekt : BaseObject
     public DateTime? Baubeginn { get; set; }
 
     public DateTime? Bauende { get; set; }
+
+    public DateTime? Projektbeginn { get; set; }
+
+    public DateTime? Projektende { get; set; }
 
     public string? Ampel { get; set; }
 
@@ -877,7 +945,7 @@ public class Projekt : BaseObject
     /// <summary>
     /// Die ID des Betriebsmittelstamms, der für dieses Projekt hinerlegt ist. Kann nicht direkt gesetzt werden,
     /// sondern wird beim erstmaligen Anlegen einer Kalkulation befüllt.
-    /// Der Betriebsmittelstamm kann per GET /build/global/betriebsmittelstaemme/{betriebsmittelstammId}
+    /// Der Betriebsmittelstamm kann per GET /build/global/betriebsmittelstaemme/{betriebsmittelStammId}
     /// abgefragt werden.
     /// Es ist möglich, dass es zu der hier hinterlegten ID keinen Betriebsmittelstamm gibt, da z.B.
     /// der Betriebsmittelstamm nachträglich gelöscht worden sein kann, wovon das Projekt jedoch nichts mitbekommt.
@@ -899,7 +967,6 @@ public class Projekt : BaseObject
     /// der Zuschlagskatalog nachträglich gelöscht worden sein kann, wovon das Projekt jedoch nichts mitbekommt.
     /// </summary>
     public Guid? ZuschlagsKatalogId { get; set; }
-
 
     /// <summary>
     /// Die Nummer des zugewiesenen Betriebsmittelstamms. Ist befüllt, wenn <see cref="BetriebsmittelStammId"/>
@@ -925,28 +992,16 @@ public class Projekt : BaseObject
     /// </summary>
     public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
 
-    /// <summary>
-    /// Die Anzahl der Nachkommastellen für die Berechnung der Mengen. Wird beim Anlegen einer Kalkulation
-    /// aus dem Betriebsmittelstamm übernommen.
-    /// </summary>
+    /// <inheritdoc cref="IBetriebsmittelRoot.RechengenauigkeitMengen"/>
     public int? RechengenauigkeitMengen { get; set; }
 
-    /// <summary>
-    /// Die Anzahl der Nachkommastellen für die Berechnung der Beträge. Wird beim Anlegen einer Kalkulation
-    /// aus dem Betriebsmittelstamm übernommen.
-    /// </summary>
+    /// <inheritdoc cref="IBetriebsmittelRoot.RechengenauigkeitBeträge"/>
     public int? RechengenauigkeitBeträge { get; set; }
 
-    /// <summary>
-    /// Die Anzahl der Nachkommastellen für die Darstellung der Mengen. Wird beim Anlegen einer Kalkulation
-    /// aus dem Betriebsmittelstamm übernommen.
-    /// </summary>
+    /// <inheritdoc cref="IBetriebsmittelRoot.DarstellungsgenauigkeitMengen"/>
     public int? DarstellungsgenauigkeitMengen { get; set; }
 
-    /// <summary>
-    /// Die Anzahl der Nachkommastellen für die Darstellung der Beträge. Wird beim Anlegen einer Kalkulation
-    /// aus dem Betriebsmittelstamm übernommen.
-    /// </summary>
+    /// <inheritdoc cref="IBetriebsmittelRoot.DarstellungsgenauigkeitBeträge"/>
     public int? DarstellungsgenauigkeitBeträge { get; set; }
 
     /// <summary>
@@ -985,9 +1040,7 @@ public class Projekt : BaseObject
     /// </summary>
     public Guid BausteinRootGruppeId { get; set; }
 
-    /// <summary>
-    /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
-    /// </summary>
+    /// <see cref="IBetriebsmittelRoot.Bezeichnungen"/>
     public BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
 
     /// <summary>
@@ -1036,12 +1089,62 @@ public class Projekt : BaseObject
     /// </summary>
     public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 
-    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; } // = IsZuschlagsgruppeDetailberechnungEnabled
+    /// <see cref="IBetriebsmittelRoot.IstZuschlagsgruppeDetailberechnungAktiv"/>
+    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; }
+
+    /// <see cref="IBetriebsmittelRoot.BezeichnungFreierZuschlag"/>
+    public string? BezeichnungFreierZuschlag { get; set; }
 
     /// <summary>
-    /// Optionale Bezeichnung eines Zuschlags für die detailierte Berechnung von Zuschlagsgruppen. Nur für B2061:2020 relevant.
+    /// Optionale Angabe der Projektfertigstellung in Prozent (0 bis 100).
     /// </summary>
-    public string? BezeichnungFreierZuschlag { get; set; }
+    public int? Projektfertigstellung { get; set; }
+
+    /// <summary>
+    /// Das Land des Ausführungsorts
+    /// </summary>
+    public string? Land { get; set; }
+
+    /// <summary>
+    /// Die Postleitzahl des Ausführungsorts
+    /// </summary>
+    public string? Plz { get; set; }
+
+    /// <summary>
+    /// Der Ausführungsort
+    /// </summary>
+    public string? Ort { get; set; }
+
+    /// <summary>
+    /// Die Straße des Ausführungsorts
+    /// </summary>
+    public string? Straße { get; set; }
+
+    /// <summary>
+    /// Die Standard-Zeitzone für dieses Projekt
+    /// </summary>
+    public string? Zeitzone { get; set; }
+
+    public string? Verantwortlicher { get; set; }
+
+    public string? Gruppe { get; set; }
+
+    public string? Organisationseinheit { get; set; }
+
+    public string? Standort { get; set; }
+
+    /// <summary>
+    /// Die Projektbeschreibung (XHTML)
+    /// </summary>
+    public string? Beschreibung { get; set; }
+
+    public string? Bearbeitungshinweis { get; set; }
+
+    /// <inheritdoc cref="IBetriebsmittelRoot.IstNachkommastellenAnsatzRundungAktiv"/>
+    public bool IstNachkommastellenAnsatzRundungAktiv { get; set; }
+
+    /// <inheritdoc cref="IBetriebsmittelRoot.IstNachkommastellenBeträgeRundungAktiv"/>
+    public bool IstNachkommastellenBeträgeRundungAktiv { get; set; }
 }
 
 /// <summary>
@@ -1121,7 +1224,7 @@ public class ProjektZugeordneteAdresse : BaseObject
 /// <summary>
 /// Ein Betriebsmittelstamm (auch Betriebsmittelkatalog genannt).
 /// </summary>
-public class BetriebsmittelStamm : BaseObject
+public class BetriebsmittelStamm : BaseObject, IBetriebsmittelRoot
 {
     public Guid Id { get; set; }
 
@@ -1148,17 +1251,26 @@ public class BetriebsmittelStamm : BaseObject
     /// </summary>
     public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
 
-    public int? RechengenauigkeitMengen { get; set; } // = NachkommastellenAnsatz
-    public int? RechengenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreise
-    public int? DarstellungsgenauigkeitMengen { get; set; } // = NachkommastellenAnsatzUI
-    public int? DarstellungsgenauigkeitBeträge { get; set; } // = NachkommastellenKostenPreiseUI
+    /// <inheritdoc cref="IBetriebsmittelRoot.RechengenauigkeitMengen"/>
+    public int? RechengenauigkeitMengen { get; set; }
 
-    
-    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; } // = IsZuschlagsgruppeDetailberechnungEnabled
+    /// <inheritdoc cref="IBetriebsmittelRoot.RechengenauigkeitBeträge"/>
+    public int? RechengenauigkeitBeträge { get; set; }
 
-    /// <summary>
-    /// Optionale Bezeichnung eines Zuschlags für die detailierte Berechnung von Zuschlagsgruppen. Nur für B2061:2020 relevant.
-    /// </summary>
+    /// <inheritdoc cref="IBetriebsmittelRoot.DarstellungsgenauigkeitMengen"/>
+    public int? DarstellungsgenauigkeitMengen { get; set; }
+
+    /// <inheritdoc cref="IBetriebsmittelRoot.DarstellungsgenauigkeitBeträge"/>
+    public int? DarstellungsgenauigkeitBeträge { get; set; }
+
+
+
+
+
+    /// <see cref="IBetriebsmittelRoot.IstZuschlagsgruppeDetailberechnungAktiv"/>
+    public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; }
+
+    /// <see cref="IBetriebsmittelRoot.BezeichnungFreierZuschlag"/>
     public string? BezeichnungFreierZuschlag { get; set; }
 
     public Guid LohnRootGruppeId { get; set; }
@@ -1168,9 +1280,7 @@ public class BetriebsmittelStamm : BaseObject
     public Guid NachunternehmerRootGruppeId { get; set; }
     public Guid BausteinRootGruppeId { get; set; }
 
-    /// <summary>
-    /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
-    /// </summary>
+    /// <see cref="IBetriebsmittelRoot.Bezeichnungen"/>
     public BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
 
     /// <summary>
@@ -1226,6 +1336,12 @@ public class BetriebsmittelStamm : BaseObject
     /// (Detailinfo) Die Individualeigenschaften, die diesem Betriebsmittelstamm zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
+
+    /// <inheritdoc cref="IBetriebsmittelRoot.IstNachkommastellenAnsatzRundungAktiv"/>
+    public bool IstNachkommastellenAnsatzRundungAktiv { get; set; }
+
+    /// <inheritdoc cref="IBetriebsmittelRoot.IstNachkommastellenBeträgeRundungAktiv"/>
+    public bool IstNachkommastellenBeträgeRundungAktiv { get; set; }
 }
 
 public enum BetriebsmittelStammArt
@@ -1282,6 +1398,11 @@ public class NewBetriebsmittelStammInfo : BaseObject
     /// Die Kalkulationsversion (nur für Betriebsmittelstämme der Art "Aut" relevant).
     /// </summary>
     public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
+
+    /// <summary>
+    /// Optionale Möglichkeit die ID des neu erzeugten Betriebsmittelstamms vorzugeben.
+    /// </summary>
+    public Guid? NewId { get; set; }
 }
 
 /// <summary>
@@ -2972,6 +3093,7 @@ public sealed class PasteToLvOptionen
     /// <summary>
     /// Steuert wie beim Einfügen mit Gruppen umgegangen wird, wenn im Ziel bereits eine Gruppe mit den gleichen Daten existiert.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public ExistierendeKnotenHandling ExistierendeKnotenHandling { get; set; }
 
     /// <summary>
@@ -3129,6 +3251,7 @@ public class KalkulationGenerierenTextvergleichOptionen
 
     public bool LückenMiteinbeziehen { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public TextvergleichAlgorithmus TextvergleichAlgorithmus { get; set; }
 }
 
@@ -3811,11 +3934,13 @@ public class Leistungsverzeichnis : BaseObject
     /// <summary>
     /// Die Norm (ÖNorm oder GAEB). Für eine genauere Angabe, siehe NormExakt.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public Norm Norm { get; set; }
 
     /// <summary>
     /// Die exakte Norm, z.B. ÖNorm A2063:2021.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public NormExakt NormExakt { get; set; }
 
     public LvArt? Art { get; set; }
@@ -4776,6 +4901,7 @@ public class NewLvPositionInfo : NewLvItemInfo
     /// <summary>
     /// Nur für GAEB
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     public BedarfspositionArt BedarfspositionArt { get; set; }
 
     /// <summary>
@@ -4884,7 +5010,9 @@ public enum ObjectTyp
 /// </summary>
 /// <param name="Id"></param>
 /// <param name="Type"></param>
-public record TypedId(Guid Id, ObjectTyp Type)
+public record TypedId(
+    Guid Id,
+    [property: JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)] ObjectTyp Type)
 {
     public static List<TypedId> FromCollection(params IEnumerable<IObjectWithTypedId> items)
     => [.. items.Select(i => i.GetTypedId())];
@@ -4913,6 +5041,7 @@ public class LvItemBase : BaseObject, IObjectWithTypedId
     /// <summary>
     /// Art der Position oder Gruppe.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public LvItemTyp ItemTyp { get; set; }
 
     /// <summary>
@@ -4943,6 +5072,7 @@ public class LvItemBase : BaseObject, IObjectWithTypedId
     /// <summary>
     /// Nur für ÖNorm: Das Herkunftskennzeichen (gibt an, ob es einen LB-Bezug gibt).
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public Herkunftskennzeichen Herkunftskennzeichen { get; set; } = Herkunftskennzeichen.LB;
 
     public LvItemLbInfo? LbInfo { get; set; }
@@ -5008,6 +5138,7 @@ public class NachlassInfo : BaseObject
 
 public class Nachlass : BaseObject
 {
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public AufschlagNachlassArt Art { get; set; }
 
     public decimal? Wert { get; set; }
@@ -5118,6 +5249,7 @@ public class LvPosition : LvItemBase
 
     public string? Umsatzsteuer { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public LvPositionsart Positionsart { get; set; } = LvPositionsart.Normalposition;
 
     public decimal? LvMenge { get; set; }
@@ -5229,6 +5361,7 @@ public class LvPosition : LvItemBase
     /// <summary>
     /// Nur für GAEB
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
     public BedarfspositionArt BedarfspositionArt { get; set; }
 
     /// <summary>
@@ -5494,6 +5627,7 @@ public abstract class LbItemBase : BaseObject, IObjectWithTypedId
     /// <summary>
     /// Art der Position oder Gruppe.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public LbItemTyp ItemTyp { get; set; }
 
     /// <summary>
@@ -5777,6 +5911,7 @@ public class NewRechnungInfo : BaseObject
 
     public string? Bezeichnung { get; set; }
 
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public RechnungsArt Art { get; set; } = RechnungsArt.Einzelrechnung;
     
     public DateTime? Rechnungsdatum { get; set; }

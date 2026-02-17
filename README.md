@@ -1,11 +1,19 @@
 # http-api-client-libs für NEVARIS Build 2025.2
 
-## Nevaris.Build.ClientApi 5.3.0
+## Nevaris.Build.ClientApi 5.5.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2025.2 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 5.5.0 (für Build 2025.2 Patch 3 – 25.2.26042.1119) – _17.02.2026_
+
+- _Projekt_: Neue Properties _Projektbeginn_, _Projektende_, _Projektfertigstellung_, _Land_, _Plz_, _Ort_, _Straße_,
+_Zeitzone_, _Verantwortlicher_, _Gruppe_, _Organisationseinheit_, _Standort_, _Beschreibung_, _Bearbeitungshinweis_,
+_IstNachkommastellenAnsatzRundungAktiv_, _IstNachkommastellenBeträgeRundungAktiv_
+- _BetriebsmittelStamm_: Neue Properties _IstNachkommastellenAnsatzRundungAktiv_, _IstNachkommastellenBeträgeRundungAktiv_
+- _NewBetriebsmittelStammInfo_: Neue Property _NewId_ (ermöglicht das explizite Setzen der ID des erzeugten Stamms)
 
 ### 5.3.0 (für Build 2025.2 Patch 1 – 25.2.25318.511) – _18.11.2025_
 

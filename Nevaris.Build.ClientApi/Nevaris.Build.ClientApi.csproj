@@ -9,14 +9,14 @@
     <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>5.3.0</Version>
+    <Version>5.5.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi-Library für Build 2025.2-1 (Erweiterungen bei den Betriebsmittel-Rechenergebnissen und beim Projekt)</PackageReleaseNotes>
-    <PackageVersion>5.3.0</PackageVersion>
-    <AssemblyVersion>5.3.0</AssemblyVersion>
-    <FileVersion>5.3.0</FileVersion>
+    <PackageReleaseNotes>ClientApi-Library für Build 2025.2-3 (Erweiterungen in den Klassen Projekt und BetriebsmittelStamm)</PackageReleaseNotes>
+    <PackageVersion>5.5.0</PackageVersion>
+    <AssemblyVersion>5.5.0</AssemblyVersion>
+    <FileVersion>5.5.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
@@ -38,12 +38,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Refit" Version="8.0.0" />
-    <PackageReference Include="Refit.Newtonsoft.Json" Version="8.0.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="Refit" Version="10.0.1" />
+    <PackageReference Include="Refit.Newtonsoft.Json" Version="10.0.1" />
     <PackageReference Include="IdentityModel" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="9.0.4" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.3" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
   </ItemGroup>
 
   <ItemGroup>
