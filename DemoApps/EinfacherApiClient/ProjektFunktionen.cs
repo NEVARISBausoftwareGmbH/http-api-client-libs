@@ -65,6 +65,7 @@ public static class ProjektFunktionen
         // Extrahiere die Werte der Individualeigenschaften "Region" und "Leistungsdatum", sofern diese gesetzt sind.
         // Voraussetzung ist, dass diese Individualeigenschaften in der Adminstration definiert sind.
         // (Ansonsten bleiben regionProperty und leistungsdatumProperty null).
+        projekt.CustomPropertyValues ??= new Dictionary<string, CustomPropertyValue?>();
         projekt.CustomPropertyValues.TryGetValue("Region", out var regionProperty);
         projekt.CustomPropertyValues.TryGetValue("Leistungsdatum", out var leistungsdatumProperty);
 
@@ -93,10 +94,9 @@ public static class ProjektFunktionen
         projekt.Nummer = kenndaten.Nummer;
         projekt.Bezeichnung = kenndaten.Bezeichnung;
         projekt.Status = kenndaten.Status;
-        projekt.CustomPropertyValues["Region"]
-            = new CustomPropertyValue { StringValue = kenndaten.Region };
-        projekt.CustomPropertyValues["Leistungsdatum"]
-            = new CustomPropertyValue { DateTimeValue = kenndaten.Leistungsdatum };
+        projekt.CustomPropertyValues ??= new Dictionary<string, CustomPropertyValue?>();
+        projekt.CustomPropertyValues["Region"] = new CustomPropertyValue { StringValue = kenndaten.Region };
+        projekt.CustomPropertyValues["Leistungsdatum"] = new CustomPropertyValue { DateTimeValue = kenndaten.Leistungsdatum };
 
         // Schreibe aktualsierte Eigenschaften zurück
         await projektApi.UpdateProjekt(projektId, projekt);

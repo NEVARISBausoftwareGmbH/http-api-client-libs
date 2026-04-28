@@ -61,10 +61,67 @@ public interface IStammApi
     Task DeleteAdresse(string code);
 
     /// <summary>
+    /// Liefert die Projekte eines Datenbank-Speicherorts als <see cref="DbProjekt"/>-Objekte.
+    /// </summary>
+    /// <remarks>Dieser Endpunkt unterstützt nur Datenbank-Speicherorte (SQL Server). Die Verwendung mit einem
+    /// Datei-Speicherort führt zu einem 400-Fehler.</remarks>
+    /// <param name="speicherortId">Speicherort-ID</param>
+    /// <param name="filter">Optionales Filterobjekt (zum Filtern auf Basis des Änderungsdatums)</param>
+    [Get("/build/global/speicherorte/{speicherortId}/db-projekte")]
+    Task<List<DbProjekt>> GetDbProjekte(Guid speicherortId, FilterObject? filter = null);
+
+    /// <summary>
+    /// Liefert ein Projekt eines Datenbank-Speicherorts als <see cref="DbProjekt"/>-Objekt.
+    /// </summary>
+    /// <remarks>Dieser Endpunkt unterstützt nur Datenbank-Speicherorte (SQL Server). Die Verwendung mit einem
+    /// Datei-Speicherort führt zu einem 400-Fehler.</remarks>
+    /// <param name="speicherortId">Speicherort-ID</param>
+    /// <param name="projektId">ID des Projekts (entweder im Format [Speicherort-ID].[Projekt-GUID] oder nur die Projekt-GUID)</param>
+    [Get("/build/global/speicherorte/{speicherortId}/db-projekte/{projektId}")]
+    Task<DbProjekt> GetDbProjekt(Guid speicherortId, string projektId);
+
+    /// <summary>
+    /// Erstellt ein neues Projekt in einem Datenbank-Speicherort.
+    /// </summary>
+    /// <remarks>Dieser Endpunkt unterstützt nur Datenbank-Speicherorte (SQL Server). Die Verwendung mit einem
+    /// Datei-Speicherort führt zu einem 400-Fehler.</remarks>
+    /// <param name="speicherortId">Speicherort-ID</param>
+    /// <param name="projekt">Anzulegendes Projekt</param>
+    [Post("/build/global/speicherorte/{speicherortId}/db-projekte")]
+    Task<DbProjekt> CreateDbProjekt(Guid speicherortId, DbProjekt projekt);
+
+    /// <summary>
+    /// Aktualisiert ein neues Projekt in einem Datenbank-Speicherort.
+    /// </summary>
+    /// <remarks>Dieser Endpunkt unterstützt nur Datenbank-Speicherorte (SQL Server). Die Verwendung mit einem
+    /// Datei-Speicherort führt zu einem 400-Fehler.</remarks>
+    /// <param name="speicherortId">Speicherort-ID</param>
+    /// <param name="projektId">ID des Projekts (entweder im Format [Speicherort-ID].[Projekt-GUID] oder nur die Projekt-GUID)</param>
+    /// <param name="projekt">Projekt mit den neuen Werten</param>
+    [Put("/build/global/speicherorte/{speicherortId}/db-projekte/{projektId}")]
+    Task UpdateDbProjekt(Guid speicherortId, string projektId, DbProjekt projekt);
+
+    /// <summary>
+    /// Löscht ein Projekt in einem Datenbank-Speicherort.
+    /// </summary>
+    /// <remarks>Dieser Endpunkt unterstützt nur Datenbank-Speicherorte (SQL Server). Die Verwendung mit einem
+    /// Datei-Speicherort führt zu einem 400-Fehler.</remarks>
+    /// <param name="speicherortId">Speicherort-ID</param>
+    /// <param name="projektId">ID des Projekts (entweder im Format [Speicherort-ID].[Projekt-GUID] oder nur die Projekt-GUID)</param>
+    [Delete("/build/global/speicherorte/{speicherortId}/db-projekte/{projektId}")]
+    Task DeleteDbProjekt(Guid speicherortId, string projektId);
+
+    /// <summary>
+    /// Liefert ein Änderungsprotokoll für alle Objekte, die für den Datenaustausch mit Finance relevant sind.
+    /// </summary>
+    [Get("/build/global/finance-sync/business-events")]
+    Task<List<BusinessEvent>> GetBusinessEvents(FilterObject? filter = null);
+
+    /// <summary>
     /// Liefert alle Speicherorte.
     /// </summary>
     /// <param name="mitProjektOrdnern">true (= Default), werden neben SQL-Datenbanken auch
-    /// Projektordner geliefert. Dieser Parameter kann explizit auf false gesetzt werden, um die Rückgabeliste
+    /// Projektordner geliefert. Dieses Paramter kann explizit auf false gesetzt werden, um die Rückgabeliste
     /// auf SQL-Datenbanken zu beschränken.</param>
     /// <returns>Liste von Speicherorten (ohne ProjektInfos)</returns>
     [Get("/build/global/speicherorte")]
@@ -270,7 +327,13 @@ public interface IStammApi
     /// Liefert alle Mandaten, einschließlich Niederlassungen.
     /// </summary>
     [Get("/build/global/mandanten")]
-    Task<List<Mandant>> GetMandaten();
+    Task<List<Mandant>> GetMandanten();
+
+    /// <summary>
+    /// Liefert den Mandanten mit der angegebenen ID, einschließlich Niederlassungen.
+    /// </summary>
+    [Get("/build/global/mandanten/{mandantId}")]
+    Task<Mandant?> GetMandant(string mandantId);
 
     /// <summary>
     /// Liefert alle Kostenartstrukturen (= Wurzelobjekte, in denen die Kostenarten enthalten sind).
@@ -322,7 +385,7 @@ public interface IStammApi
     /// <param name="niederlassungId">Die ID der Niederlassung (nur angebbar, wenn mandantId ungleich null)</param>
     [Put("/build/global/kostenarten/{kostenartNummer}")]
     Task UpdateKostenart(
-        string kostenartNummer, 
+        string kostenartNummer,
         [Body] Kostenart kostenart,
         string? mandantId = null,
         string? niederlassungId = null);

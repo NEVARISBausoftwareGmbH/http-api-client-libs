@@ -1,11 +1,39 @@
-# http-api-client-libs für NEVARIS Build 2025.2
+# http-api-client-libs für NEVARIS Build 2026.1
 
-## Nevaris.Build.ClientApi 5.5.0
+## Nevaris.Build.ClientApi 6.0.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
-von NEVARIS Build 2025.2 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
+von NEVARIS Build 2026.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
+
+### 6.0.0 (für Build 2026.1 – 25.2.26113.450) – _28.04.2026_
+
+- _IStammApi.GetSpeicherorte_: Mit dem neu hinzugekommenen Parameter _mitProjektOrdnern_ lässt sich steuern, ob
+persönliche Projektordner (d.h. dateibasierte Speicherorte) geliefert werden sollen (Default: _true_).
+Durch Übergabe von _false_ kann die Ergebnisliste auf SQL-Server-Speicherorte eingeschränkt werden.
+- _IStammApi.GetSpeicherort_: Der neu hinzugekommen Parameter _filter_ erlaubt die Filterung der Projekte nach dem Änderungsdatum.
+- _IStammApi.GetDbProjekte/GetDbProjekt/CreateDbProjekt/UpdateDbProjekt/DeleteDbProjekt_: Neue Funktionen für den Zugriff
+speziell auf Projekte, die auf SQL-Server-Speicherorten liegen. Besonders die Funktion zum Auslesen aller Projekte
+(_GetDbProjekte_) ist performanter als die bisher dafür vorgesehene Funktion _IStammApi.GetSpeicherort_.
+- _IBetriebsmittelRoot_: Neues gemeinsames Interface für _BetriebsmittelStamm_ und _Projekt_. Die enthaltenen Properties 
+_IstNachkommastellenAnsatzRundungAktiv, IstNachkommastellenBeträgeRundungAktiv, RechengenauigkeitMengen,
+RechengenauigkeitBeträge, DarstellungsgenauigkeitMengen, DarstellungsgenauigkeitBeträge_ ermöglichen den
+Zugriff auf Rundungseinstellungen für die Kalkulation.
+- _Mandant_: Zusätzliche Properties für den Zugriff auf das kaufmännische System BMD (_BMDFirmenNr, BMDDefaultProjektServerId, BMDDefaultProjektServerOrdnerId_).
+- _BetriebsmittelDetails.FremdsystemInformationen_: Ermöglicht die Verknüpfung eines Betriebsmittels mit einem Fremdsystem (z.B. BMD).
+
+#### Breaking Changes
+
+- _IStammApi.GetMandanten_: Diese Funktion trug bislang den falschen Namen _GetMandaten_. Zusätzlich
+  gibt es nun die Funktion _IStammApi.GetMandant_ zum Auslesen eines einzelnen Mandanten.
+- _KalkulationGenerierenResultItem.QuellPositionIds_ (Ergebnis der Funktion _IProjektApi.GeneriereKalkulation_):
+  Der Typ dieser Property wurde von `Guid` in `List<Guid>?` geändert
+(Liste der IDs der Positionen im Quell-LV, dessen Kalkulationsdaten übernommen wurden).
+- _BetriebsmittelLohnDetails.AlternativeNummer_, _BetriebsmittelMaterialDetailsSonstiges.AlternativeNummer_,
+_BetriebsmittelGerätDetails.AlternativeNummer_, _BetriebsmittelSonstigeKostenDetails.AlternativeNummer_,
+_BetriebsmittelNachunternehmerDetails.AlternativeNummer_:
+Diese Property steht nicht mehr zur Verfügung. Stattdessen wird _BetriebsmittelDetails.FremdsystemInformationen_ genutzt. 
 
 ### 5.5.0 (für Build 2025.2 Patch 3 – 25.2.26042.1119) – _17.02.2026_
 
@@ -350,7 +378,7 @@ foreach (var speicherort in speicherorte)
 ### Demo-Apps ###
 
 Die Solution _http-api-client-libs.sln_ enthält neben dem Quellcode der Nevaris.Build.ClientApi
-auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2025.2 über
+auch einen Ordner _DemoApps_ mit Code für Client-Programme, die den Zugriff auf NEVARIS Build 2026.1 über
 die Nevaris.Build.ClientApi demonstrieren.
 
 * *EinfacherApiClient:* Minimale Konsolenapplikation, die die Verwendung der Nevaris.Build.ClientApi zeigt.
@@ -370,5 +398,5 @@ die Nevaris.Build.ClientApi demonstrieren.
 
 Um die RESTful API von NEVARIS Build nutzen zu können, muss auf einem geeigneten Server
 der NEVARIS Businessdienst installiert und entsprechend konfiguriert werden. Die notwendigen Schritte sind
-in der [Installationsanleitung](https://nevaris-gmbh.atlassian.net/wiki/spaces/NDB/pages/406913095/Installationsanleitung+Build+API+ab+Version+2025.1+-+Hosting+HTTPS+Authentifizierung+Authorizierung)
+in der [Installationsanleitung](https://nevaris-gmbh.atlassian.net/wiki/spaces/NDB/pages/1095831398/Installationsanleitung+Build+API+ab+Version+2026.1+-+Hosting+HTTPS+Authentifizierung+Authorizierung)
 beschrieben.

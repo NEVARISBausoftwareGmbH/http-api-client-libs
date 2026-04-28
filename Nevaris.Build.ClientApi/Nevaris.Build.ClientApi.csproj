@@ -9,14 +9,14 @@
     <Authors>Nevaris Bausoftware GmbH</Authors>
     <Company>Nevaris Bausoftware GmbH</Company>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Version>5.5.0</Version>
+    <Version>6.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Title>Nevaris.Build.ClientApi</Title>
     <Copyright>NEVARIS Bausoftware GmbH</Copyright>
-    <PackageReleaseNotes>ClientApi-Library für Build 2025.2-3 (Erweiterungen in den Klassen Projekt und BetriebsmittelStamm)</PackageReleaseNotes>
-    <PackageVersion>5.5.0</PackageVersion>
-    <AssemblyVersion>5.5.0</AssemblyVersion>
-    <FileVersion>5.5.0</FileVersion>
+    <PackageReleaseNotes>ClientApi-Library für Build 2026.1 (Erweiterungen beim Zugriff auf Speicherorte und Projekte; Zugriff auf Rundungseinstellungen)</PackageReleaseNotes>
+    <PackageVersion>6.0.0</PackageVersion>
+    <AssemblyVersion>6.0.0</AssemblyVersion>
+    <FileVersion>6.0.0</FileVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>keyPair.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworks>netstandard2.1;net48</TargetFrameworks>
@@ -42,7 +42,7 @@
     <PackageReference Include="Refit" Version="10.1.6" />
     <PackageReference Include="Refit.Newtonsoft.Json" Version="10.1.6" />
     <PackageReference Include="IdentityModel" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.7" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.17.0" />
   </ItemGroup>
 

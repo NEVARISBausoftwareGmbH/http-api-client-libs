@@ -182,6 +182,23 @@ public class Mandant : BaseObject
     public IReadOnlyList<Niederlassung>? Niederlassungen { get; internal set; }
 
     public override string? ToString() => AnzeigeText;
+
+    /// <summary>
+    /// Dem Mandanten optional zugeordnete BMD-Firmennummer.
+    /// </summary>
+    public long? BMDFirmenNr { get; set; }
+
+    /// <summary>
+    /// Id des dem Mandanten optional zugeordneter Standard-Speicherort für BMD-Projekte.
+    /// Es muss sich um einen allgemeinen Projektserver handeln.
+    /// </summary>
+    public Guid? BMDDefaultProjektServerId { get; set; }
+
+    /// <summary>
+    /// Id des dem Mandanten optional zugeordneten Projektserver Ordner für BMD-Projekte.
+    /// Es muss sich um einen Ordner in einem allgemeinen Projektserver handeln.
+    /// </summary>
+    public Guid? BMDDefaultProjektServerOrdnerId { get; set; }
 }
 
 /// <summary>
@@ -505,8 +522,10 @@ public class Adresse : BaseObject
     public string? UrsprungsCode { get; set; }
     public string? TitelImAnschreiben { get; set; }
     public DateTime? Geburtsdatum { get; set; }
+
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public GesperrtArt GesperrtArt { get; set; }
+
     public DateTime? GültigAb { get; set; }
     public DateTime? GültigBis { get; set; }
     public int? VollständigkeitInProzent { get; set; }
@@ -540,11 +559,11 @@ public class Adresse : BaseObject
     public string? Beschreibung { get; set; }
 
     public List<Adressat>? Adressaten { get; set; }
-    
+
     public List<Bankverbindung>? Bankverbindungen { get; set; }
-    
+
     public List<AdressBranche>? Branchen { get; set; }
-    
+
     public List<AdressGewerk>? Gewerke { get; set; }
 
     /// <summary>
@@ -762,11 +781,155 @@ public class ProjektInfo : BaseObject
 }
 
 /// <summary>
+/// Beschreibt ein Projekt. Wird von den Endpunkten /build/speicherort/{speicherortId}/db-projekte
+/// genutzt und wird nur für Projekte unterstützt, die auf einem Datenbank-Speicherort liegen.
+/// Im Gegensatz zu <see cref="Projekt"/> enthält nur Basisdaten des Projekts und keine Detailinformationen,
+/// dafür ist über den Endpunkt GET /build/speicherort/{speicherortId}/db-projekte das performante Auslesen
+/// aller Projekte eines Speicherorts möglich.
+/// </summary>
+public class DbProjekt : BaseObject
+{
+    /// <summary>
+    /// Die Projekt-ID im Format "[Speicherort-Guid].[Projekt-Guid]", wie sie in den URLs für Projekt-Endpunkte
+    /// (/build/projekte/{projektId}/...) vorkommt. Identifiziert ein Projekt Speicherort-übergreifend.
+    /// </summary>
+    [JsonProperty]
+    public string Id { get; internal set; } = "";
+
+    /// <summary>
+    /// Die ID des Projekts als Guid (ohne Speicherort-Information). Beim Anlegen eines neuen Projekts per
+    /// POST /build/speicherort/{speicherortId}/db-projekte kann diese Guid explizit gesetzt werden.
+    /// Eine nachträgliche Änderung per PUT /build/speicherort/{speicherortId}/db-projekte ist jedoch nicht möglich.
+    /// </summary>
+    public Guid Guid { get; set; }
+
+    /// <summary>
+    /// Das Datum der letzten Änderung am Projekt
+    /// </summary>
+    [JsonProperty]
+    public DateTimeOffset? ModificationDate { get; internal set; }
+
+    /// <summary>
+    /// Der Benutzer, der die letzte Änderung am Projekt gemacht hat
+    /// </summary>
+    [JsonProperty]
+    public string? ModificationUser { get; internal set; }
+
+    /// <summary>
+    /// Die Speicherort-ID (muss ein Datenbank-Speichoerort sein). Kann nicht nachträglich geändert werden.
+    /// </summary>
+    [JsonProperty]
+    public Guid? SpeicherortId { get; internal set; }
+
+    /// <summary>
+    /// Für Projekte, die auf Server-Speicherorten liegen: Die ID des Ordners, in dem das Projekt abgelegt ist
+    /// (innerhalb seines Speicherorts). Falls null, liegt das Projekt auf der Wurzelebene.
+    /// </summary>
+    public Guid? SpeicherortOrdnerId { get; set; }
+
+    /// <summary>
+    /// Die ID des Mandanten, dem das Projekt zugeordnet ist (optional).
+    /// </summary>
+    public string? MandantId { get; set; }
+
+    /// <summary>
+    /// Identifiziert in Kombination mit MandantId die Niederlassung, der das Projekt zugeordnet ist (optional).
+    /// </summary>
+    public string? NiederlassungId { get; set; }
+
+    public bool IstVorlageprojekt { get; set; }
+
+    /// <summary>
+    /// Die Nummer des Projekts
+    /// </summary>
+    public string? Nummer { get; set; }
+
+    /// <summary>
+    /// Die Bezeichnung des Projekts
+    /// </summary>
+    public string? Bezeichnung { get; set; }
+
+    public DateTime? Baubeginn { get; set; }
+
+    public DateTime? Bauende { get; set; }
+
+    public DateTime? Projektbeginn { get; set; }
+
+    public DateTime? Projektende { get; set; }
+
+    public string? Ampel { get; set; }
+
+    public string? Art { get; set; }
+
+    public string? Ausschreibungsart { get; set; }
+
+    public string? Status { get; set; }
+
+    public string? Sparte { get; set; }
+
+    public string? Typ { get; set; }
+
+    /// <summary>
+    /// Die Nummer der Kostenstelle, die dem Projekt zugeordnet ist. Im Falle aktiver Finance-Integration ist das
+    /// eine Finance-Kostenstelle, ansonsten eine Control-Kostenstelle.
+    /// </summary>
+    public string? KostenstelleNummer { get; set; }
+
+    public string? Verantwortlicher { get; set; }
+
+    public string? Gruppe { get; set; }
+
+    public string? Organisationseinheit { get; set; }
+
+    public string? Standort { get; set; }
+
+    public string? Bearbeitungshinweis { get; set; }
+
+    /// <summary>
+    /// Projektfertigstellung in Prozent (0 bis 100)
+    /// </summary>
+    public int? Projektfertigstellung { get; set; }
+
+    /// <summary>
+    /// Das Land des Ausführungsorts
+    /// </summary>
+    public string? Land { get; set; }
+
+    /// <summary>
+    /// Die Postleitzahl des Ausführungsorts
+    /// </summary>
+    public string? Plz { get; set; }
+
+    /// <summary>
+    /// Der Ausführungsort
+    /// </summary>
+    public string? Ort { get; set; }
+
+    /// <summary>
+    /// Die Straße des Ausführungsorts
+    /// </summary>
+    public string? Straße { get; set; }
+
+    /// <summary>
+    /// Die Standard-Zeitzone für dieses Projekt
+    /// </summary>
+    public string? Zeitzone { get; set; }
+
+    /// <summary>
+    /// Diese Property wird nur beim Anlegen eines neuen Projekts per POST /build/global/{speicherortId}/db-projekte
+    /// berücksichtigt. Ist sie befüllt, wird zusätzlich zum Projekt auch noch ein darin enthaltenes LV angelegt.
+    /// Relevant ist dies vor allem im Fall von Success X-Projekten, die immer ein LV benötigen. In diesem
+    /// Fall ist <see cref="NewLvInfo.Art"/> = <see cref="LvArt.VereinfachterModus"/> zu setzen. Außerdem sollte
+    /// zumindest auch die gewünschte Norm per <see cref="NewLvInfo.NormExakt"/> übergeben werden. 
+    /// </summary>
+    public NewLvInfo? NewLvInfo { get; set; }
+}
+
+/// <summary>
 /// Gemeinsames Interface für <see cref="BetriebsmittelStamm"/> und <see cref="Projekt"/>
 /// </summary>
 internal interface IBetriebsmittelRoot
 {
-
     /// <summary>
     /// (Detailinfo) Enthält Kostenanteilbezeichnungen.
     /// </summary>
@@ -938,7 +1101,7 @@ public class Projekt : BaseObject, IBetriebsmittelRoot
     public List<Umsatzsteuer>? Umsatzsteuern { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Verweist auf die Adressen, die dem Projekt zugeordnet sind (inklusive Adressrollen).
+    /// Verweist auf die Adressen, die dem Projekt zugeordnet sind (inklusive Adressrollen).
     /// </summary>
     public List<ProjektZugeordneteAdresse>? ZugeordneteAdressen { get; set; }
 
@@ -1044,7 +1207,7 @@ public class Projekt : BaseObject, IBetriebsmittelRoot
     public BetriebsmittelStammBezeichnungen? Bezeichnungen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
+    /// Liste von Zuschlagsarten (entspricht dem Reiter "Zuschläge" in Build).
     /// Über dieses Feld wird bestimmt, wie viele Zuschlagsspalten in den Kosten- und Zuschlagskatalogen angeboten
     /// werden und wie diese heißen.
     /// Für Betriebsmittelstämme mit der Kalkulationsversion B2061_2020 ist hier immer genau eine vordefinierte
@@ -1053,39 +1216,39 @@ public class Projekt : BaseObject, IBetriebsmittelRoot
     public List<Zuschlagsart>? Zuschlagsarten { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen
+    /// Liste von Zuschlagsgruppen. Legt fest, welche Zuschläge zur Verfügung stehen
     /// (nur für ÖNORM relevant).
     /// </summary>
     public List<Zuschlagsgruppe>? Zuschlagsgruppen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Für GAEB: Die Einträge im Reiter "Zuschlagsberechnung". Legt die Berechnungsmethode
+    /// Für GAEB: Die Einträge im Reiter "Zuschlagsberechnung". Legt die Berechnungsmethode
     /// für die einzelnen Zuschlagstypen (z.B. AGK) fest.
     /// </summary>
     public List<ZuschlagsartGruppe>? ZuschlagsartGruppen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Gerätefaktoren.
+    /// Liste von Gerätefaktoren.
     /// </summary>
     public List<Gerätefaktor>? Gerätefaktoren { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von globalen Variablen.
+    /// Liste von globalen Variablen.
     /// </summary>
     public List<GlobaleVariable>? GlobaleVariablen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von Warengruppen.
+    /// Liste von Warengruppen.
     /// </summary>
     public List<Warengruppe>? Warengruppen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Liste von DbBetriebsmittelGruppen.
+    /// Liste von DbBetriebsmittelGruppen.
     /// </summary>
     public List<DbBetriebsmittelGruppe>? DbBetriebsmittelGruppen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
+    /// Die Individualeigenschaften, die diesem Projekt zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 
@@ -1251,6 +1414,13 @@ public class BetriebsmittelStamm : BaseObject, IBetriebsmittelRoot
     /// </summary>
     public BetriebsmittelStammKalkulationsVersion? KalkulationsVersion { get; set; }
 
+    /// <summary>
+    /// Der Zustand der Checkbox "Sync. Bezeichnung". Falls true, wird beim Datenaustausch zwischen Build und Finance
+    /// die Bezeichnung der Betriebsmittel übertragen.
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public bool SyncBezeichnung { get; set; }
+
     /// <inheritdoc cref="IBetriebsmittelRoot.RechengenauigkeitMengen"/>
     public int? RechengenauigkeitMengen { get; set; }
 
@@ -1262,10 +1432,6 @@ public class BetriebsmittelStamm : BaseObject, IBetriebsmittelRoot
 
     /// <inheritdoc cref="IBetriebsmittelRoot.DarstellungsgenauigkeitBeträge"/>
     public int? DarstellungsgenauigkeitBeträge { get; set; }
-
-
-
-
 
     /// <see cref="IBetriebsmittelRoot.IstZuschlagsgruppeDetailberechnungAktiv"/>
     public bool IstZuschlagsgruppeDetailberechnungAktiv { get; set; }
@@ -2106,7 +2272,9 @@ public class Betriebsmittel : BaseObject
 
     /// <summary>
     /// Die Id der Gruppe, unter dem dieses Betriebsmittel hängt. Ist null, wenn dieses Betriebsmittel
-    /// selbst eine Gruppe auf oberste Ebene ist.
+    /// selbst eine Gruppe auf oberste Ebene ist. Kann nur für Lesezugriffe genutzt werden, außer in Zusammenhang
+    /// mit dem Endpunkt POST /build/global/betriebsmittel/kosten_collection_update, um eine hierarchische
+    /// Struktur von Betriebsmitteln (inkl. Gruppen) zu erzeugen.
     /// </summary>
     public Guid? ParentGruppeId { get; set; }
 
@@ -2120,6 +2288,7 @@ public class Betriebsmittel : BaseObject
 
     /// <summary>
     /// Vollständige Nummer des Betriebsmittels (einschließlich Präfix), z.B. "M24.211".
+    /// Wird bei Schreibzugriffen ignoriert.
     /// </summary>
     public string? NummerKomplett { get; set; }
 
@@ -2294,6 +2463,81 @@ public class BetriebsmittelDetails : BaseObject
     /// Der Zeitpunkt der letzten Änderung. Wird bei Schreiboperationen ignoriert.
     /// </summary>
     public DateTimeOffset? ModificationDate { get; set; }
+
+    /// <summary>
+    /// Liste mit Fremdsysteminformaiotnen für dieses Betriebsmittel.
+    /// Build Betriebsmittel unterstützen Verknüpfungen zu mehreren Fremdsystemen. 
+    /// </summary>
+    public List<FremdsystemInformationen> FremdsystemInformationen { get; init; } = [];
+}
+
+public sealed class FremdsystemInformationen : BaseObject
+{
+    /// <summary>
+    /// Eindeutige ID der Fremdsysteminformation.
+    /// </summary>
+    public Guid Id { get; set; }
+
+    /// <summary>
+    /// Die Nummer des Fremdartikels. Kann eventuell auch einen zusammengesetzten Schlüssel enthalten.
+    /// </summary>
+    public string? Nummer { get; set; }
+
+    /// <summary>
+    /// Zeigt an ob die Zuordnung zum Fremdartikel aktiv ist.
+    /// </summary>
+    public bool IstAktiv { get; set; }
+
+    /// <summary>
+    /// Die Einheit des Fremdartikels.
+    /// </summary>
+    public string? Einheit { get; set; }
+
+    /// <summary>
+    /// Optionale Formel um bei Bedarf Mengenumrechnungen durchzuführen.
+    /// </summary>
+    public string? Formel { get; set; }
+
+    /// <summary>
+    /// Das Fremdsystem, mit dem das Betriebsmittel verknüpft ist.
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public FremdsystemArt Art { get; set; }
+
+    /// <summary>
+    /// Vom Einkauf erfasster Preis des Fremdartikels.
+    /// </summary>
+    public Money? Einkaufspreis { get; set; }
+
+    /// <summary>
+    /// Datum des Einkaufspreis
+    /// </summary>
+    public DateTime? DatumEinkaufspreis { get; set; }
+
+    /// <summary>
+    /// Optionales Kommentar für die Zuordnung
+    /// </summary>
+    public string? Kommentar { get; set; }
+}
+
+public enum FremdsystemArt
+{
+    Alternative0 = 0,
+    Alternative1 = 1000,
+    Alternative2 = 2000,
+    Alternative3 = 3000,
+    Alternative4 = 4000,
+    Alternative5 = 5000,
+    Alternative6 = 6000,
+    Alternative7 = 7000,
+    Alternative8 = 8000,
+    Alternative9 = 9000,
+    BMD = 10000,
+    //OEBSL = 11000,
+    //EAN = 12000,
+    //SAP = 13000,
+    //NevarisRegieArtikel = 14000,
+    //NevarisFinanceArtikel = 15000,
 }
 
 /// <summary>
@@ -2367,8 +2611,6 @@ public class BetriebsmittelLohnDetails : BaseObject
 
     public int? WarengruppeUmlagekosten { get; set; }
 
-    public string? AlternativeNummer { get; set; }
-
     /// <summary>
     /// Das Feld "Externe Preiswartung".
     /// </summary>
@@ -2426,8 +2668,6 @@ public class BetriebsmittelMaterialDetailsSonstiges : BaseObject
     public string? Rabattgruppe { get; set; }
 
     public string? Lieferant { get; set; }
-
-    public string? AlternativeNummer { get; set; }
 
     public bool? Markierung { get; set; }
 
@@ -2496,7 +2736,6 @@ public class BetriebsmittelGerätDetails : BaseObject
 
     public int? WarengruppeListenpreisgerätGemeinkosten { get; set; }
 
-    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -2592,8 +2831,6 @@ public class BetriebsmittelSonstigeKostenDetails : BaseObject
 
     public int? WarengruppeGemeinkosten { get; set; }
 
-    public string? AlternativeNummer { get; set; }
-
     /// <summary>
     /// Das Feld "Externe Preiswartung".
     /// </summary>
@@ -2637,8 +2874,6 @@ public class BetriebsmittelNachunternehmerDetails : BaseObject
     public int? WarengruppeKostenanteil8 { get; set; }
 
     public int? WarengruppeGemeinkosten { get; set; }
-
-    public string? AlternativeNummer { get; set; }
 
     /// <summary>
     /// Das Feld "Externe Preiswartung".
@@ -3110,7 +3345,6 @@ public sealed class PasteToLvOptionen
     /// Wenn True werden die Preise der Position ins Ziel übernommen. Nur bei relevant wenn sich bei der Quelle um ein LV handelt.
     /// </summary>
     public bool PreiseÜbernehmen { get; set; } = true;
-
 }
 
 public enum ExistierendeKnotenHandling
@@ -3130,8 +3364,8 @@ public sealed class PasteToLvResult
     {
         public SourceItemTargetItemMapping()
         {
-                
         }
+
         public SourceItemTargetItemMapping(TypedId sourceItem)
         {
             SourceItem = sourceItem;
@@ -3279,10 +3513,10 @@ public class KalkulationGenerierenResultItem
     public Guid ZielPositionId { get; internal init; }
 
     /// <summary>
-    /// Die ID der Position im Quell-LV, dessen Kalkulationsdaten übernommen wurden.
+    /// Die IDs der Positionen im Quell-LV, dessen Kalkulationsdaten übernommen wurden.
     /// </summary>
     [JsonProperty]
-    public Guid QuellPositionId { get; internal init; }
+    public List<Guid>? QuellPositionIds { get; internal init; }
 }
 
 public enum TextvergleichAlgorithmus
@@ -3704,10 +3938,12 @@ public class KalkulationsBlatt : BaseObject
 
     public Guid PositionId { get; set; }
 
-    [Obsolete("Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
+    [Obsolete(
+        "Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
     public string? Nummer { get; set; }
 
-    [Obsolete("Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
+    [Obsolete(
+        "Diese Eigenschaft wurde in der Vergangenheit nicht befüllt und wird in der Zukunft nicht mehr weiter unterstützt.")]
     public string? Bezeichnung { get; set; }
 
     /// <summary>
@@ -3720,7 +3956,8 @@ public class KalkulationsBlatt : BaseObject
     /// wird auch beim Abrufen sämtlicher Kalkulationsblätter per
     /// /build/{projektId}/kalkulationen/{kalkulationId}/kalkulationsBlaetter befüllt.
     /// </summary>
-    [Obsolete("Diese Eigenschaft wurde durch die Eigenschaft Ergebnisse ersetzt und wird in Zukunft nicht mehr weiter unterstützt.")]
+    [Obsolete(
+        "Diese Eigenschaft wurde durch die Eigenschaft Ergebnisse ersetzt und wird in Zukunft nicht mehr weiter unterstützt.")]
     public KalkulationsBlattDetails? Details { get; set; }
 
     /// <summary>
@@ -3948,22 +4185,22 @@ public class Leistungsverzeichnis : BaseObject
     public LvStatus? Status { get; set; }
 
     /// <summary>
-    /// Detailinformationen zum LV.
+    /// (Detailinfo) Detailinformationen zum LV.
     /// </summary>
     public LvDetails? LvDetails { get; set; }
 
     /// <summary>
-    /// Nur für ÖNorm-LVs: Normspezifische Informationen.
+    /// (Detailinfo) Nur für ÖNorm-LVs: Normspezifische Informationen.
     /// </summary>
     public OenormLvDetails? OenormLvDetails { get; set; }
 
     /// <summary>
-    /// Nur für GAEB-LVs: Normspezifische Informationen.
+    /// (Detailinfo) Nur für GAEB-LVs: Normspezifische Informationen.
     /// </summary>
     public GaebLvDetails? GaebLvDetails { get; set; }
 
     /// <summary>
-    /// Enthält Binärdaten für Grafiken.
+    /// (Detailinfo) Enthält Binärdaten für Grafiken.
     /// </summary>
     public LvBildDetails? BildDetails { get; set; }
 
@@ -3974,7 +4211,7 @@ public class Leistungsverzeichnis : BaseObject
     public IReadOnlyList<LvKnoten>? RootKnotenListe { get; internal set; }
 
     /// <summary>
-    /// Nur für GAEB: Positionen auf der obersten Ebene (z.B. Hinweistexte).
+    /// (Detailinfo) Nur für GAEB: Positionen auf der obersten Ebene (z.B. Hinweistexte).
     /// </summary>
     [JsonProperty]
     public IReadOnlyList<LvPosition>? RootPositionen { get; internal set; }
@@ -3986,7 +4223,7 @@ public class Leistungsverzeichnis : BaseObject
     public IReadOnlyList<Kalkulation>? RootKalkulationen { get; internal set; }
 
     /// <summary>
-    /// Die Rechenergebnisse auf oberster Ebene. 
+    /// (Detailinfo) Die Rechenergebnisse auf oberster Ebene. 
     /// </summary>
     [JsonProperty]
     public LvItemErgebnisse? Ergebnisse { get; internal init; }
@@ -4129,12 +4366,12 @@ public class LvDetails : BaseObject
     public NachlassInfo? NachlassInfo { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
+    /// Nur für ÖNORM-LVs ab Version A 2063:2021: Liste von <see cref="GarantierteAngebotssummeGruppe"/>-Objekten.
     /// </summary>
     public List<GarantierteAngebotssummeGruppe>? GarantierteAngebotssummeGruppen { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Verweist auf die Adressen, die dem LV zugeordnet sind (inklusive Adressrollen).
+    /// Verweist auf die Adressen, die dem LV zugeordnet sind (inklusive Adressrollen).
     /// </summary>
     public List<LvZugeordneteAdresse>? ZugeordneteAdressen { get; set; }
 
@@ -4187,7 +4424,7 @@ public class LvDetails : BaseObject
     public string? Auftragsreferenz { get; set; }
 
     /// <summary>
-    /// (Detailinfo) Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
+    /// Die Individualeigenschaften, die diesem Leistungsverzeichnis zugeordnet sind.
     /// </summary>
     public Dictionary<string, CustomPropertyValue?>? CustomPropertyValues { get; set; }
 }
@@ -4971,7 +5208,6 @@ public class ZuBezuschlagendePosition : BaseObject
     public decimal? Menge { get; set; }
 }
 
-
 /// <summary>
 /// Bildet Werte für alle Typen ab die in <see cref="TypedId"/> benötigt werden.
 /// </summary>
@@ -5004,7 +5240,6 @@ public enum ObjectTyp
     OnLbVorbemerkungsposition,
 }
 
-
 /// <summary>
 /// Schlüssel und Typ eines Objekts
 /// </summary>
@@ -5015,9 +5250,8 @@ public record TypedId(
     [property: JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)] ObjectTyp Type)
 {
     public static List<TypedId> FromCollection(params IEnumerable<IObjectWithTypedId> items)
-    => [.. items.Select(i => i.GetTypedId())];
+        => [.. items.Select(i => i.GetTypedId())];
 }
-
 
 /// <summary>
 /// Interface für Objekte mit einer TypedId
@@ -5050,7 +5284,7 @@ public class LvItemBase : BaseObject, IObjectWithTypedId
     public string? Nummer { get; set; }
 
     /// <summary>
-    /// Die vollständige Nummer (z.B. "01.04.03").
+    /// Die vollständige Nummer (z.B. "01.04.03"). Wird bei Schreibzugriffen ignoriert.
     /// </summary>
     public string? NummerKomplett { get; set; }
 
@@ -5119,7 +5353,6 @@ public class LvItemBase : BaseObject, IObjectWithTypedId
 
     /// <inheritdoc/>
     public TypedId GetTypedId() => new(Id, ItemTyp.ToObjectTyp());
-
 }
 
 public class NachlassInfo : BaseObject
@@ -5194,7 +5427,6 @@ public class LvItemLbInfo : BaseObject
     public string? LbPosNummer { get; set; }
 
     public OnÄnderungsumfang? AenderungsUmfang { get; set; }
-
 }
 
 /// <summary>
@@ -5694,7 +5926,6 @@ public abstract class LbItemBase : BaseObject, IObjectWithTypedId
 
     /// <inheritdoc/>
     public TypedId GetTypedId() => new(Id, ItemTyp.ToObjectTyp());
-
 }
 
 /// <summary>
@@ -5713,7 +5944,6 @@ public sealed class LbKnoten : LbItemBase
     public List<LbKnoten>? Knoten { get; set; }
 
     public List<LbPosition>? Positionen { get; set; }
-
 }
 
 /// <summary>
@@ -5836,7 +6066,6 @@ public sealed class ImportiereLeistungsbeschreibungErgebnis : BaseObject
     public Guid? LeistungsbeschreibungId { get; internal init; }
 }
 
-
 #endregion Leistungsbeschreibung
 
 #region Mengenermittlung
@@ -5913,9 +6142,9 @@ public class NewRechnungInfo : BaseObject
 
     [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public RechnungsArt Art { get; set; } = RechnungsArt.Einzelrechnung;
-    
+
     public DateTime? Rechnungsdatum { get; set; }
-    
+
     public bool? IstGeschützt { get; set; }
 }
 
@@ -6327,12 +6556,11 @@ public enum MengenArt
     /// Prognose2: Entspricht standardmäßig der Prognosemenge mit der Bezeichnung "Prognosemenge_9"
     /// </summary>
     Prognose10 = 19,
-    
+
     Abgrenzungsmenge = 20,
     Leistungsmenge = 21,
     LeistungsmengeAbgrenzung = 22
 }
-
 
 public class Aufmaßzeile : BaseObject
 {
@@ -6891,3 +7119,65 @@ public class BautagebuchGeraeteProjektdaten : BaseObject
 }
 
 #endregion Bautagebuch
+
+/// <summary>
+/// Vom Endpunkt GET /build/global/finance-sync/business-events geliefertes Objekt, das eine Änderungen an den
+/// Stammdaten beschreibt. Wird vom Middleware Connector (MWC) für den Datenaustausch mit Finance genutzt.
+/// </summary>
+public class BusinessEvent
+{
+    /// <summary>
+    /// Interne ID des Events
+    /// </summary>
+    public required Guid Guid { get; init; }
+
+    /// <summary>
+    /// Art der Änderung (Create, Update, Delete, Rename)
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public required BusinessEventType EventType { get; init; }
+
+    /// <summary>
+    /// Mandanten-ID (falls das betroffene Objekt mandantenabhängig ist, z.B. Debitor)
+    /// </summary>
+    public string? CompanyId { get; init; }
+
+    /// <summary>
+    /// Das URL-Segment des korrespondierenden Endpunkts, z.B. "customers" für Debitoren
+    /// (vollständiger URL: /build/global/finance-sync/customers).
+    /// </summary>
+    public required string Endpoint { get; set; }
+
+    /// <summary>
+    /// Die (ggf. mehrteilige) ID des Objekts (fachlicher Schlüssel, so wie er von Finance erwartet wird),
+    /// z.B. ["EN"] für die Sprache mit dem Code "EN".
+    /// </summary>
+    public required IReadOnlyList<object> Id { get; init; }
+
+    /// <summary>
+    /// Nur für Schlüsseländerungen (EventType = Rename): die ursprüngliche ID.
+    /// </summary>
+    public IReadOnlyList<object>? PreviousId { get; init; }
+
+    /// <summary>
+    /// Zeitpunkt der Änderung
+    /// </summary>
+    public required DateTimeOffset ModifiedAt { get; init; }
+
+    /// <summary>
+    /// Die RowVersion des Datensatzes (= ein eindeutiger, streng monoton steigender Wert, der bei jeder
+    /// Datensatzaktualsierung vom SQL Server neu vergeben wird).
+    /// </summary>
+    public required ulong RowVersion { get; init; }
+}
+
+/// <summary>
+/// Beschreibt, um welches Ereignis es sich bei einem konkreten <see cref="BusinessEvent"/> handelt.
+/// </summary>
+public enum BusinessEventType
+{
+    Create,
+    Update,
+    Delete,
+    Rename // Rename bedeutet hier: Schlüsselwerte wurden geändert
+}
