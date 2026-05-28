@@ -3334,17 +3334,26 @@ public sealed class PasteToLvOptionen
     /// <summary>
     /// Wenn True wird die Mengenermittlung der Quelle ins Ziel übernommen. Nur bei bei relevant wenn sich bei der Quelle um ein LV handelt.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public bool MengenermittlungÜbernehmen { get; set; } = true;
 
     /// <summary>
     /// Wenn True werden die Mengen der Position ins Ziel übernommen. Nur bei relevant wenn sich bei der Quelle um ein LV handelt.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public bool MengenÜbernehmen { get; set; } = true;
 
     /// <summary>
     /// Wenn True werden die Preise der Position ins Ziel übernommen. Nur bei relevant wenn sich bei der Quelle um ein LV handelt.
     /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
     public bool PreiseÜbernehmen { get; set; } = true;
+
+    /// <summary>
+    /// Wenn True werden die Inhalte von Lücken in Langtexten in das Ziel übernommen.
+    /// </summary>
+    [JsonProperty(DefaultValueHandling = DefaultValueHandling.Include)]
+    public bool LückeninhalteÜbernehmen { get; set; } = true;
 }
 
 public enum ExistierendeKnotenHandling

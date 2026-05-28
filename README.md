@@ -1,13 +1,17 @@
 # http-api-client-libs für NEVARIS Build 2026.1
 
-## Nevaris.Build.ClientApi 6.0.0
+## Nevaris.Build.ClientApi 6.1.0
 
 Diese .NET-Bibliothek ermöglicht einen typsicheren Zugriff auf die RESTful API
 von NEVARIS Build 2026.1 Sie ist auch als [nuget-Paket](https://www.nuget.org/packages/Nevaris.Build.ClientApi/) verfügbar.
 
 ## Neuerungen und Breaking Changes ##
 
-### 6.0.0 (für Build 2026.1 – 25.2.26113.450) – _28.04.2026_
+### 6.1.0 (für Build 2026.1-1 – 26.1.26148.502) – _28.05.2026_
+
+- Neue Option _PasteToLvOptionen.MengenermittlungÜbernehmen_ für die Operationen _IProjektApi.PasteOnLvDataIntoOnLv_ und _IProjektApi.PasteOnLbDataIntoOnLv_.
+
+### 6.0.0 (für Build 2026.1 – 26.1.26113.450) – _28.04.2026_
 
 - _IStammApi.GetSpeicherorte_: Mit dem neu hinzugekommenen Parameter _mitProjektOrdnern_ lässt sich steuern, ob
 persönliche Projektordner (d.h. dateibasierte Speicherorte) geliefert werden sollen (Default: _true_).
